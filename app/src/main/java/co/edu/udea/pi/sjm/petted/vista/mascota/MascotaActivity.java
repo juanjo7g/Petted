@@ -1,7 +1,13 @@
 package co.edu.udea.pi.sjm.petted.vista.mascota;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -70,6 +76,12 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
             }
         });
 
+        List<Integer> iconos = new ArrayList<>();
+        iconos.add(R.mipmap.ic_assignment_turned_in_white);
+        iconos.add(R.mipmap.ic_assignment_white);
+        iconos.add(R.mipmap.ic_favorite_border_white);
+        iconos.add(R.mipmap.ic_create_white);
+
         // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
             // Create a tab with text corresponding to the page title defined by
@@ -78,7 +90,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
             // this tab is selected.
             actionBar.addTab(
                     actionBar.newTab()
-                            .setText(mSectionsPagerAdapter.getPageTitle(i))
+                            .setIcon(iconos.get(i))
                             .setTabListener(this));
         }
 
