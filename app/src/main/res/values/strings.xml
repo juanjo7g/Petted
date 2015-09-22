@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Petted</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_mascotas">Mis Mascotas</string>
+    <string name="btn_iniciar">Iniciar</string>
+    <string name="nombre">Nombre</string>
+    <string name="tipo">Tipo</string>
+    <string name="raza">Raza</string>
+
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_mascota">Mascota</string>
+
+    <string name="titulo_informacion">Información</string>
+    <string name="titulo_citas">Citas</string>
+    <string name="titulo_vacunas">Vacunas</string>
+    <string name="action_notificaciones">Activar/Desactivar Notificaciones</string>
+    <string name="action_editar">Editar Mascota</string>
+    <string name="action_eliminar">Eliminar Mascota</string>
+    <string name="title_activity_mascota_nueva">MascotaNuevaActivity</string>
+</resources>
