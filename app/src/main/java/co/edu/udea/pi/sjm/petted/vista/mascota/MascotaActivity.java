@@ -50,6 +50,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//        actionBar.
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -145,7 +146,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
                 case 1:
                     return MascotaCitasFragment.newInstance();
                 case 2:
-                    return MascotaVacunasFragment.newInstance();
+                    return MascotaMedicamentosFragment.newInstance();
                 case 3:
                     return MascotaVacunasFragment.newInstance();
             }
@@ -154,7 +155,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
 
         @Override
@@ -166,6 +167,8 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
                 case 1:
                     return getString(R.string.titulo_citas).toUpperCase(l);
                 case 2:
+                    return getString(R.string.titulo_medicamentos).toUpperCase(l);
+                case 3:
                     return getString(R.string.titulo_vacunas).toUpperCase(l);
             }
             return null;

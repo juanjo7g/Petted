@@ -16,7 +16,9 @@
 
     <string name="titulo_informacion">Información</string>
     <string name="titulo_citas">Citas</string>
+    <string name="titulo_medicamentos">Medicamentos</string>
     <string name="titulo_vacunas">Vacunas</string>
+
     <string name="action_notificaciones">Activar/Desactivar Notificaciones</string>
     <string name="action_editar">Editar Mascota</string>
     <string name="action_eliminar">Eliminar Mascota</string>
