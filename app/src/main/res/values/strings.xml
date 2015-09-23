@@ -22,5 +22,6 @@
     <string name="action_notificaciones">Activar/Desactivar Notificaciones</string>
     <string name="action_editar">Editar Mascota</string>
     <string name="action_eliminar">Eliminar Mascota</string>
-    <string name="title_activity_mascota_nueva">MascotaNuevaActivity</string>
+    <string name="title_activity_mascota_nueva">Mascota Nueva</string>
+    <string name="btn_agregar_mascota">Añadir Mascota</string>
 </resources>
