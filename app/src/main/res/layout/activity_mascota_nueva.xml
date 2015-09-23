@@ -12,18 +12,21 @@
         android:id="@+id/etNombreMacota"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nombre de la mascota"
-        android:inputType="textCapWords"
-        android:layout_marginTop="64dp"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="64dp"
+        android:gravity="center"
+        android:hint="Nombre de la mascota"
+        android:inputType="textCapWords" />
 
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/scrollView">
+        android:fillViewport="false">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,7 +35,7 @@
             <TextView
                 android:id="@+id/info"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </ScrollView>
@@ -46,32 +49,19 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="52dp"
         android:background="@color/ColorPrimary"
+        android:gravity="center"
         android:padding="12dp"
         android:text="@string/btn_agregar_mascota"
         android:textColor="@color/blanco" />
 
     <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/etFechaNacimiento"
-        android:layout_below="@+id/etNombreMacota"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/etxt_fromdate"
-        android:layout_centerVertical="true"
-        android:layout_alignRight="@+id/scrollView"
-        android:layout_alignEnd="@+id/scrollView" />
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/etxt_todate"
-        android:layout_below="@+id/etxt_fromdate"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/etNombreMacota"
+        android:gravity="center"
+        android:hint="Selecionar la fecha de nacimiento" />
 
 </RelativeLayout>

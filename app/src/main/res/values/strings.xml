@@ -9,8 +9,6 @@
     <string name="tipo">Tipo</string>
     <string name="raza">Raza</string>
 
-
-<!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_mascota">Mascota</string>
 
@@ -24,4 +22,6 @@
     <string name="action_eliminar">Eliminar Mascota</string>
     <string name="title_activity_mascota_nueva">Mascota Nueva</string>
     <string name="btn_agregar_mascota">Añadir Mascota</string>
+
+    <style name="etSeleccionarFechaNacimiento">Seleccionar la fecha de nacimiento</style>
 </resources>

@@ -19,77 +19,47 @@ import co.edu.udea.pi.sjm.petted.R;
 
 public class MascotaNuevaActivity extends AppCompatActivity {
 
-    EditText etFechaNacimiento;
 
-    private EditText fromDateEtxt;
-    private EditText toDateEtxt;
-
-    private DatePickerDialog fromDatePickerDialog;
-    private DatePickerDialog toDatePickerDialog;
-    private SimpleDateFormat dateFormatter;
+    private EditText etFechaNacimiento;
+    private DatePickerDialog electorDeFechaDialogo;
+    private SimpleDateFormat formateadorDeFecha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mascota_nueva);
 
-        dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
+        etFechaNacimiento = (EditText) findViewById(R.id.etFechaNacimiento);
 
-        findViewsById();
-        setDateTimeField();
+        formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+
+        etFechaNacimiento.setInputType(InputType.TYPE_NULL);
+        etFechaNacimiento.requestFocus();
+
+        mostrarFecha();
     }
 
     private void findViewsById() {
-        fromDateEtxt = (EditText) findViewById(R.id.etxt_fromdate);
-        fromDateEtxt.setInputType(InputType.TYPE_NULL);
-        fromDateEtxt.requestFocus();
 
-        toDateEtxt = (EditText) findViewById(R.id.etxt_todate);
-        toDateEtxt.setInputType(InputType.TYPE_NULL);
     }
 
-    private void setDateTimeField() {
-        fromDateEtxt.setOnClickListener(new View.OnClickListener() {
+    private void mostrarFecha() {
+        etFechaNacimiento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (v == fromDateEtxt) {
-                    fromDatePickerDialog.show();
-                } else if (v == toDateEtxt) {
-                    toDatePickerDialog.show();
-                }
-            }
-        });
-        toDateEtxt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (v == fromDateEtxt) {
-                    fromDatePickerDialog.show();
-                } else if (v == toDateEtxt) {
-                    toDatePickerDialog.show();
-                }
+                electorDeFechaDialogo.show();
             }
         });
 
-        Calendar newCalendar = Calendar.getInstance();
-        fromDatePickerDialog = new DatePickerDialog(this, new OnDateSetListener() {
+        Calendar calendario = Calendar.getInstance();
+        electorDeFechaDialogo = new DatePickerDialog(this, new OnDateSetListener() {
 
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Calendar newDate = Calendar.getInstance();
-                newDate.set(year, monthOfYear, dayOfMonth);
-                fromDateEtxt.setText(dateFormatter.format(newDate.getTime()));
+            public void onDateSet(DatePicker view, int año, int mes, int dia) {
+                Calendar nuevaFecha = Calendar.getInstance();
+                nuevaFecha.set(año, mes, dia);
+                etFechaNacimiento.setText(formateadorDeFecha.format(nuevaFecha.getTime()));
             }
-
-        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-
-        toDatePickerDialog = new DatePickerDialog(this, new OnDateSetListener() {
-
-            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                Calendar newDate = Calendar.getInstance();
-                newDate.set(year, monthOfYear, dayOfMonth);
-                toDateEtxt.setText(dateFormatter.format(newDate.getTime()));
-            }
-
-        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        }, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH));
     }
 
 
