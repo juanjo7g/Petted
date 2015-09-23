@@ -24,4 +24,12 @@
     <string name="btn_agregar_mascota">Añadir Mascota</string>
 
     <style name="etSeleccionarFechaNacimiento">Seleccionar la fecha de nacimiento</style>
+
+    <string-array name="TiposDeMascotas">
+        <item>Perro</item>
+        <item>Gato</item>
+        <item>Vaca</item>
+        <item>Caballo</item>
+        <item>Otro</item>
+    </string-array>
 </resources>

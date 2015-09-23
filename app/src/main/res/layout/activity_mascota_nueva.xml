@@ -9,36 +9,26 @@
     tools:context="co.edu.udea.pi.sjm.petted.vista.MascotaNuevaActivity">
 
     <EditText
-        android:id="@+id/etNombreMacota"
+        android:id="@+id/etNombreMascota"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="64dp"
         android:gravity="center"
-        android:hint="Nombre de la mascota"
-        android:inputType="textCapWords" />
+        android:hint="Ingresar en nombre de la mascota"
+        android:inputType="textCapWords"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="46dp" />
 
-
-    <ScrollView
-        android:id="@+id/scrollView"
+    <EditText
+        android:id="@+id/etFechaNacimiento"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="false">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/info"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-    </ScrollView>
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="Selecionar la fecha de nacimiento"
+        android:layout_marginTop="44dp"
+        android:layout_below="@+id/etNombreMascota"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:id="@+id/btnAgregarMascotar"
@@ -54,14 +44,22 @@
         android:text="@string/btn_agregar_mascota"
         android:textColor="@color/blanco" />
 
-    <EditText
-        android:id="@+id/etFechaNacimiento"
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar el tipo de mascota"
+        android:layout_below="@+id/etFechaNacimiento"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="44dp" />
+
+    <Spinner
+        android:id="@+id/spinnerTipoMascota"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/etNombreMacota"
         android:gravity="center"
-        android:hint="Selecionar la fecha de nacimiento" />
+        android:layout_below="@+id/textView"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

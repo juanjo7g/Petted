@@ -8,8 +8,10 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,6 +25,8 @@ public class MascotaNuevaActivity extends AppCompatActivity {
     private EditText etFechaNacimiento;
     private DatePickerDialog electorDeFechaDialogo;
     private SimpleDateFormat formateadorDeFecha;
+    Spinner spinnerTipoMascota;
+    String[] tiposMascotas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +41,16 @@ public class MascotaNuevaActivity extends AppCompatActivity {
         etFechaNacimiento.requestFocus();
 
         mostrarFecha();
+
+        spinnerTipoMascota = (Spinner) findViewById(R.id.spinnerTipoMascota);
+        ArrayAdapter<CharSequence> adapter;
+
+        adapter = ArrayAdapter.createFromResource(this, R.array.TiposDeMascotas,
+                android.R.layout.simple_spinner_item);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        spinnerTipoMascota.setAdapter(adapter);
     }
 
     private void findViewsById() {
