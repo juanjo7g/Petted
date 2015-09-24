@@ -15,7 +15,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:gravity="center"
+        android:layout_marginTop="24dp"
         android:hint="Ingresar en nombre de la mascota"
         android:inputType="textCapWords" />
 
@@ -26,7 +26,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/etNombreMascota"
-        android:gravity="center"
+        android:layout_marginTop="20dp"
         android:hint="Selecionar la fecha de nacimiento" />
 
 
@@ -37,15 +37,17 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/etFechaNacimiento"
-        android:text="Seleccionar el tipo de mascota" />
+        android:layout_marginTop="20dp"
+        android:text="Seleccionar el tipo de mascota:" />
 
     <Spinner
         android:id="@+id/spinnerTipoMascota"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/tvTipoMascota"
-        android:layout_centerHorizontal="true"
-        android:gravity="center" />
+        android:layout_marginTop="10dp" />
 
     <EditText
         android:id="@+id/etRaza"
@@ -54,7 +56,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/spinnerTipoMascota"
-        android:gravity="center"
+        android:layout_marginTop="10dp"
         android:hint="Ingresar la raza" />
 
     <TextView
@@ -64,28 +66,30 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/etRaza"
-        android:text="Seleccionar el genero" />
+        android:layout_marginTop="20dp"
+        android:text="Seleccionar el genero:" />
 
-    <Button
-        android:id="@+id/btnAgregarMascotar"
-        android:layout_width="fill_parent"
+    <Spinner
+        android:id="@+id/spinnerGenero"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="52dp"
+        android:layout_below="@+id/tvGenero"
+        android:layout_marginTop="10dp" />
+
+    <Button
+        android:id="@+id/btnAgregarMascota"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/spinnerGenero"
+        android:layout_marginTop="24dp"
         android:background="@color/ColorPrimary"
-        android:gravity="center"
         android:padding="12dp"
         android:text="@string/btn_agregar_mascota"
         android:textColor="@color/blanco" />
-
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinnerGenero"
-        android:layout_below="@+id/tvGenero"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    />
 
 </RelativeLayout>

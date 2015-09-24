@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -27,6 +28,7 @@ public class MascotaNuevaActivity extends AppCompatActivity {
     private SimpleDateFormat formateadorDeFecha;
     Spinner spinnerTipoMascota;
     Spinner spinnerGenero;
+    Button btnAgregarMascota;
     String[] tiposMascotas;
 
     @Override
@@ -37,6 +39,14 @@ public class MascotaNuevaActivity extends AppCompatActivity {
         etFechaNacimiento = (EditText) findViewById(R.id.etFechaNacimiento);
         spinnerTipoMascota = (Spinner) findViewById(R.id.spinnerTipoMascota);
         spinnerGenero = (Spinner) findViewById(R.id.spinnerGenero);
+        btnAgregarMascota = (Button) findViewById(R.id.btnAgregarMascota);
+
+        btnAgregarMascota.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
