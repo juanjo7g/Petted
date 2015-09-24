@@ -26,6 +26,7 @@ public class MascotaNuevaActivity extends AppCompatActivity {
     private DatePickerDialog electorDeFechaDialogo;
     private SimpleDateFormat formateadorDeFecha;
     Spinner spinnerTipoMascota;
+    Spinner spinnerGenero;
     String[] tiposMascotas;
 
     @Override
@@ -34,6 +35,8 @@ public class MascotaNuevaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mascota_nueva);
 
         etFechaNacimiento = (EditText) findViewById(R.id.etFechaNacimiento);
+        spinnerTipoMascota = (Spinner) findViewById(R.id.spinnerTipoMascota);
+        spinnerGenero = (Spinner) findViewById(R.id.spinnerGenero);
 
         formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
@@ -42,7 +45,6 @@ public class MascotaNuevaActivity extends AppCompatActivity {
 
         mostrarFecha();
 
-        spinnerTipoMascota = (Spinner) findViewById(R.id.spinnerTipoMascota);
         ArrayAdapter<CharSequence> adapter;
 
         adapter = ArrayAdapter.createFromResource(this, R.array.TiposDeMascotas,
@@ -51,6 +53,12 @@ public class MascotaNuevaActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerTipoMascota.setAdapter(adapter);
+
+        adapter = ArrayAdapter.createFromResource(this, R.array.Generos,
+                android.R.layout.simple_spinner_item);
+
+        spinnerGenero.setAdapter(adapter);
+
     }
 
     private void findViewsById() {

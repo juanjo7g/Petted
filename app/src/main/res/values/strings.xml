@@ -32,4 +32,8 @@
         <item>Caballo</item>
         <item>Otro</item>
     </string-array>
+    <string-array name="Generos">
+        <item>Femenino</item>
+        <item>Masculino</item>
+    </string-array>
 </resources>
