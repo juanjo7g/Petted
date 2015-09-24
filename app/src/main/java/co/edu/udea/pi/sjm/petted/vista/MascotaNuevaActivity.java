@@ -59,13 +59,13 @@ public class MascotaNuevaActivity extends AppCompatActivity {
 
         adapter = ArrayAdapter.createFromResource(this, R.array.TiposDeMascotas,
                 android.R.layout.simple_spinner_item);
-
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerTipoMascota.setAdapter(adapter);
 
         adapter = ArrayAdapter.createFromResource(this, R.array.Generos,
                 android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerGenero.setAdapter(adapter);
 

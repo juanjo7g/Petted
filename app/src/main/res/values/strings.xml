@@ -36,4 +36,5 @@
         <item>Femenino</item>
         <item>Masculino</item>
     </string-array>
+    <string name="title_activity_asociar_tag_nfc">AsociarTagNFCActivity</string>
 </resources>
