@@ -29,6 +29,10 @@
             android:name=".vista.AsociarTagNFCActivity"
             android:label="@string/title_activity_asociar_tag_nfc" >
         </activity>
+        <activity
+            android:name=".vista.CreacionUsuarioActivity"
+            android:label="@string/title_activity_creacion_usuario" >
+        </activity>
     </application>
 
 </manifest>

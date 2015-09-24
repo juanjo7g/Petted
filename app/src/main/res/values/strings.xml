@@ -37,4 +37,5 @@
         <item>Masculino</item>
     </string-array>
     <string name="title_activity_asociar_tag_nfc">AsociarTagNFCActivity</string>
+    <string name="title_activity_creacion_usuario">CreacionUsuarioActivity</string>
 </resources>

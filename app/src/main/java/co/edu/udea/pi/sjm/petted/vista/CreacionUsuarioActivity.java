@@ -1,43 +1,35 @@
 package co.edu.udea.pi.sjm.petted.vista;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
 
 import co.edu.udea.pi.sjm.petted.R;
 
-public class MainActivity extends AppCompatActivity {
+public class CreacionUsuarioActivity extends AppCompatActivity {
 
-    TextView tvCrearUsuario;
+    Button btnCrearUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        tvCrearUsuario = (TextView) findViewById(R.id.tvCrearUsuario);
-
-    }
-
-
-    public void iniciarActividadListadoMascotas(View view) {
-        Intent i = new Intent(this, ListadoMascotasActivity.class);
-        finish();
-        startActivity(i);
-    }
-
-    public void iniciarCreacionUsuario(View view) {
-        Intent i = new Intent(this, CreacionUsuarioActivity.class);
-        startActivity(i);
+        setContentView(R.layout.activity_creacion_usuario);
+        btnCrearUsuario = (Button) findViewById(R.id.btnCrearUsuario);
+        btnCrearUsuario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_creacion_usuario, menu);
         return true;
     }
 
@@ -49,9 +41,9 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
+        if (id == R.id.action_settings) {
             return true;
-        }*/
+        }
 
         return super.onOptionsItemSelected(item);
     }
