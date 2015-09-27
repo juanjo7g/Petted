@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
@@ -48,6 +50,8 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         this.mascota = mascota;
     }
 
+    List<Integer> iconos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,11 +80,17 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
             }
         });
 
-        List<Integer> iconos = new ArrayList<>();
+        iconos = new ArrayList<>();
+        iconos.add(R.mipmap.ic_assignment_turned_in_gray);
+        iconos.add(R.mipmap.ic_assignment_gray);
+        iconos.add(R.mipmap.ic_favorite_border_gray);
+        iconos.add(R.mipmap.ic_vacuna_gray);
+
         iconos.add(R.mipmap.ic_assignment_turned_in_white);
         iconos.add(R.mipmap.ic_assignment_white);
         iconos.add(R.mipmap.ic_favorite_border_white);
-        iconos.add(R.mipmap.ic_create_white);
+        iconos.add(R.mipmap.ic_vacuna_white);
+
 
         // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
@@ -127,11 +137,46 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
+        for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+
+        }
+        switch (tab.getPosition()) {
+            case 0:
+                setTitle("Información");
+                tab.setIcon(iconos.get(4));
+                break;
+            case 1:
+                setTitle("Citas");
+                tab.setIcon(iconos.get(5));
+                break;
+            case 2:
+                setTitle("Medicamentos");
+                tab.setIcon(iconos.get(6));
+                break;
+            case 3:
+                setTitle("Vacunas");
+                tab.setIcon(iconos.get(7));
+                break;
+        }
         mViewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
     public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+        switch (tab.getPosition()) {
+            case 0:
+                tab.setIcon(iconos.get(0));
+                break;
+            case 1:
+                tab.setIcon(iconos.get(1));
+                break;
+            case 2:
+                tab.setIcon(iconos.get(2));
+                break;
+            case 3:
+                tab.setIcon(iconos.get(3));
+                break;
+        }
     }
 
     @Override

@@ -31,7 +31,7 @@ public class MascotaInformacionFragment extends Fragment {
     List<String> listaProximosEventos;
     ListView lvProximosEventos;
 
-    public MascotaInformacionFragment() {
+    public MascotaInformacionFragment(){
     }
 
     public static MascotaInformacionFragment newInstance() {
@@ -67,7 +67,8 @@ public class MascotaInformacionFragment extends Fragment {
                 android.R.layout.simple_spinner_item, listaProximosEventos);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         lvProximosEventos.setAdapter(adapter);
-
         return rootView;
     }
+
+
 }

@@ -3,4 +3,5 @@
     <item name="blanco" type="color">#FFFFFFFF</item>
     <color name="ColorPrimary">#00897B</color>
     <color name="ColorPrimaryDark">#00695C</color>
+
 </resources>
