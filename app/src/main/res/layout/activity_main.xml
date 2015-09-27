@@ -26,7 +26,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/ivIcono"
         android:layout_marginTop="36dp"
-        android:hint="Usuario o Email"
+        android:hint="Email"
         android:inputType="textEmailAddress" />
 
     <EditText
@@ -58,13 +58,14 @@
 
     <TextView
         android:id="@+id/tvCrearUsuario"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_below="@+id/btnIniciar"
         android:layout_centerHorizontal="true"
         android:text="Crear usuario"
         android:onClick="iniciarCreacionUsuario"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:gravity="center"/>
 
 </RelativeLayout>

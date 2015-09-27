@@ -3,12 +3,14 @@ package co.edu.udea.pi.sjm.petted.dto;
 import android.media.Image;
 
 import java.sql.Blob;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by Juan on 20/09/2015.
  */
 public class Mascota {
+    private String propietario;
     private String nombre;
     private Date fechaNacimiento;
     private String tipo;
@@ -16,6 +18,9 @@ public class Mascota {
     private String genero;
     private String idTag;
     private Blob foto;
+    private ArrayList<String> citas;
+    private ArrayList<String> medicamentos;
+    private ArrayList<String> vacunas;
 
     public Mascota() {
     }
