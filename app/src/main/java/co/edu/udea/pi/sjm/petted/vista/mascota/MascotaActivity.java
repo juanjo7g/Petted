@@ -137,6 +137,21 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
         // When the given tab is selected, switch to the corresponding page in
         // the ViewPager.
+        switch (tab.getPosition()) {
+            case 0:
+                setTitle(R.string.titulo_informacion);
+                break;
+            case 1:
+                setTitle(R.string.titulo_citas);
+                break;
+            case 2:
+                setTitle(R.string.titulo_medicamentos);
+                break;
+            case 3:
+                setTitle(R.string.titulo_vacunas);
+                break;
+        }
+
         tab.setIcon(iconos.get(tab.getPosition() + 4));
         mViewPager.setCurrentItem(tab.getPosition());
     }
