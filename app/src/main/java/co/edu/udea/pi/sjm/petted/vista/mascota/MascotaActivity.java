@@ -83,12 +83,12 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         iconos = new ArrayList<>();
         iconos.add(R.mipmap.ic_assignment_turned_in_gray);
         iconos.add(R.mipmap.ic_assignment_gray);
-        iconos.add(R.mipmap.ic_favorite_border_gray);
+        iconos.add(R.mipmap.ic_medical_gray);
         iconos.add(R.mipmap.ic_vacuna_gray);
 
         iconos.add(R.mipmap.ic_assignment_turned_in_white);
         iconos.add(R.mipmap.ic_assignment_white);
-        iconos.add(R.mipmap.ic_favorite_border_white);
+        iconos.add(R.mipmap.ic_medical_white);
         iconos.add(R.mipmap.ic_vacuna_white);
 
 
