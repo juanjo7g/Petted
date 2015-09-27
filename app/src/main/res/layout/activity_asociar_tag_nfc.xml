@@ -15,37 +15,15 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="24dp"
-        android:hint="Ingresar el nombre de la mascota"
+        android:layout_marginTop="48dp"
+        android:hint="Nombre de la mascota"
         android:inputType="textCapWords" />
-
-    <EditText
-        android:id="@+id/etNombrePropietario"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/etNombreMascota"
-        android:layout_marginTop="24dp"
-        android:hint="Ingresar el nombre del propietario"
-        android:inputType="textCapWords" />
-
-    <EditText
-        android:id="@+id/etTelefonoPropietario"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/etNombrePropietario"
-        android:layout_marginTop="24dp"
-        android:hint="Ingresar el telefono del propietario"
-        android:inputType="phone" />
 
     <TextView
         android:id="@+id/tvIdTagNFC"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etTelefonoPropietario"
+        android:layout_below="@+id/etNombreMascota"
         android:layout_marginTop="24dp"
         android:text="ID Tag NFC: " />
 
@@ -61,19 +39,17 @@
         android:hint="#idTag"
         android:inputType="text" />
 
-
     <Button
         android:id="@+id/btnAsociar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/etContraseña"
-        android:layout_marginBottom="62dp"
+        android:layout_marginBottom="102dp"
         android:background="@color/ColorPrimary"
         android:padding="12dp"
         android:text="Asociar"
-        android:textColor="@color/blanco" />
+        android:textColor="@color/blanco"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

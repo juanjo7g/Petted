@@ -38,13 +38,13 @@ public class AsociarTagNFCActivity extends AppCompatActivity {
 
         if (mNfcAdapter == null) {
             // Stop here, we definitely need NFC
-            Toast.makeText(this, "This device doesn't support NFC.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Este dispositivo no tiene NFC.", Toast.LENGTH_LONG).show();
             finish();
             return;
         }
 
         if (!mNfcAdapter.isEnabled()) {
-            tvIdTag.setText("NFC is disabled.");
+            tvIdTag.setText("NFC deshabilitado.");
         } else {
             tvIdTag.setText(NfcAdapter.EXTRA_ID);
         }

@@ -53,7 +53,8 @@
         android:onClick="iniciarActividadListadoMascotas"
         android:padding="12dp"
         android:text="@string/btn_iniciar"
-        android:textColor="@color/blanco" />
+        android:textColor="@color/blanco"
+        android:elevation="10dp"/>
 
     <TextView
         android:id="@+id/tvCrearUsuario"
