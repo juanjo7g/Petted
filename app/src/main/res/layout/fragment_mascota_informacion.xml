@@ -77,6 +77,8 @@
         android:layout_below="@+id/etContraseña"
         android:layout_marginBottom="28dp"
         android:layout_marginTop="36dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:background="@color/ColorPrimary"
         android:onClick="iniciarActividadListadoMascotas"
         android:padding="12dp"

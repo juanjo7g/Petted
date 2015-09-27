@@ -5,25 +5,37 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.EditText;
 
 import co.edu.udea.pi.sjm.petted.R;
+import co.edu.udea.pi.sjm.petted.SQLite.PettedDataBaseHelper;
+import co.edu.udea.pi.sjm.petted.dto.Usuario;
 
 public class CreacionUsuarioActivity extends AppCompatActivity {
 
-    Button btnCrearUsuario;
+    private EditText etNombreUsuario;
+    private EditText etCorreoElectronico;
+    private EditText etContraseña;
+    private EditText etContraseñaRep;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_creacion_usuario);
-        btnCrearUsuario = (Button) findViewById(R.id.btnCrearUsuario);
-        btnCrearUsuario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        etNombreUsuario = (EditText) findViewById(R.id.etNombreUsuario);
+        etCorreoElectronico = (EditText) findViewById(R.id.etCorreoElectronico);
+        etContraseña = (EditText) findViewById(R.id.etContraseña);
+        etContraseñaRep = (EditText) findViewById(R.id.etContraseñaRep);
+    }
+
+    public void onClickCrearUsuario(View v) {
+        Usuario u = new Usuario();
+        u.setCorreo(etCorreoElectronico.getText().toString());
+        u.setNombre(etNombreUsuario.getText().toString());
+        u.setContraseña(etContraseña.getText().toString());
+        PettedDataBaseHelper helper = PettedDataBaseHelper.getInstance(this);
+        helper.insertarUsuario(u);
+
     }
 
     @Override
