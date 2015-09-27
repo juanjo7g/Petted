@@ -16,7 +16,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginTop="24dp"
-        android:hint="Ingresar en nombre de la mascota"
+        android:hint="Nombre de la mascota"
         android:inputType="textCapWords" />
 
     <EditText
@@ -27,7 +27,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/etNombreMascota"
         android:layout_marginTop="20dp"
-        android:hint="Selecionar la fecha de nacimiento" />
+        android:hint="Fecha de nacimiento" />
 
 
     <TextView
@@ -38,7 +38,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/etFechaNacimiento"
         android:layout_marginTop="20dp"
-        android:text="Seleccionar el tipo de mascota:" />
+        android:text="Tipo de mascota:" />
 
     <Spinner
         android:id="@+id/spinnerTipoMascota"
@@ -57,7 +57,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/spinnerTipoMascota"
         android:layout_marginTop="10dp"
-        android:hint="Ingresar la raza" />
+        android:hint="Raza" />
 
     <TextView
         android:id="@+id/tvGenero"
@@ -67,7 +67,7 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/etRaza"
         android:layout_marginTop="20dp"
-        android:text="Seleccionar el genero:" />
+        android:text="Genero:" />
 
     <Spinner
         android:id="@+id/spinnerGenero"
