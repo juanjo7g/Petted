@@ -42,13 +42,12 @@
         android:inputType="phone" />
 
     <TextView
+        android:id="@+id/tvIdTagNFC"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ID Tag NFC: "
-        android:id="@+id/tvIdTagNFC"
         android:layout_below="@+id/etTelefonoPropietario"
         android:layout_marginTop="24dp"
-        />
+        android:text="ID Tag NFC: " />
 
     <EditText
         android:id="@+id/etIdTag"
@@ -58,22 +57,23 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/tvIdTagNFC"
         android:layout_marginTop="10dp"
+        android:enabled="false"
         android:hint="#idTag"
-        android:inputType="text"
-        android:enabled="false" />
+        android:inputType="text" />
 
 
     <Button
         android:id="@+id/btnAsociar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/ColorPrimary"
-        android:padding="12dp"
-        android:text="Asociar"
-        android:textColor="@color/blanco"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="62dp" />
+        android:layout_below="@+id/etContraseña"
+        android:layout_marginBottom="62dp"
+        android:background="@color/ColorPrimary"
+        android:padding="12dp"
+        android:text="Asociar"
+        android:textColor="@color/blanco" />
 
 </RelativeLayout>

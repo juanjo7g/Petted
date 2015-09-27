@@ -69,12 +69,14 @@
 
     <Button
         android:id="@+id/btnAsociarTagNFC"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:layout_below="@+id/etContraseña"
         android:layout_marginBottom="28dp"
+        android:layout_marginTop="36dp"
         android:background="@color/ColorPrimary"
         android:onClick="iniciarActividadListadoMascotas"
         android:padding="12dp"
