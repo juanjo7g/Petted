@@ -34,10 +34,22 @@ public class CreacionUsuarioActivity extends AppCompatActivity {
         u.setCorreo(etCorreoElectronico.getText().toString());
         u.setNombre(etNombreUsuario.getText().toString());
         u.setContraseña(etContraseña.getText().toString());
-        Toast.makeText(this, u.getNombre(), Toast.LENGTH_SHORT).show();
-        PettedDataBaseHelper helper = PettedDataBaseHelper.getInstance(this);
-        helper.insertarUsuario(u);
-        finish();
+        switch (validarDatos(u)) {
+            case 0:
+            PettedDataBaseHelper helper = PettedDataBaseHelper.getInstance(this);
+            helper.insertarUsuario(u);
+            Toast.makeText(this, "Usuario creado con exito", Toast.LENGTH_SHORT).show();
+            finish();
+            break;
+            case 1:
+                break;
+            case 2:
+                break;
+        }
+        }
+
+    private int validarDatos(Usuario u) {
+        return 0;
     }
 
     @Override
