@@ -40,8 +40,8 @@ public class MainActivity extends AppCompatActivity {
         if (u != null) {
             if (u.getContraseña().equals(etContraseña.getText().toString())) {
                 finish();
-                Toast.makeText(MainActivity.this, "Nombre: " + u.getNombre() + " Correo: " +
-                        u.getCorreo() + " Contraseña: " + u.getContraseña(), Toast.LENGTH_LONG).show();
+                Toast.makeText(MainActivity.this, "Nombre: " + u.getNombre() + " - Correo: " +
+                        u.getCorreo() + " - Contraseña: " + u.getContraseña(), Toast.LENGTH_LONG).show();
                 startActivity(i);
             }
             else{
