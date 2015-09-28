@@ -3,6 +3,7 @@ package co.edu.udea.pi.sjm.petted.SQLite;
 import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
@@ -18,7 +19,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
 
     private static PettedDataBaseHelper sInstance; // Instancia unica de la clase SINGLETON!
 
-    private static final String DATABASE_NAME = "pettedDataBase";
+    private static final String DATABASE_NAME = "pettedDataBase.db";
     private static final int DATABASE_VERSION = 1;
 
     private static final String TABLA_USUARIOS = "usuarios";
@@ -81,4 +82,31 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
     }
+
+    public Usuario obtenerUsuario(String correo) {
+        SQLiteDatabase db = getWritableDatabase();
+        Usuario u = null;
+        Cursor c = null;
+
+        db.beginTransaction();
+        try {
+            u = new Usuario();
+            String selection = KEY_USUARIO_CORREO + " = ? ";//WHERE correo = ?
+            String selectionArgs[] = new String[]{correo};
+            c = db.query(TABLA_USUARIOS, null, selection, selectionArgs, null, null, null);
+            if (c.moveToFirst()) {
+                u.setCorreo(c.getString(0));
+                u.setNombre(c.getString(1));
+                u.setContraseña(c.getString(2));
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            Log.d("ERROR", "Error");
+        } finally {
+            db.endTransaction();
+        }
+        return u;
+    }
+
 }

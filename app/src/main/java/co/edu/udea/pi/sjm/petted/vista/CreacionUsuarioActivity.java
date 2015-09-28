@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.SQLite.PettedDataBaseHelper;
@@ -33,9 +34,10 @@ public class CreacionUsuarioActivity extends AppCompatActivity {
         u.setCorreo(etCorreoElectronico.getText().toString());
         u.setNombre(etNombreUsuario.getText().toString());
         u.setContraseña(etContraseña.getText().toString());
+        Toast.makeText(this, u.getNombre(), Toast.LENGTH_SHORT).show();
         PettedDataBaseHelper helper = PettedDataBaseHelper.getInstance(this);
         helper.insertarUsuario(u);
-
+        finish();
     }
 
     @Override

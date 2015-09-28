@@ -80,7 +80,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:background="@color/ColorPrimary"
-        android:onClick="iniciarActividadListadoMascotas"
+        android:onClick="onClickIniciar"
         android:padding="12dp"
         android:text="Asociar Tag NFC"
         android:textColor="@color/blanco" />

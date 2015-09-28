@@ -37,4 +37,6 @@
     <string name="hintContraseña">Contraseña</string>
     <string name="hintRepitaContraseña">Repita la contraseña</string>
     <string name="crear">Crear</string>
+    <string name="errorUsuarioNoExiste">Error, correo no registrado.</string>
+    <string name="errorContraseña">Error, contraseña incorrecta.</string>
 </resources>
