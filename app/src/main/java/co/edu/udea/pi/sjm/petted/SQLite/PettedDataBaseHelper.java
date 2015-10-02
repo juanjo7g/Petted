@@ -69,8 +69,8 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 ")";
         String CREATE_TABLA_MASCOTAS = "CREATE TABLE " + TABLA_MASCOTAS +
                 "(" +
-                KEY_MASCOTAS_ID + " TEXT PRIMARY KEY," +
-                KEY_MASCOTAS_PROPIETARIO + " TEXT NOT NULL," + // TODO: MANEJO DE CLAVE FORANEA
+                KEY_MASCOTAS_ID + " TEXT PRIMARY KEY," + // TODO: Hacer autoincrementable
+                KEY_MASCOTAS_PROPIETARIO + " TEXT NOT NULL," + // TODO: MANEJO DE CLAVE FORANEA, CORREO DE PROPETARIO
                 KEY_MASCOTAS_NOMBRE + " TEXT NOT NULL," +
                 KEY_MASCOTAS_FECHA_NACIMIENTO + " TEXT," + // TODO: MANEJO DE FECHA
                 KEY_MASCOTAS_TIPO + " TEXT," +
@@ -111,7 +111,27 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
     }
 
     public void insertarMascota(Mascota mascota) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(KEY_MASCOTAS_ID, mascota.getId());
+            values.put(KEY_MASCOTAS_PROPIETARIO, mascota.getPropietario().getCorreo());
+            values.put(KEY_MASCOTAS_NOMBRE, mascota.getNombre());
+            values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, mascota.getFechaNacimiento().toString());
+            values.put(KEY_MASCOTAS_TIPO, mascota.getTipo());
+            values.put(KEY_MASCOTAS_RAZA, mascota.getRaza());
+            values.put(KEY_MASCOTAS_GENERO, mascota.getGenero());
+            values.put(KEY_MASCOTAS_ID_TAG, mascota.getIdTag());
+            values.put(KEY_MASCOTAS_FOTO, String.valueOf(mascota.getFoto())); // TODO: Obtener arreglo de bytes
 
+            db.insertOrThrow(TABLA_MASCOTAS, null, values);
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.d("ERROR", "Error almacenando mascota en la base de datos");
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public Cursor obtenerUsuario(String correo) {
