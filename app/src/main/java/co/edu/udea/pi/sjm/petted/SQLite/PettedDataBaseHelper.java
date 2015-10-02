@@ -10,6 +10,7 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
 
 /**
@@ -23,10 +24,22 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     private static final String TABLA_USUARIOS = "usuarios";
+    private static final String TABLA_MASCOTAS = "mascotas";
 
     private static final String KEY_USUARIO_CORREO = "correo";
     private static final String KEY_USUARIO_NOMBRE = "nombre";
     private static final String KEY_USUARIO_CONTRASEÑA = "contraseña";
+
+    private static final String KEY_MASCOTAS_ID = "id";
+    private static final String KEY_MASCOTAS_PROPIETARIO = "propietario";
+    private static final String KEY_MASCOTAS_NOMBRE = "nombre";
+    private static final String KEY_MASCOTAS_FECHA_NACIMIENTO = "fechaNacimiento";
+    private static final String KEY_MASCOTAS_TIPO = "tipo";
+    private static final String KEY_MASCOTAS_RAZA = "raza";
+    private static final String KEY_MASCOTAS_GENERO = "genero";
+    private static final String KEY_MASCOTAS_ID_TAG = "idTag";
+    private static final String KEY_MASCOTAS_FOTO = "foto";
+
 
     public static synchronized PettedDataBaseHelper getInstance(Context context) {
         if (sInstance == null) {
@@ -54,13 +67,27 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 KEY_USUARIO_NOMBRE + " TEXT NOT NULL," +
                 KEY_USUARIO_CONTRASEÑA + " TEXT NOT NULL" +
                 ")";
+        String CREATE_TABLA_MASCOTAS = "CREATE TABLE " + TABLA_MASCOTAS +
+                "(" +
+                KEY_MASCOTAS_ID + " TEXT PRIMARY KEY," +
+                KEY_MASCOTAS_PROPIETARIO + " TEXT NOT NULL," + // TODO: MANEJO DE CLAVE FORANEA
+                KEY_MASCOTAS_NOMBRE + " TEXT NOT NULL," +
+                KEY_MASCOTAS_FECHA_NACIMIENTO + " TEXT," + // TODO: MANEJO DE FECHA
+                KEY_MASCOTAS_TIPO + " TEXT," +
+                KEY_MASCOTAS_RAZA + " TEXT," +
+                KEY_MASCOTAS_GENERO + " TEXT," +
+                KEY_MASCOTAS_ID_TAG + " TEXT," +
+                KEY_MASCOTAS_FOTO + " BLOB" +
+                ")";
         db.execSQL(CREATE_TABLA_USUARIOS);
+        db.execSQL(CREATE_TABLA_MASCOTAS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion != newVersion) {
             db.execSQL("DROP TABLE IF EXISTS " + TABLA_USUARIOS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLA_MASCOTAS);
             onCreate(db);
         }
     }
@@ -81,6 +108,10 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
+    }
+
+    public void insertarMascota(Mascota mascota) {
+
     }
 
     public Cursor obtenerUsuario(String correo) {

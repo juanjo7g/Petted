@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText etEmail;
     private EditText etContraseña;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,12 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     public void onClickIniciar(View view) {
         Intent i = new Intent(this, ListadoMascotasActivity.class);
-        PettedDataBaseHelper helper = PettedDataBaseHelper.getInstance(this);
         UsuarioDAO dao = new UsuarioDAOImpl();
-        Usuario u = new Usuario();
+        Usuario u;
         String correo = etEmail.getText().toString();
 
         u = dao.obtenerUsuario(correo, this);
@@ -46,9 +43,7 @@ public class MainActivity extends AppCompatActivity {
         if (u != null) {
             if (u.getContraseña().equals(etContraseña.getText().toString())) {
                 finish();
-                Toast.makeText(MainActivity.this, "Nombre: " + u.getNombre() + " - Correo: " +
-                        u.getCorreo() + " - Contraseña: " + u.getContraseña(), Toast.LENGTH_LONG).show();
-                i.putExtra("usuario", u);
+                i.putExtra("usuario",u);
                 startActivity(i);
             } else {
                 Toast.makeText(MainActivity.this, R.string.errorContraseña, Toast.LENGTH_SHORT).show();

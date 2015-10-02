@@ -11,12 +11,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
+import co.edu.udea.pi.sjm.petted.dto.Usuario;
 import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
 
 public class ListadoMascotasActivity extends AppCompatActivity {
@@ -31,7 +33,9 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado_mascotas);
-        FragmentManager fm = getSupportFragmentManager();
+
+        Usuario u = (Usuario) this.getIntent().getSerializableExtra("usuario");
+        Toast.makeText(ListadoMascotasActivity.this, "BIENVENIDO " + u.getNombre(), Toast.LENGTH_LONG).show();
 
         lvMascotas = (ListView) this.findViewById(R.id.lvListaMascotas);
         ibtnNuevaMacota = (ImageButton) this.findViewById(R.id.ibtnNuevaMascota);
@@ -60,7 +64,8 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         i.putExtra("raza", m.getRaza());
         startActivity(i);
     }
-    public void iniciarActividadMascotaNueva(){
+
+    public void iniciarActividadMascotaNueva() {
         Intent i = new Intent(this, MascotaNuevaActivity.class);
         startActivity(i);
     }
