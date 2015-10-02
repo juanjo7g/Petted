@@ -77,36 +77,28 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             db.insertOrThrow(TABLA_USUARIOS, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.d("ERROR", "Error while trying to add post to database");
+            Log.d("ERROR", "Error almacenando usuario en la base de datos");
         } finally {
             db.endTransaction();
         }
     }
 
-    public Usuario obtenerUsuario(String correo) {
+    public Cursor obtenerUsuario(String correo) {
         SQLiteDatabase db = getWritableDatabase();
-        Usuario u = null;
         Cursor c = null;
 
         db.beginTransaction();
         try {
-            u = new Usuario();
             String selection = KEY_USUARIO_CORREO + " = ? ";//WHERE correo = ?
             String selectionArgs[] = new String[]{correo};
             c = db.query(TABLA_USUARIOS, null, selection, selectionArgs, null, null, null);
-            if (c.moveToFirst()) {
-                u.setCorreo(c.getString(0));
-                u.setNombre(c.getString(1));
-                u.setContraseña(c.getString(2));
-            } else {
-                return null;
-            }
+
         } catch (Exception e) {
             Log.d("ERROR", "Error");
         } finally {
             db.endTransaction();
         }
-        return u;
+        return c;
     }
 
 }

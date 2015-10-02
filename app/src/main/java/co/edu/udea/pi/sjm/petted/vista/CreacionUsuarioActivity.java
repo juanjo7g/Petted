@@ -9,7 +9,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import co.edu.udea.pi.sjm.petted.R;
-import co.edu.udea.pi.sjm.petted.SQLite.PettedDataBaseHelper;
+import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
+import co.edu.udea.pi.sjm.petted.dao.impl.UsuarioDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
 
 public class CreacionUsuarioActivity extends AppCompatActivity {
@@ -30,23 +31,25 @@ public class CreacionUsuarioActivity extends AppCompatActivity {
     }
 
     public void onClickCrearUsuario(View v) {
+        UsuarioDAO dao;
         Usuario u = new Usuario();
         u.setCorreo(etCorreoElectronico.getText().toString());
         u.setNombre(etNombreUsuario.getText().toString());
         u.setContraseña(etContraseña.getText().toString());
         switch (validarDatos(u)) {
             case 0:
-            PettedDataBaseHelper helper = PettedDataBaseHelper.getInstance(this);
-            helper.insertarUsuario(u);
-            Toast.makeText(this, "Usuario creado con exito", Toast.LENGTH_SHORT).show();
-            finish();
-            break;
+                dao = new UsuarioDAOImpl();
+                dao.insertarUsuario(u, this);
+
+                Toast.makeText(this, "Usuario creado con exito", Toast.LENGTH_SHORT).show();
+                finish();
+                break;
             case 1:
                 break;
             case 2:
                 break;
         }
-        }
+    }
 
     private int validarDatos(Usuario u) {
         return 0;
