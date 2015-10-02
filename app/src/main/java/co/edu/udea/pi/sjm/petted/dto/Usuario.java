@@ -1,9 +1,11 @@
 package co.edu.udea.pi.sjm.petted.dto;
 
+import java.io.Serializable;
+
 /**
  * Created by Juan on 27/09/2015.
  */
-public class Usuario {
+public class Usuario implements Serializable {
     private String nombre;
     private String correo; // PK
     private String contraseña;

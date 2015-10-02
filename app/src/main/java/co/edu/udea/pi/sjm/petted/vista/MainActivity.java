@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 finish();
                 Toast.makeText(MainActivity.this, "Nombre: " + u.getNombre() + " - Correo: " +
                         u.getCorreo() + " - Contraseña: " + u.getContraseña(), Toast.LENGTH_LONG).show();
+                i.putExtra("usuario", u);
                 startActivity(i);
             } else {
                 Toast.makeText(MainActivity.this, R.string.errorContraseña, Toast.LENGTH_SHORT).show();
