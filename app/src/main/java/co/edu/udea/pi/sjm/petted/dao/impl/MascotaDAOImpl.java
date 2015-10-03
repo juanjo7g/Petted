@@ -1,9 +1,13 @@
 package co.edu.udea.pi.sjm.petted.dao.impl;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
+import co.edu.udea.pi.sjm.petted.SQLite.PettedDataBaseHelper;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
@@ -14,7 +18,12 @@ import co.edu.udea.pi.sjm.petted.dto.Usuario;
 public class MascotaDAOImpl implements MascotaDAO {
     @Override
     public void insertarUsuario(Mascota mascota, Context context) {
-
+        PettedDataBaseHelper helper;
+        try {
+            helper = PettedDataBaseHelper.getInstance(context);
+            helper.insertarMascota(mascota);
+        } catch (Exception e) {
+        }
     }
 
     @Override

@@ -29,7 +29,6 @@ public class MascotaNuevaActivity extends AppCompatActivity {
     Spinner spinnerTipoMascota;
     Spinner spinnerGenero;
     Button btnAgregarMascota;
-    String[] tiposMascotas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +70,7 @@ public class MascotaNuevaActivity extends AppCompatActivity {
 
     }
 
-    private void findViewsById() {
+    public void onClickAñadirMascota(View view){
 
     }
 

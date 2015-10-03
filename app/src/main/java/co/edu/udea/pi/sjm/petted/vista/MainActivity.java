@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickIniciar(View view) {
-        Intent i = new Intent(this, ListadoMascotasActivity.class);
+        Intent i;
         UsuarioDAO dao = new UsuarioDAOImpl();
         Usuario u;
         String correo = etEmail.getText().toString();
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         if (u != null) {
             if (u.getContraseña().equals(etContraseña.getText().toString())) {
                 finish();
+                i = new Intent(this, ListadoMascotasActivity.class);
                 i.putExtra("usuario",u);
                 startActivity(i);
             } else {

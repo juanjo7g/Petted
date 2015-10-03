@@ -1,5 +1,7 @@
 package co.edu.udea.pi.sjm.petted.dto;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 import java.sql.Blob;
@@ -19,7 +21,7 @@ public class Mascota implements Serializable {
     private String raza;
     private String genero;
     private String idTag;
-    private Blob foto;
+    private Bitmap foto;
 
     public Mascota() {
     }
@@ -88,11 +90,11 @@ public class Mascota implements Serializable {
         this.idTag = idTag;
     }
 
-    public Blob getFoto() {
+    public Bitmap getFoto() {
         return foto;
     }
 
-    public void setFoto(Blob foto) {
+    public void setFoto(Bitmap foto) {
         this.foto = foto;
     }
 }

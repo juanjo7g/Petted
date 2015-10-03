@@ -10,6 +10,10 @@ import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
+import co.edu.udea.pi.sjm.petted.dao.Utility;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
 
@@ -69,7 +73,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 ")";
         String CREATE_TABLA_MASCOTAS = "CREATE TABLE " + TABLA_MASCOTAS +
                 "(" +
-                KEY_MASCOTAS_ID + " TEXT PRIMARY KEY," + // TODO: Hacer autoincrementable
+                KEY_MASCOTAS_ID + " TEXT PRIMARY KEY," + // TODO: Hacer autoincrementable PK
                 KEY_MASCOTAS_PROPIETARIO + " TEXT NOT NULL," + // TODO: MANEJO DE CLAVE FORANEA, CORREO DE PROPETARIO
                 KEY_MASCOTAS_NOMBRE + " TEXT NOT NULL," +
                 KEY_MASCOTAS_FECHA_NACIMIENTO + " TEXT," + // TODO: MANEJO DE FECHA
@@ -77,8 +81,9 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 KEY_MASCOTAS_RAZA + " TEXT," +
                 KEY_MASCOTAS_GENERO + " TEXT," +
                 KEY_MASCOTAS_ID_TAG + " TEXT," +
-                KEY_MASCOTAS_FOTO + " BLOB" +
-                ")";
+                KEY_MASCOTAS_FOTO + " BLOB, " +
+                " FOREIGN KEY(" + KEY_MASCOTAS_PROPIETARIO + ") REFERENCES " + TABLA_USUARIOS +
+                "(" + KEY_USUARIO_CORREO + "))";
         db.execSQL(CREATE_TABLA_USUARIOS);
         db.execSQL(CREATE_TABLA_MASCOTAS);
     }
@@ -112,18 +117,24 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
 
     public void insertarMascota(Mascota mascota) {
         SQLiteDatabase db = getWritableDatabase();
-        db.beginTransaction();
+        SimpleDateFormat formateadorDeFecha;
+
         try {
             ContentValues values = new ContentValues();
+            db.beginTransaction();
+
             values.put(KEY_MASCOTAS_ID, mascota.getId());
             values.put(KEY_MASCOTAS_PROPIETARIO, mascota.getPropietario().getCorreo());
             values.put(KEY_MASCOTAS_NOMBRE, mascota.getNombre());
-            values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, mascota.getFechaNacimiento().toString());
+
+            formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+            values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, formateadorDeFecha.format(mascota.getFechaNacimiento()));
+
             values.put(KEY_MASCOTAS_TIPO, mascota.getTipo());
             values.put(KEY_MASCOTAS_RAZA, mascota.getRaza());
             values.put(KEY_MASCOTAS_GENERO, mascota.getGenero());
             values.put(KEY_MASCOTAS_ID_TAG, mascota.getIdTag());
-            values.put(KEY_MASCOTAS_FOTO, String.valueOf(mascota.getFoto())); // TODO: Obtener arreglo de bytes
+            values.put(KEY_MASCOTAS_FOTO, Utility.getBytes(mascota.getFoto())); // TODO: Obtener arreglo de bytes
 
             db.insertOrThrow(TABLA_MASCOTAS, null, values);
             db.setTransactionSuccessful();
@@ -133,6 +144,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
     }
+
 
     public Cursor obtenerUsuario(String correo) {
         SQLiteDatabase db = getWritableDatabase();
