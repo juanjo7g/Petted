@@ -17,7 +17,7 @@ import co.edu.udea.pi.sjm.petted.dto.Usuario;
  */
 public class MascotaDAOImpl implements MascotaDAO {
     @Override
-    public void insertarUsuario(Mascota mascota, Context context) {
+    public void insertarMascota(Mascota mascota, Context context) {
         PettedDataBaseHelper helper;
         try {
             helper = PettedDataBaseHelper.getInstance(context);
@@ -27,17 +27,17 @@ public class MascotaDAOImpl implements MascotaDAO {
     }
 
     @Override
-    public Mascota obtenerUsuario(String id, Context context) {
+    public Mascota obtenerMascota(int id, Context context) {
         return null;
     }
 
     @Override
-    public void actualizarUsuario(Mascota mascota, Context context) {
+    public void actualizarMascota(Mascota mascota, Context context) {
 
     }
 
     @Override
-    public void eliminarUsuario(Mascota mascota, Context context) {
+    public void eliminarMascota(Mascota mascota, Context context) {
 
     }
 

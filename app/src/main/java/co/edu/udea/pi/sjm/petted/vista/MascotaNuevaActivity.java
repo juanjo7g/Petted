@@ -13,12 +13,20 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import co.edu.udea.pi.sjm.petted.R;
+import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
+import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
+import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
+import co.edu.udea.pi.sjm.petted.dao.impl.UsuarioDAOImpl;
+import co.edu.udea.pi.sjm.petted.dto.Mascota;
+import co.edu.udea.pi.sjm.petted.dto.Usuario;
 
 public class MascotaNuevaActivity extends AppCompatActivity {
 
@@ -38,14 +46,14 @@ public class MascotaNuevaActivity extends AppCompatActivity {
         etFechaNacimiento = (EditText) findViewById(R.id.etFechaNacimiento);
         spinnerTipoMascota = (Spinner) findViewById(R.id.spinnerTipoMascota);
         spinnerGenero = (Spinner) findViewById(R.id.spinnerGenero);
-        btnAgregarMascota = (Button) findViewById(R.id.btnAgregarMascota);
-
-        btnAgregarMascota.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+//        btnAgregarMascota = (Button) findViewById(R.id.btnAgregarMascota);
+//
+//        btnAgregarMascota.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                finish();
+//            }
+//        });
 
         formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
@@ -70,8 +78,22 @@ public class MascotaNuevaActivity extends AppCompatActivity {
 
     }
 
-    public void onClickAñadirMascota(View view){
-
+    public void onClickAñadirMascota(View view) {
+        UsuarioDAO dao = new UsuarioDAOImpl();
+        MascotaDAO dao1 = new MascotaDAOImpl();
+        Mascota m = new Mascota();
+        Usuario u = dao.obtenerUsuario("j@gmail.com", this);
+        m.setNombre("Lucas");
+        m.setPropietario(u);
+//        m.setRaza(null);
+//        m.setTipo(null);
+//        m.setFechaNacimiento(new Date(2000,10,01));
+//        m.setFoto(null);
+//        m.setGenero(null);
+//        m.setIdTag(null);
+        dao1.insertarMascota(m, this);
+        Toast.makeText(MascotaNuevaActivity.this, m.getNombre(), Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     private void mostrarFecha() {

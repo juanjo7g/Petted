@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class Mascota implements Serializable {
 
-    private String id; //pk
+    private int id; //pk autoincrementable
     private Usuario propietario;
     private String nombre;
     private Date fechaNacimiento;
@@ -26,11 +26,11 @@ public class Mascota implements Serializable {
     public Mascota() {
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

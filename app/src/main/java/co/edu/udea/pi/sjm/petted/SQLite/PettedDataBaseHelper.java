@@ -73,7 +73,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 ")";
         String CREATE_TABLA_MASCOTAS = "CREATE TABLE " + TABLA_MASCOTAS +
                 "(" +
-                KEY_MASCOTAS_ID + " TEXT PRIMARY KEY," + // TODO: Hacer autoincrementable PK
+                KEY_MASCOTAS_ID + " INTEGER PRIMARY KEY autoincrement," + // Autoincrementable PK
                 KEY_MASCOTAS_PROPIETARIO + " TEXT NOT NULL," + // TODO: MANEJO DE CLAVE FORANEA, CORREO DE PROPETARIO
                 KEY_MASCOTAS_NOMBRE + " TEXT NOT NULL," +
                 KEY_MASCOTAS_FECHA_NACIMIENTO + " TEXT," + // TODO: MANEJO DE FECHA
@@ -99,8 +99,9 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
 
     public void insertarUsuario(Usuario usuario) {
         SQLiteDatabase db = getWritableDatabase();
-        db.beginTransaction();
+
         try {
+            db.beginTransaction();
             ContentValues values = new ContentValues();
             values.put(KEY_USUARIO_CORREO, usuario.getCorreo());
             values.put(KEY_USUARIO_NOMBRE, usuario.getNombre());
@@ -109,7 +110,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             db.insertOrThrow(TABLA_USUARIOS, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.d("ERROR", "Error almacenando usuario en la base de datos");
+            Log.d("ERROR", "Error almacenando usuario en la base de datos: " + e.getMessage());
         } finally {
             db.endTransaction();
         }
@@ -123,22 +124,29 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             db.beginTransaction();
 
-            values.put(KEY_MASCOTAS_ID, mascota.getId());
             values.put(KEY_MASCOTAS_PROPIETARIO, mascota.getPropietario().getCorreo());
             values.put(KEY_MASCOTAS_NOMBRE, mascota.getNombre());
 
             formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-            values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, formateadorDeFecha.format(mascota.getFechaNacimiento()));
-
+            if (mascota.getFechaNacimiento() != null) {
+                values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, formateadorDeFecha.format(mascota.getFechaNacimiento()));
+            } else {
+                values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, (byte[]) null);
+            }
             values.put(KEY_MASCOTAS_TIPO, mascota.getTipo());
             values.put(KEY_MASCOTAS_RAZA, mascota.getRaza());
             values.put(KEY_MASCOTAS_GENERO, mascota.getGenero());
             values.put(KEY_MASCOTAS_ID_TAG, mascota.getIdTag());
-            values.put(KEY_MASCOTAS_FOTO, Utility.getBytes(mascota.getFoto())); // TODO: Obtener arreglo de bytes
+            if (mascota.getFoto() != null) {
+                values.put(KEY_MASCOTAS_FOTO, Utility.getBytes(mascota.getFoto())); // Se obtiene el arreglo de bytes
+            } else {
+                values.put(KEY_MASCOTAS_FOTO, (byte[]) null);
+            }
 
             db.insertOrThrow(TABLA_MASCOTAS, null, values);
             db.setTransactionSuccessful();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             Log.d("ERROR", "Error almacenando mascota en la base de datos");
         } finally {
             db.endTransaction();
