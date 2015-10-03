@@ -1,14 +1,14 @@
 package co.edu.udea.pi.sjm.petted.dao.impl;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.database.Cursor;
 
-import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.SQLite.PettedDataBaseHelper;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
+import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
 
@@ -48,6 +48,20 @@ public class MascotaDAOImpl implements MascotaDAO {
 
     @Override
     public List<Mascota> obtener(Context context) {
-        return null;
+        PettedDataBaseHelper helper;
+        List<Mascota> listaMascotas = new ArrayList<Mascota>();
+        Cursor c;
+        helper = PettedDataBaseHelper.getInstance(context);
+        c = helper.obtenerMastcotas();
+        Mascota m = new Mascota();
+        UsuarioDAO dao = new UsuarioDAOImpl();
+
+        while (c.moveToNext()) {
+            m.setId(c.getInt(0));
+            m.setPropietario(dao.obtenerUsuario(c.getString(1), context));
+            m.setNombre(c.getString(2));
+            listaMascotas.add(m);
+        }
+        return listaMascotas;
     }
 }

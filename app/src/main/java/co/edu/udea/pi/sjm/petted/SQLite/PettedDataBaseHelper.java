@@ -128,15 +128,18 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             values.put(KEY_MASCOTAS_NOMBRE, mascota.getNombre());
 
             formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+
             if (mascota.getFechaNacimiento() != null) {
                 values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, formateadorDeFecha.format(mascota.getFechaNacimiento()));
             } else {
                 values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, (byte[]) null);
             }
+
             values.put(KEY_MASCOTAS_TIPO, mascota.getTipo());
             values.put(KEY_MASCOTAS_RAZA, mascota.getRaza());
             values.put(KEY_MASCOTAS_GENERO, mascota.getGenero());
             values.put(KEY_MASCOTAS_ID_TAG, mascota.getIdTag());
+
             if (mascota.getFoto() != null) {
                 values.put(KEY_MASCOTAS_FOTO, Utility.getBytes(mascota.getFoto())); // Se obtiene el arreglo de bytes
             } else {
@@ -169,6 +172,13 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         } finally {
             db.endTransaction();
         }
+        return c;
+    }
+
+    public Cursor obtenerMastcotas() {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = db.rawQuery(
+                "SELECT * FROM " + TABLA_MASCOTAS, null);
         return c;
     }
 

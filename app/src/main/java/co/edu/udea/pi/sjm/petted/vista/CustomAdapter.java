@@ -20,11 +20,11 @@ import co.edu.udea.pi.sjm.petted.dto.Mascota;
 public class CustomAdapter extends BaseAdapter {
 
     Context context;
-    List<Mascota> listaOpciones;
+    List<Mascota> listaMascotas;
 
-    public CustomAdapter(Context context, List<Mascota> opciones) {
+    public CustomAdapter(Context context, List<Mascota> listaMascotas) {
         this.context = context;
-        this.listaOpciones = opciones;
+        this.listaMascotas = listaMascotas;
     }
 
     // Cambia dependiendo del layout
@@ -69,45 +69,52 @@ public class CustomAdapter extends BaseAdapter {
         holder.tvTipo.setText(m.getTipo());
         holder.tvRaza.setText(m.getRaza());
 
-        switch (position) {
-            case 0:
-                holder.ivImagen.setImageDrawable(context.getResources()
-                        .getDrawable(R.drawable.mascota1));
-                break;
-            case 1:
-                holder.ivImagen.setImageDrawable(context.getResources()
-                        .getDrawable(R.drawable.mascota2));
-                break;
-            case 2:
-                holder.ivImagen.setImageDrawable(context.getResources()
-                        .getDrawable(R.drawable.mascota3));
-                break;
-            case 3:
-                holder.ivImagen.setImageDrawable(context.getResources()
-                        .getDrawable(R.drawable.mascota4));
-                break;
-            default:
-                break;
+        if (m.getFoto() != null) {
+            holder.ivImagen.setImageBitmap(m.getFoto());
+        } else {
+            holder.ivImagen.setImageDrawable(context.getResources()
+                    .getDrawable(R.drawable.mascota1));
         }
+
+//        switch (position) {
+//            case 0:
+//                holder.ivImagen.setImageDrawable(context.getResources()
+//                        .getDrawable(R.drawable.mascota1));
+//                break;
+//            case 1:
+//                holder.ivImagen.setImageDrawable(context.getResources()
+//                        .getDrawable(R.drawable.mascota2));
+//                break;
+//            case 2:
+//                holder.ivImagen.setImageDrawable(context.getResources()
+//                        .getDrawable(R.drawable.mascota3));
+//                break;
+//            case 3:
+//                holder.ivImagen.setImageDrawable(context.getResources()
+//                        .getDrawable(R.drawable.mascota4));
+//                break;
+//            default:
+//                break;
+//        }
         return convertView;
     }
 
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return listaOpciones.size();
+        return listaMascotas.size();
     }
 
     @Override
     public Mascota getItem(int arg0) {
         // TODO Auto-generated method stub
-        return listaOpciones.get(arg0);
+        return listaMascotas.get(arg0);
     }
 
     @Override
     public long getItemId(int arg0) {
         // TODO Auto-generated method stub
-        return listaOpciones.indexOf(getItem(arg0));
+        return listaMascotas.indexOf(getItem(arg0));
     }
 
 }

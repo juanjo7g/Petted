@@ -82,7 +82,7 @@ public class MascotaNuevaActivity extends AppCompatActivity {
         UsuarioDAO dao = new UsuarioDAOImpl();
         MascotaDAO dao1 = new MascotaDAOImpl();
         Mascota m = new Mascota();
-        Usuario u = dao.obtenerUsuario("j@gmail.com", this);
+        Usuario u = dao.obtenerUsuario("", this);
         m.setNombre("Lucas");
         m.setPropietario(u);
 //        m.setRaza(null);

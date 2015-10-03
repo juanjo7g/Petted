@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.R;
+import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
+import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
 import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
@@ -28,6 +30,8 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     ListView lvMascotas;
     CustomAdapter customAdapter;
     ImageButton ibtnNuevaMacota;
+    MascotaDAO dao;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +43,13 @@ public class ListadoMascotasActivity extends AppCompatActivity {
 
         lvMascotas = (ListView) this.findViewById(R.id.lvListaMascotas);
         ibtnNuevaMacota = (ImageButton) this.findViewById(R.id.ibtnNuevaMascota);
-        crearMascotas();
+
+        //crearMascotas();
+        dao = new MascotaDAOImpl();
+        listaMascotas = dao.obtener(this);
         customAdapter = new CustomAdapter(this, listaMascotas);
         lvMascotas.setAdapter(customAdapter);
+
         lvMascotas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -55,10 +63,21 @@ public class ListadoMascotasActivity extends AppCompatActivity {
                 iniciarActividadMascotaNueva();
             }
         });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        dao = new MascotaDAOImpl();
+        listaMascotas = dao.obtener(this);
+        customAdapter = new CustomAdapter(this, listaMascotas);
+        lvMascotas.setAdapter(customAdapter);
     }
 
     public void iniciarActividadMascota(Mascota m) {
         Intent i = new Intent(this, MascotaActivity.class);
+        i.putExtra("mascota", m);
         i.putExtra("nombre", m.getNombre());
         i.putExtra("tipo", m.getTipo());
         i.putExtra("raza", m.getRaza());
@@ -70,7 +89,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         startActivity(i);
     }
 
-    public List<Mascota> crearMascotas() {
+    public void crearMascotas() {
         listaMascotas = new ArrayList<Mascota>();
 
         Mascota m = new Mascota();
@@ -101,7 +120,6 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         m.setRaza("Giuyha");
 
         listaMascotas.add(m);
-        return listaMascotas;
     }
 
 
