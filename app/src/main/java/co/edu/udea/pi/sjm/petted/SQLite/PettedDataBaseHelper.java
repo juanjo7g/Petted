@@ -166,7 +166,23 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             String selection = KEY_USUARIO_CORREO + " = ? ";//WHERE correo = ?
             String selectionArgs[] = new String[]{correo};
             c = db.query(TABLA_USUARIOS, null, selection, selectionArgs, null, null, null);
+        } catch (Exception e) {
+            Log.d("ERROR", "Error");
+        } finally {
+            db.endTransaction();
+        }
+        return c;
+    }
 
+    public Cursor obtenerMascota(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = null;
+
+        db.beginTransaction();
+        try {
+            String selection = KEY_MASCOTAS_ID + " = ? ";//WHERE ID = ?
+            String selectionArgs[] = new String[]{id + ""};
+            c = db.query(TABLA_MASCOTAS, null, selection, selectionArgs, null, null, null);
         } catch (Exception e) {
             Log.d("ERROR", "Error");
         } finally {

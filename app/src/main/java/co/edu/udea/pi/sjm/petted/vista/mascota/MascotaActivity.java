@@ -20,8 +20,11 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import co.edu.udea.pi.sjm.petted.R;
+import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
+import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 
 public class MascotaActivity extends AppCompatActivity implements ActionBar.TabListener {
@@ -41,6 +44,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
      */
     ViewPager mViewPager;
     private Mascota mascota;
+    private MascotaDAO dao;
 
     public Mascota getMascota() {
         return mascota;
@@ -105,9 +109,13 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         }
 
         mascota = new Mascota();
-        mascota.setNombre(this.getIntent().getStringExtra("nombre"));
-        mascota.setTipo(this.getIntent().getStringExtra("tipo"));
-        mascota.setRaza(this.getIntent().getStringExtra("raza"));
+//        mascota.setNombre(((Mascota) this.getIntent().getSerializableExtra("mascota")).getNombre());
+        dao = new MascotaDAOImpl();
+        mascota = dao.obtenerMascota(Integer.parseInt(this.getIntent().getStringExtra("id")), this);
+        if (mascota == null) {
+            Toast.makeText(MascotaActivity.this, "ALGO ANDA MAL", Toast.LENGTH_SHORT).show();
+        }
+        Toast.makeText(MascotaActivity.this, mascota.getNombre(), Toast.LENGTH_SHORT).show();
     }
 
 

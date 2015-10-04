@@ -17,7 +17,7 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 
     @Override
     public void insertarUsuario(Usuario usuario, Context context) {
-        PettedDataBaseHelper helper;
+        PettedDataBaseHelper helper = null;
         try {
             helper = PettedDataBaseHelper.getInstance(context);
             helper.insertarUsuario(usuario);

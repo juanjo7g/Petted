@@ -2,6 +2,9 @@ package co.edu.udea.pi.sjm.petted.vista;
 
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -23,6 +26,7 @@ import java.util.Locale;
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
 import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
+import co.edu.udea.pi.sjm.petted.dao.Utility;
 import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dao.impl.UsuarioDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
@@ -34,9 +38,10 @@ public class MascotaNuevaActivity extends AppCompatActivity {
     private EditText etFechaNacimiento;
     private DatePickerDialog electorDeFechaDialogo;
     private SimpleDateFormat formateadorDeFecha;
-    Spinner spinnerTipoMascota;
-    Spinner spinnerGenero;
-    Button btnAgregarMascota;
+    private Spinner spinnerTipoMascota;
+    private Spinner spinnerGenero;
+    private Button btnAgregarMascota;
+    private EditText etNombreMascota;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +51,8 @@ public class MascotaNuevaActivity extends AppCompatActivity {
         etFechaNacimiento = (EditText) findViewById(R.id.etFechaNacimiento);
         spinnerTipoMascota = (Spinner) findViewById(R.id.spinnerTipoMascota);
         spinnerGenero = (Spinner) findViewById(R.id.spinnerGenero);
+        etNombreMascota = (EditText) findViewById(R.id.etNombreMascota);
+
 //        btnAgregarMascota = (Button) findViewById(R.id.btnAgregarMascota);
 //
 //        btnAgregarMascota.setOnClickListener(new View.OnClickListener() {
@@ -81,12 +88,27 @@ public class MascotaNuevaActivity extends AppCompatActivity {
     public void onClickAñadirMascota(View view) {
         UsuarioDAO dao = new UsuarioDAOImpl();
         MascotaDAO dao1 = new MascotaDAOImpl();
-        Mascota m = new Mascota();
+        Mascota m;
         Usuario u;
         u = (Usuario) this.getIntent().getSerializableExtra("propietario");
-        m.setNombre("Lucas");
+
+        m = new Mascota();
+        m.setNombre(etNombreMascota.getText().toString());
         m.setPropietario(u);
+        m.setFoto(Utility.resizeImage(this, R.drawable.mascota1, 300, 300));
+
         dao1.insertarMascota(m, this);
+
+
+//        m = new Mascota();
+//        m.setNombre(etNombreMascota.getText().toString()+"2");
+//        m.setPropietario(u);
+//        m.setFoto(BitmapFactory.decodeResource(this.getResources(),
+//                R.drawable.mascota1));
+//        m.setFoto(Utility.resizeImage(this, R.drawable.mascota2, 300, 300));
+
+//        dao1.insertarMascota(m, this);
+
         Toast.makeText(MascotaNuevaActivity.this, m.getNombre(), Toast.LENGTH_SHORT).show();
         finish();
     }

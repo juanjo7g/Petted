@@ -72,7 +72,7 @@ public class CustomAdapter extends BaseAdapter {
             holder.ivImagen.setImageBitmap(m.getFoto());
         } else {
             holder.ivImagen.setImageDrawable(context.getResources()
-                    .getDrawable(R.drawable.mascota1));
+                    .getDrawable(R.drawable.mascota2));
         }
 
 //        switch (position) {

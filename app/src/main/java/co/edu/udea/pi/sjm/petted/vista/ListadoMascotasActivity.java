@@ -4,6 +4,7 @@ package co.edu.udea.pi.sjm.petted.vista;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +31,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     private CustomAdapter customAdapter;
     private ImageButton ibtnNuevaMacota;
     private MascotaDAO dao;
-    private Usuario u;
+    private Usuario usuarioActual;
 
 
     @Override
@@ -38,15 +39,15 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado_mascotas);
 
-        u = (Usuario) this.getIntent().getSerializableExtra("usuario");
-        Toast.makeText(ListadoMascotasActivity.this, "BIENVENIDO " + u.getNombre(), Toast.LENGTH_LONG).show();
+        usuarioActual = (Usuario) this.getIntent().getSerializableExtra("usuario");
+        Toast.makeText(ListadoMascotasActivity.this, "BIENVENIDO " + usuarioActual.getNombre(), Toast.LENGTH_LONG).show();
 
         lvMascotas = (ListView) this.findViewById(R.id.lvListaMascotas);
         ibtnNuevaMacota = (ImageButton) this.findViewById(R.id.ibtnNuevaMascota);
 
         //crearMascotas();
         dao = new MascotaDAOImpl();
-        listaMascotas = dao.obtenerMascotas(u,this);
+        listaMascotas = dao.obtenerMascotas(usuarioActual, this);
         customAdapter = new CustomAdapter(this, listaMascotas);
         lvMascotas.setAdapter(customAdapter);
 
@@ -70,23 +71,20 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         dao = new MascotaDAOImpl();
-        listaMascotas = dao.obtenerMascotas(u, this);
+        listaMascotas = dao.obtenerMascotas(usuarioActual, this);
         customAdapter = new CustomAdapter(this, listaMascotas);
         lvMascotas.setAdapter(customAdapter);
     }
 
     public void iniciarActividadMascota(Mascota m) {
         Intent i = new Intent(this, MascotaActivity.class);
-        i.putExtra("mascota", m);
-        i.putExtra("nombre", m.getNombre());
-        i.putExtra("tipo", m.getTipo());
-        i.putExtra("raza", m.getRaza());
+        i.putExtra("id", m.getId() + "");
         startActivity(i);
     }
 
     public void iniciarActividadMascotaNueva() {
         Intent i = new Intent(this, MascotaNuevaActivity.class);
-        i.putExtra("propietario", u);
+        i.putExtra("propietario", usuarioActual);
         startActivity(i);
     }
 
