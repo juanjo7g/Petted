@@ -6,7 +6,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="co.edu.udea.pi.sjm.petted.vista.MascotaNuevaActivity">
+    tools:context="co.edu.udea.pi.sjm.petted.vista.mascota_nueva.MascotaNuevaActivity">
 
     <EditText
         android:id="@+id/etNombreMascota"
@@ -20,15 +20,31 @@
         android:inputType="textCapWords" />
 
     <EditText
+        android:layout_marginTop="16dp"
         android:id="@+id/etFechaNacimiento"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/etNombreMascota"
-        android:layout_marginTop="20dp"
-        android:hint="Fecha de nacimiento" />
+        android:layout_below="@id/etNombreMascota"
+        android:hint="Fecha de nacimiento"
+        android:editable="false"
+        android:focusable="false"
+        android:layout_toLeftOf="@+id/ibFechaNacimiento"
+        android:layout_toStartOf="@+id/ibFechaNacimiento" />
 
+    <ImageButton
+        android:id="@+id/ibFechaNacimiento"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/oval"
+        android:elevation="5dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="5dp"
+        android:src="@mipmap/ic_calendar_white"
+        android:layout_alignBottom="@+id/etFechaNacimiento"
+        android:layout_alignRight="@+id/etNombreMascota"
+        android:layout_alignEnd="@+id/etNombreMascota" />
 
     <TextView
         android:id="@+id/tvTipoMascota"
@@ -49,15 +65,14 @@
         android:layout_below="@+id/tvTipoMascota"
         android:layout_marginTop="10dp" />
 
-    <EditText
-        android:id="@+id/etRaza"
+    <Spinner
+        android:id="@+id/spinnerRazaMascota"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/spinnerTipoMascota"
-        android:layout_marginTop="10dp"
-        android:hint="Raza" />
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:id="@+id/tvGenero"
@@ -65,7 +80,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/etRaza"
+        android:layout_below="@+id/spinnerRazaMascota"
         android:layout_marginTop="20dp"
         android:text="Genero:" />
 

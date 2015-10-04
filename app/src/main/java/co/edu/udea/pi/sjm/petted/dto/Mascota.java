@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * Created by Juan on 20/09/2015.
  */
-public class Mascota implements Serializable {
+public class Mascota {
 
     private int id; //pk autoincrementable
     private Usuario propietario;

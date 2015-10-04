@@ -28,10 +28,10 @@
             android:name=".vista.mascota.MascotaActivity"
             android:label="@string/title_activity_mascota" />
         <activity
-            android:name=".vista.MascotaNuevaActivity"
+            android:name=".vista.mascota_nueva.MascotaNuevaActivity"
             android:label="@string/title_activity_mascota_nueva" />
         <activity
-            android:name=".vista.AsociarTagNFCActivity"
+            android:name=".vista.mascota.AsociarTagNFCActivity"
             android:label="@string/title_activity_asociar_tag_nfc" >
         </activity>
         <activity

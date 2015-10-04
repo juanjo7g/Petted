@@ -18,18 +18,70 @@
     <string name="action_eliminar">Eliminar Mascota</string>
     <string name="title_activity_mascota_nueva">Mascota Nueva</string>
     <string name="btn_agregar_mascota">Añadir Mascota</string>
+
     <style name="etSeleccionarFechaNacimiento">Seleccionar la fecha de nacimiento</style>
+
     <string-array name="TiposDeMascotas">
-        <item>Perro</item>
         <item>Gato</item>
-        <item>Vaca</item>
-        <item>Caballo</item>
+        <item>Perro</item>
+        <item>Ave</item>
+        <item>Reptil</item>
+        <item>Otro</item>
+    </string-array>
+    <string-array name="RazasDeGatos">
+        <item>Angora Turco</item>
+        <item>Azul Ruso</item>
+        <item>Bosque de Noruega</item>
+        <item>Europeo de pelo corto</item>
+        <item>Maine Coon</item>
+        <item>Persa</item>
+        <item>Peterbald</item>
+        <item>Scottish Fold</item>
+        <item>Siamés</item>
+        <item>Sphynx</item>
+        <item>Otro</item>
+    </string-array>
+    <string-array name="RazasDePerros">
+        <item>Labrador</item>
+        <item>Chihuahua</item>
+        <item>Dálmata</item>
+        <item>Golden Retriever</item>
+        <item>Boxer</item>
+        <item>Border Collie</item>
+        <item>Schnauzer</item>
+        <item>Cocker Spaniel</item>
+        <item>Collie</item>
+        <item>Beagle</item>
+        <item>Otro</item>
+    </string-array>
+    <string-array name="RazasDeAves">
+        <item>Periquito</item>
+        <item>Diamante Mandarin</item>
+        <item>Diamante Gould</item>
+        <item>Canario</item>
+        <item>Jilguero</item>
+        <item>Agaporni</item>
+        <item>Forpus</item>
+        <item>Ninfa</item>
+        <item>Kakarikis</item>
+        <item>Cacatua</item>
+        <item>Otro</item>
+    </string-array>
+    <string-array name="RazasDeReptiles">
+        <item>Iguana</item>
+        <item>Gecko</item>
+        <item>Dálmata</item>
+        <item>Camaleón</item>
+        <item>Otro</item>
+    </string-array>
+    <string-array name="RazasOtro">
         <item>Otro</item>
     </string-array>
     <string-array name="Generos">
-        <item>Femenino</item>
-        <item>Masculino</item>
+        <item>Hembra</item>
+        <item>Macho</item>
     </string-array>
+
     <string name="title_activity_asociar_tag_nfc">AsociarTagNFCActivity</string>
     <string name="title_activity_creacion_usuario">CreacionUsuarioActivity</string>
     <string name="hintNombreUsuario">Nombre de usuario</string>
@@ -39,4 +91,12 @@
     <string name="crear">Crear</string>
     <string name="errorUsuarioNoExiste">Error, correo no registrado.</string>
     <string name="errorContraseña">Error, contraseña incorrecta.</string>
+    <string name="action_save">Guardar</string>
+    <string name="cliente_label">Cliente</string>
+    <string name="producto_label">Producto</string>
+    <string name="fecha_label">Fecha</string>
+    <string name="prioridad_label">Prioridad</string>
+    <string name="notas_label">Notas</string>
+    <string name="notas_hint">Notas hint</string>
+    <string name="action_guardar">Guardar</string>
 </resources>

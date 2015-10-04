@@ -1,4 +1,4 @@
-package co.edu.udea.pi.sjm.petted.vista;
+package co.edu.udea.pi.sjm.petted.vista.mascota;
 
 import android.content.Intent;
 import android.nfc.NfcAdapter;

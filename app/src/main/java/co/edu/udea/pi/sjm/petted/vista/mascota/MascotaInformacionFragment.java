@@ -6,18 +6,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.R;
-import co.edu.udea.pi.sjm.petted.vista.AsociarTagNFCActivity;
 
 /**
  * Created by Juan on 20/09/2015.
@@ -30,6 +28,7 @@ public class MascotaInformacionFragment extends Fragment {
     Button btnAsociarTagNFC;
     List<String> listaProximosEventos;
     ListView lvProximosEventos;
+    ImageView ivFoto;
 
     public MascotaInformacionFragment(){
     }
@@ -48,11 +47,14 @@ public class MascotaInformacionFragment extends Fragment {
         tvRaza = (TextView) rootView.findViewById(R.id.tvRaza);
         btnAsociarTagNFC = (Button) rootView.findViewById(R.id.btnAsociarTagNFC);
         lvProximosEventos = (ListView) rootView.findViewById(R.id.lvProximosEventos);
+        ivFoto = (ImageView) rootView.findViewById(R.id.ivFoto);
 
         MascotaActivity ma = (MascotaActivity) getActivity();
         tvNombre.setText(ma.getMascota().getNombre());
         tvTipo.setText(ma.getMascota().getTipo());
         tvRaza.setText(ma.getMascota().getRaza());
+        ivFoto.setImageBitmap(ma.getMascota().getFoto());
+
         btnAsociarTagNFC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

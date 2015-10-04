@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import co.edu.udea.pi.sjm.petted.R;
+import co.edu.udea.pi.sjm.petted.Validacion;
 import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
 import co.edu.udea.pi.sjm.petted.dao.impl.UsuarioDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
@@ -36,7 +37,7 @@ public class CreacionUsuarioActivity extends AppCompatActivity {
         u.setCorreo(etCorreoElectronico.getText().toString());
         u.setNombre(etNombreUsuario.getText().toString());
         u.setContraseña(etContraseña.getText().toString());
-        switch (validarDatos(u)) {
+        switch (Validacion.validarUsuario(u)) {
             case 0:
                 dao = new UsuarioDAOImpl();
                 dao.insertarUsuario(u, this);
@@ -51,9 +52,6 @@ public class CreacionUsuarioActivity extends AppCompatActivity {
         }
     }
 
-    private int validarDatos(Usuario u) {
-        return 0;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

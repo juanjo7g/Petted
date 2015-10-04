@@ -4,7 +4,6 @@ package co.edu.udea.pi.sjm.petted.vista;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +21,7 @@ import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
 import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
+import co.edu.udea.pi.sjm.petted.vista.mascota_nueva.MascotaNuevaActivity;
 
 public class ListadoMascotasActivity extends AppCompatActivity {
 

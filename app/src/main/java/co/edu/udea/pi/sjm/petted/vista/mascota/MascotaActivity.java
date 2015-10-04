@@ -109,13 +109,8 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         }
 
         mascota = new Mascota();
-//        mascota.setNombre(((Mascota) this.getIntent().getSerializableExtra("mascota")).getNombre());
         dao = new MascotaDAOImpl();
         mascota = dao.obtenerMascota(Integer.parseInt(this.getIntent().getStringExtra("id")), this);
-        if (mascota == null) {
-            Toast.makeText(MascotaActivity.this, "ALGO ANDA MAL", Toast.LENGTH_SHORT).show();
-        }
-        Toast.makeText(MascotaActivity.this, mascota.getNombre(), Toast.LENGTH_SHORT).show();
     }
 
 
