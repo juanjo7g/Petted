@@ -45,6 +45,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
     ViewPager mViewPager;
     private Mascota mascota;
     private MascotaDAO dao;
+    boolean notificaciones;
 
     public Mascota getMascota() {
         return mascota;
@@ -95,6 +96,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         iconos.add(R.mipmap.ic_medical_white);
         iconos.add(R.mipmap.ic_vacuna_white);
 
+        notificaciones = true;
 
         // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
@@ -128,10 +130,26 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
-            return true;
-        }*/
+        String s = "";
+        switch (id) {
+            case R.id.action_notificaciones:
+                s = "notificaciones";
+                if (notificaciones){
+                    item.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_off_white));
+                    notificaciones = false;
+                }else{
+                    item.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_white));
+                    notificaciones = true;
+                }
+                break;
+            case R.id.action_editar:
+                s = "Editar";
+                break;
+            case R.id.action_eliminar:
+                s = "Eliminar";
+                break;
+        }
+        Toast.makeText(MascotaActivity.this, s, Toast.LENGTH_SHORT).show();
 
         return super.onOptionsItemSelected(item);
     }

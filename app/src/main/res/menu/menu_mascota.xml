@@ -2,10 +2,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity">
-    <item android:id="@+id/action_notificaciones" android:title="@string/action_notificaciones"
-        android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_editar" android:title="@string/action_editar"
-        android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_eliminar" android:title="@string/action_eliminar"
-        android:orderInCategory="100" app:showAsAction="never" />
+    <item
+        android:id="@+id/action_notificaciones"
+        android:icon="@mipmap/ic_notifications_white"
+        android:orderInCategory="100"
+        android:title="@string/action_notificaciones"
+        app:showAsAction="ifRoom"
+        />
+    <item
+        android:id="@+id/action_editar"
+        android:icon="@mipmap/ic_create_white"
+        android:orderInCategory="100"
+        android:title="@string/action_editar"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_eliminar"
+        android:icon="@mipmap/ic_delete_white"
+        android:orderInCategory="100"
+        android:title="@string/action_eliminar"
+        app:showAsAction="ifRoom" />
 </menu>
