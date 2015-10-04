@@ -42,17 +42,31 @@ public class MascotaDAOImpl implements MascotaDAO {
     }
 
     @Override
-    public List<Mascota> obtenerMasctoras(Usuario usuario, Context context) {
-        return null;
+    public List<Mascota> obtenerMascotas(Usuario usuario, Context context) {
+        PettedDataBaseHelper helper;
+        List<Mascota> listaMascotas = new ArrayList<>();
+        Cursor c;
+        helper = PettedDataBaseHelper.getInstance(context);
+        c = helper.obtenerMascotas(usuario);
+        Mascota m = new Mascota();
+        UsuarioDAO dao = new UsuarioDAOImpl();
+
+        while (c.moveToNext()) {
+            m.setId(c.getInt(0));
+            m.setPropietario(dao.obtenerUsuario(c.getString(1), context));
+            m.setNombre(c.getString(2));
+            listaMascotas.add(m);
+        }
+        return listaMascotas;
     }
 
     @Override
-    public List<Mascota> obtener(Context context) {
+    public List<Mascota> obtenerMascotas(Context context) {
         PettedDataBaseHelper helper;
-        List<Mascota> listaMascotas = new ArrayList<Mascota>();
+        List<Mascota> listaMascotas = new ArrayList<>();
         Cursor c;
         helper = PettedDataBaseHelper.getInstance(context);
-        c = helper.obtenerMastcotas();
+        c = helper.obtenerMascotas();
         Mascota m = new Mascota();
         UsuarioDAO dao = new UsuarioDAOImpl();
 

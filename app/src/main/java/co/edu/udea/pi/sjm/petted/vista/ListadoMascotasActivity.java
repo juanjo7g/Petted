@@ -2,7 +2,6 @@ package co.edu.udea.pi.sjm.petted.vista;
 
 
 import android.content.Intent;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -26,11 +25,12 @@ import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
 public class ListadoMascotasActivity extends AppCompatActivity {
 
 
-    List<Mascota> listaMascotas;
-    ListView lvMascotas;
-    CustomAdapter customAdapter;
-    ImageButton ibtnNuevaMacota;
-    MascotaDAO dao;
+    private List<Mascota> listaMascotas;
+    private ListView lvMascotas;
+    private CustomAdapter customAdapter;
+    private ImageButton ibtnNuevaMacota;
+    private MascotaDAO dao;
+    private Usuario u;
 
 
     @Override
@@ -38,7 +38,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado_mascotas);
 
-        Usuario u = (Usuario) this.getIntent().getSerializableExtra("usuario");
+        u = (Usuario) this.getIntent().getSerializableExtra("usuario");
         Toast.makeText(ListadoMascotasActivity.this, "BIENVENIDO " + u.getNombre(), Toast.LENGTH_LONG).show();
 
         lvMascotas = (ListView) this.findViewById(R.id.lvListaMascotas);
@@ -46,7 +46,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
 
         //crearMascotas();
         dao = new MascotaDAOImpl();
-        listaMascotas = dao.obtener(this);
+        listaMascotas = dao.obtenerMascotas(u,this);
         customAdapter = new CustomAdapter(this, listaMascotas);
         lvMascotas.setAdapter(customAdapter);
 
@@ -70,7 +70,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         dao = new MascotaDAOImpl();
-        listaMascotas = dao.obtener(this);
+        listaMascotas = dao.obtenerMascotas(u, this);
         customAdapter = new CustomAdapter(this, listaMascotas);
         lvMascotas.setAdapter(customAdapter);
     }
@@ -86,9 +86,11 @@ public class ListadoMascotasActivity extends AppCompatActivity {
 
     public void iniciarActividadMascotaNueva() {
         Intent i = new Intent(this, MascotaNuevaActivity.class);
+        i.putExtra("propietario", u);
         startActivity(i);
     }
 
+    @Deprecated
     public void crearMascotas() {
         listaMascotas = new ArrayList<Mascota>();
 
@@ -99,6 +101,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         m.setRaza("Salchicha");
 
         listaMascotas.add(m);
+
         m = new Mascota();
 
         m.setNombre("Uran");

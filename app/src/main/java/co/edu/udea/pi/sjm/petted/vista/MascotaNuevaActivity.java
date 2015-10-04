@@ -82,15 +82,10 @@ public class MascotaNuevaActivity extends AppCompatActivity {
         UsuarioDAO dao = new UsuarioDAOImpl();
         MascotaDAO dao1 = new MascotaDAOImpl();
         Mascota m = new Mascota();
-        Usuario u = dao.obtenerUsuario("", this);
+        Usuario u;
+        u = (Usuario) this.getIntent().getSerializableExtra("propietario");
         m.setNombre("Lucas");
         m.setPropietario(u);
-//        m.setRaza(null);
-//        m.setTipo(null);
-//        m.setFechaNacimiento(new Date(2000,10,01));
-//        m.setFoto(null);
-//        m.setGenero(null);
-//        m.setIdTag(null);
         dao1.insertarMascota(m, this);
         Toast.makeText(MascotaNuevaActivity.this, m.getNombre(), Toast.LENGTH_SHORT).show();
         finish();

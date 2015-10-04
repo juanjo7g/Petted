@@ -175,11 +175,22 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor obtenerMastcotas() {
+    public Cursor obtenerMascotas() {
         SQLiteDatabase db = getWritableDatabase();
         Cursor c = db.rawQuery(
                 "SELECT * FROM " + TABLA_MASCOTAS, null);
         return c;
     }
+
+    public Cursor obtenerMascotas(Usuario u) {
+        SQLiteDatabase db = getWritableDatabase();
+        String correo = u.getCorreo();
+        Cursor c;
+        String selection = KEY_MASCOTAS_PROPIETARIO + " = ? ";//WHERE propietario.correo = ?
+        String selectionArgs[] = new String[]{correo};
+        c = db.query(TABLA_MASCOTAS, null, selection, selectionArgs, null, null, null);
+        return c;
+    }
+
 
 }

@@ -28,8 +28,7 @@ public class CustomAdapter extends BaseAdapter {
     }
 
     // Cambia dependiendo del layout
-    private class viewHolder {
-
+    private class ViewHolder {
         ImageView ivImagen;
         TextView tvNombre;
         TextView tvTipo;
@@ -39,7 +38,7 @@ public class CustomAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        viewHolder holder = null;
+        ViewHolder holder = null;
 
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -48,7 +47,7 @@ public class CustomAdapter extends BaseAdapter {
 
             convertView = mInflater.inflate(R.layout.item_mascota_lista, null);
 
-            holder = new viewHolder();
+            holder = new ViewHolder();
 
             // No estamos en un activity
             holder.ivImagen = (ImageView) convertView.findViewById(R.id.ivFoto);
@@ -60,7 +59,7 @@ public class CustomAdapter extends BaseAdapter {
             convertView.setTag(holder);
 
         } else {
-            holder = (viewHolder) convertView.getTag();
+            holder = (ViewHolder) convertView.getTag();
         }
 
         Mascota m = getItem(position);
@@ -101,19 +100,16 @@ public class CustomAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
         return listaMascotas.size();
     }
 
     @Override
     public Mascota getItem(int arg0) {
-        // TODO Auto-generated method stub
         return listaMascotas.get(arg0);
     }
 
     @Override
     public long getItemId(int arg0) {
-        // TODO Auto-generated method stub
         return listaMascotas.indexOf(getItem(arg0));
     }
 
