@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -134,10 +136,10 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         switch (id) {
             case R.id.action_notificaciones:
                 s = "notificaciones";
-                if (notificaciones){
+                if (notificaciones) {
                     item.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_off_white));
                     notificaciones = false;
-                }else{
+                } else {
                     item.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_white));
                     notificaciones = true;
                 }
@@ -146,7 +148,22 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
                 s = "Editar";
                 break;
             case R.id.action_eliminar:
-                s = "Eliminar";
+                new AlertDialog.Builder(this)
+                        .setTitle("Eliminar mascota")
+                        .setMessage("¿Desea eliminar a " + mascota.getNombre() + "?")
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dao.eliminarMascota(mascota, MascotaActivity.this);
+                                Toast.makeText(MascotaActivity.this, "Mascota eliminada", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_delete)
+                        .show();
                 break;
         }
         Toast.makeText(MascotaActivity.this, s, Toast.LENGTH_SHORT).show();

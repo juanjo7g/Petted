@@ -207,5 +207,9 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public void eliminarMascota(int id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLA_MASCOTAS, KEY_MASCOTAS_ID + "=" + id, null);
+    }
 
 }

@@ -20,31 +20,31 @@
         android:inputType="textCapWords" />
 
     <EditText
-        android:layout_marginTop="16dp"
         android:id="@+id/etFechaNacimiento"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@id/etNombreMascota"
-        android:hint="Fecha de nacimiento"
+        android:layout_marginTop="16dp"
+        android:layout_toLeftOf="@+id/ibFechaNacimiento"
+        android:layout_toStartOf="@+id/ibFechaNacimiento"
         android:editable="false"
         android:focusable="false"
-        android:layout_toLeftOf="@+id/ibFechaNacimiento"
-        android:layout_toStartOf="@+id/ibFechaNacimiento" />
+        android:hint="Fecha de nacimiento" />
 
     <ImageButton
         android:id="@+id/ibFechaNacimiento"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/oval"
-        android:elevation="5dp"
+        android:layout_alignBottom="@+id/etFechaNacimiento"
+        android:layout_alignEnd="@+id/etNombreMascota"
+        android:layout_alignRight="@+id/etNombreMascota"
         android:layout_marginLeft="24dp"
         android:layout_marginRight="5dp"
-        android:src="@mipmap/ic_calendar_white"
-        android:layout_alignBottom="@+id/etFechaNacimiento"
-        android:layout_alignRight="@+id/etNombreMascota"
-        android:layout_alignEnd="@+id/etNombreMascota" />
+        android:background="@drawable/oval"
+        android:elevation="5dp"
+        android:src="@mipmap/ic_calendar_white" />
 
     <TextView
         android:id="@+id/tvTipoMascota"
@@ -94,18 +94,28 @@
         android:layout_marginTop="10dp" />
 
     <Button
-        android:id="@+id/btnAgregarMascota"
+        android:id="@+id/btnFoto"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignEnd="@+id/tvTipoMascota"
+        android:layout_alignRight="@+id/tvTipoMascota"
         android:layout_below="@+id/spinnerGenero"
         android:layout_marginTop="24dp"
         android:background="@color/ColorPrimary"
-        android:onClick="onClickAñadirMascota"
         android:padding="12dp"
-        android:text="@string/btn_agregar_mascota"
+        android:text="Foto"
         android:textColor="@color/blanco" />
+
+    <ImageView
+        android:id="@+id/ivFotoPrevia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/btnFoto"
+        android:layout_alignEnd="@+id/etFechaNacimiento"
+        android:layout_alignRight="@+id/etFechaNacimiento"
+        android:layout_alignTop="@+id/btnFoto"
+        android:layout_toEndOf="@+id/btnFoto"
+        android:layout_toRightOf="@+id/btnFoto" />
     />
 
 </RelativeLayout>

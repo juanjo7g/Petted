@@ -58,7 +58,10 @@ public class MascotaDAOImpl implements MascotaDAO {
 
     @Override
     public void eliminarMascota(Mascota mascota, Context context) {
-
+        PettedDataBaseHelper helper;
+        int id = mascota.getId();
+        helper = PettedDataBaseHelper.getInstance(context);
+        helper.eliminarMascota(id);
     }
 
     @Override
