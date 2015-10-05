@@ -104,7 +104,8 @@
         android:background="@color/ColorPrimary"
         android:padding="12dp"
         android:text="Foto"
-        android:textColor="@color/blanco" />
+        android:textColor="@color/blanco"
+        android:onClick="onClickFoto"/>
 
     <ImageView
         android:id="@+id/ivFotoPrevia"
