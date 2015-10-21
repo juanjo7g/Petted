@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.R;
+import co.edu.udea.pi.sjm.petted.util.Utility;
 
 /**
  * Created by Juan on 20/09/2015.
@@ -53,7 +54,7 @@ public class MascotaInformacionFragment extends Fragment {
         tvNombre.setText(ma.getMascota().getNombre());
         tvTipo.setText(ma.getMascota().getTipo());
         tvRaza.setText(ma.getMascota().getRaza());
-        ivFoto.setImageBitmap(ma.getMascota().getFoto());
+        ivFoto.setImageBitmap(Utility.getFoto(ma.getMascota().getFoto()));
 
         btnAsociarTagNFC.setOnClickListener(new View.OnClickListener() {
             @Override

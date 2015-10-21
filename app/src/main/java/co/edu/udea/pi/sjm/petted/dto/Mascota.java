@@ -1,17 +1,12 @@
 package co.edu.udea.pi.sjm.petted.dto;
 
-import android.graphics.Bitmap;
-
 import java.io.Serializable;
-
-import java.sql.Blob;
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
  * Created by Juan on 20/09/2015.
  */
-public class Mascota {
+public class Mascota implements Serializable {
 
     private int id; //pk autoincrementable
     private Usuario propietario;
@@ -21,7 +16,7 @@ public class Mascota {
     private String raza;
     private String genero;
     private String idTag;
-    private Bitmap foto;
+    private byte[] foto;
 
     public Mascota() {
     }
@@ -90,11 +85,11 @@ public class Mascota {
         this.idTag = idTag;
     }
 
-    public Bitmap getFoto() {
+    public byte[] getFoto() {
         return foto;
     }
 
-    public void setFoto(Bitmap foto) {
+    public void setFoto(byte[] foto) {
         this.foto = foto;
     }
 }

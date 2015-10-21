@@ -79,6 +79,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     public void iniciarActividadMascota(Mascota m) {
         Intent i = new Intent(this, MascotaActivity.class);
         i.putExtra("id", m.getId() + "");
+        i.putExtra("mascota", m);
         startActivity(i);
     }
 

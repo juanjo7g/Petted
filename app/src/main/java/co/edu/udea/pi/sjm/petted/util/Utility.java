@@ -1,4 +1,4 @@
-package co.edu.udea.pi.sjm.petted;
+package co.edu.udea.pi.sjm.petted.util;
 
 import java.io.ByteArrayOutputStream;
 

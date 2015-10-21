@@ -7,16 +7,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,20 +25,18 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
 import co.edu.udea.pi.sjm.petted.R;
-import co.edu.udea.pi.sjm.petted.Validacion;
+import co.edu.udea.pi.sjm.petted.util.Validacion;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
-import co.edu.udea.pi.sjm.petted.Utility;
+import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
@@ -186,7 +181,7 @@ public class MascotaNuevaActivity extends AppCompatActivity {
         m = new Mascota();
         m.setNombre(etNombreMascota.getText().toString());
         m.setPropietario(u);
-        m.setFoto(Utility.resizeImage(this, R.drawable.mascota1, 300, 300));
+        m.setFoto(Utility.getBytes(Utility.resizeImage(this, R.drawable.mascota1, 300, 300)));
 
         switch (Validacion.validarMascota(m)) {
             case 0:
@@ -208,9 +203,9 @@ public class MascotaNuevaActivity extends AppCompatActivity {
         m.setNombre(etNombreMascota.getText().toString());
         m.setPropietario(u);
         if (foto != null) {
-            m.setFoto(Utility.resizeImage(foto, 300, 300));
+            m.setFoto(Utility.getBytes(Utility.resizeImage(foto, 300, 300)));
         } else {
-            m.setFoto(Utility.resizeImage(this, R.drawable.mascota1, 300, 300));
+            m.setFoto(Utility.getBytes(Utility.resizeImage(this, R.drawable.mascota1, 300, 300)));
         }
         switch (Validacion.validarMascota(m)) {
             case 0:

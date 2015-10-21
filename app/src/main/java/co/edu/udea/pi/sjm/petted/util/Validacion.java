@@ -1,4 +1,4 @@
-package co.edu.udea.pi.sjm.petted;
+package co.edu.udea.pi.sjm.petted.util;
 
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;

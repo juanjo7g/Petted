@@ -13,6 +13,7 @@ import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
+import co.edu.udea.pi.sjm.petted.util.Utility;
 
 /**
  * Created by Juan on 20/09/2015.
@@ -69,7 +70,7 @@ public class CustomAdapter extends BaseAdapter {
         holder.tvRaza.setText(m.getRaza());
 
         if (m.getFoto() != null) {
-            holder.ivImagen.setImageBitmap(m.getFoto());
+            holder.ivImagen.setImageBitmap(Utility.getFoto(m.getFoto()));
         } else {
             holder.ivImagen.setImageDrawable(context.getResources()
                     .getDrawable(R.drawable.mascota2));

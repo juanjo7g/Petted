@@ -12,7 +12,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import co.edu.udea.pi.sjm.petted.Utility;
+import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
 
@@ -140,7 +140,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             values.put(KEY_MASCOTAS_ID_TAG, mascota.getIdTag());
 
             if (mascota.getFoto() != null) {
-                values.put(KEY_MASCOTAS_FOTO, Utility.getBytes(mascota.getFoto())); // Se obtiene el arreglo de bytes
+                values.put(KEY_MASCOTAS_FOTO, mascota.getFoto()); // Se obtiene el arreglo de bytes
             } else {
                 values.put(KEY_MASCOTAS_FOTO, (byte[]) null);
             }
