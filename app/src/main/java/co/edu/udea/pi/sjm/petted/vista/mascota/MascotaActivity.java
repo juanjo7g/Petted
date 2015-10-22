@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -20,6 +22,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -28,6 +31,7 @@ import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
 import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
+import co.edu.udea.pi.sjm.petted.vista.mascota_nueva.MascotaFormularioActivity;
 
 public class MascotaActivity extends AppCompatActivity implements ActionBar.TabListener {
 
@@ -44,10 +48,12 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    ViewPager mViewPager;
+    private ViewPager mViewPager;
     private Mascota mascota;
     private MascotaDAO dao;
-    boolean notificaciones;
+    private boolean notificaciones;
+    private MenuItem miNotificaciones;
+    private String REFRESCAR;
 
     public Mascota getMascota() {
         return mascota;
@@ -67,7 +73,6 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-//        actionBar.
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -76,6 +81,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+
 
         // When swiping between different sections, select the corresponding
         // tab. We can also use ActionBar.Tab#select() to do this if we have
@@ -98,8 +104,6 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         iconos.add(R.mipmap.ic_medical_white);
         iconos.add(R.mipmap.ic_vacuna_white);
 
-        notificaciones = true;
-
         // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
             // Create a tab with text corresponding to the page title defined by
@@ -114,14 +118,25 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
 
         mascota = new Mascota();
         dao = new MascotaDAOImpl();
-        mascota = dao.obtenerMascota(Integer.parseInt(this.getIntent().getStringExtra("id")), this);
-    }
+        //mascota = (Mascota) this.getIntent().getExtras().getSerializable("mascota");
+        mascota = dao.obtenerMascota(this.getIntent().getStringExtra("id"), this);
+        notificaciones = false;
 
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_mascota, menu);
+        if (mascota.getNotificaciones().equals("1")) {
+            notificaciones = true;
+        }
+        miNotificaciones = menu.findItem(R.id.action_notificaciones);
+        if (notificaciones) {
+            miNotificaciones.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_white));
+        } else {
+            miNotificaciones.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_off_white));
+        }
         return true;
     }
 
@@ -137,28 +152,38 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
             case R.id.action_notificaciones:
                 s = "notificaciones";
                 if (notificaciones) {
+                    mascota.setNotificaciones("0");
+                    dao.actualizarMascota(mascota, this);
                     item.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_off_white));
                     notificaciones = false;
                 } else {
+                    mascota.setNotificaciones("1");
+                    dao.actualizarMascota(mascota, this);
                     item.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_white));
                     notificaciones = true;
                 }
                 break;
             case R.id.action_editar:
+
+                Intent i = new Intent(this, MascotaFormularioActivity.class);
+                i.putExtra("propietario", mascota.getPropietario());
+                i.putExtra("mascota", mascota);
+                startActivityForResult(i, 0);
+
                 s = "Editar";
                 break;
             case R.id.action_eliminar:
                 new AlertDialog.Builder(this)
                         .setTitle("Eliminar mascota")
                         .setMessage("¿Desea eliminar a " + mascota.getNombre() + "?")
-                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dao.eliminarMascota(mascota, MascotaActivity.this);
                                 Toast.makeText(MascotaActivity.this, "Mascota eliminada", Toast.LENGTH_SHORT).show();
                                 finish();
                             }
                         })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                             }
                         })
@@ -166,7 +191,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
                         .show();
                 break;
         }
-        Toast.makeText(MascotaActivity.this, s, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MascotaActivity.this, s, Toast.LENGTH_SHORT).show(); // Eliminar despues
 
         return super.onOptionsItemSelected(item);
     }
@@ -252,4 +277,14 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) {
+            Toast.makeText(MascotaActivity.this, "REINICIAR", Toast.LENGTH_SHORT).show();
+            finish();
+            startActivity(getIntent());
+        }
+
+    }
 }

@@ -42,7 +42,8 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
     private static final String KEY_MASCOTAS_GENERO = "genero";
     private static final String KEY_MASCOTAS_ID_TAG = "idTag";
     private static final String KEY_MASCOTAS_FOTO = "foto";
-
+    private static final String KEY_MASCOTAS_NOTIFICACIONES = "notificaciones"; // 0-> Desactivado 1->Activado
+    private static final String KEY_MASCOTAS_ESTADO = "estado"; // 0-> Sin sincronizar 1-> Sincronizado
 
     public static synchronized PettedDataBaseHelper getInstance(Context context) {
         if (sInstance == null) {
@@ -81,6 +82,8 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 KEY_MASCOTAS_GENERO + " TEXT," +
                 KEY_MASCOTAS_ID_TAG + " TEXT," +
                 KEY_MASCOTAS_FOTO + " BLOB, " +
+                KEY_MASCOTAS_NOTIFICACIONES + " TEXT, " +
+                KEY_MASCOTAS_ESTADO + " TEXT, " +
                 " FOREIGN KEY(" + KEY_MASCOTAS_PROPIETARIO + ") REFERENCES " + TABLA_USUARIOS +
                 "(" + KEY_USUARIO_CORREO + "))";
         db.execSQL(CREATE_TABLA_USUARIOS);
@@ -145,8 +148,12 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 values.put(KEY_MASCOTAS_FOTO, (byte[]) null);
             }
 
+            values.put(KEY_MASCOTAS_NOTIFICACIONES, mascota.getNotificaciones());
+            values.put(KEY_MASCOTAS_ESTADO, mascota.getEstado());
+
             db.insertOrThrow(TABLA_MASCOTAS, null, values);
             db.setTransactionSuccessful();
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             Log.d("ERROR", "Error almacenando mascota en la base de datos");
@@ -154,7 +161,6 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
         }
     }
-
 
     public Cursor obtenerUsuario(String correo) {
         SQLiteDatabase db = getWritableDatabase();
@@ -173,7 +179,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor obtenerMascota(int id) {
+    public Cursor obtenerMascota(String id) {
         SQLiteDatabase db = getWritableDatabase();
         Cursor c = null;
 
@@ -207,7 +213,52 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public void eliminarMascota(int id) {
+    public void actualizarMascota(Mascota mascota) {
+        SQLiteDatabase db = getWritableDatabase();
+        SimpleDateFormat formateadorDeFecha;
+
+        try {
+            ContentValues values = new ContentValues();
+            db.beginTransaction();
+
+            values.put(KEY_MASCOTAS_PROPIETARIO, mascota.getPropietario().getCorreo());
+            values.put(KEY_MASCOTAS_NOMBRE, mascota.getNombre());
+
+            formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+
+            if (mascota.getFechaNacimiento() != null) {
+                values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, formateadorDeFecha.format(mascota.getFechaNacimiento()));
+            } else {
+                values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, (byte[]) null);
+            }
+
+            values.put(KEY_MASCOTAS_TIPO, mascota.getTipo());
+            values.put(KEY_MASCOTAS_RAZA, mascota.getRaza());
+            values.put(KEY_MASCOTAS_GENERO, mascota.getGenero());
+            values.put(KEY_MASCOTAS_ID_TAG, mascota.getIdTag());
+
+            if (mascota.getFoto() != null) {
+                values.put(KEY_MASCOTAS_FOTO, mascota.getFoto()); // Se obtiene el arreglo de bytes
+            } else {
+                values.put(KEY_MASCOTAS_FOTO, (byte[]) null);
+            }
+
+            values.put(KEY_MASCOTAS_NOTIFICACIONES, mascota.getNotificaciones());
+            values.put(KEY_MASCOTAS_ESTADO, mascota.getEstado());
+
+            db.update(TABLA_MASCOTAS, values, KEY_MASCOTAS_ID + "= ?", new String[]{mascota.getId()});
+            db.setTransactionSuccessful();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            Log.d("ERROR", "Error actualizando mascota en la base de datos");
+        } finally {
+            db.endTransaction();
+        }
+
+    }
+
+    public void eliminarMascota(String id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLA_MASCOTAS, KEY_MASCOTAS_ID + "=" + id, null);
     }

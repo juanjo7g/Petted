@@ -71,31 +71,8 @@ public class CustomAdapter extends BaseAdapter {
 
         if (m.getFoto() != null) {
             holder.ivImagen.setImageBitmap(Utility.getFoto(m.getFoto()));
-        } else {
-            holder.ivImagen.setImageDrawable(context.getResources()
-                    .getDrawable(R.drawable.mascota2));
         }
 
-//        switch (position) {
-//            case 0:
-//                holder.ivImagen.setImageDrawable(context.getResources()
-//                        .getDrawable(R.drawable.mascota1));
-//                break;
-//            case 1:
-//                holder.ivImagen.setImageDrawable(context.getResources()
-//                        .getDrawable(R.drawable.mascota2));
-//                break;
-//            case 2:
-//                holder.ivImagen.setImageDrawable(context.getResources()
-//                        .getDrawable(R.drawable.mascota3));
-//                break;
-//            case 3:
-//                holder.ivImagen.setImageDrawable(context.getResources()
-//                        .getDrawable(R.drawable.mascota4));
-//                break;
-//            default:
-//                break;
-//        }
         return convertView;
     }
 

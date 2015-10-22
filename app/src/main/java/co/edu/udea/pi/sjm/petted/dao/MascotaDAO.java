@@ -13,7 +13,7 @@ import co.edu.udea.pi.sjm.petted.dto.Usuario;
 public interface MascotaDAO {
     void insertarMascota(Mascota mascota, Context context);
 
-    Mascota obtenerMascota(int id, Context context);
+    Mascota obtenerMascota(String id, Context context);
 
     void actualizarMascota(Mascota mascota, Context context);
 

@@ -51,6 +51,7 @@ public class MascotaInformacionFragment extends Fragment {
         ivFoto = (ImageView) rootView.findViewById(R.id.ivFoto);
 
         MascotaActivity ma = (MascotaActivity) getActivity();
+
         tvNombre.setText(ma.getMascota().getNombre());
         tvTipo.setText(ma.getMascota().getTipo());
         tvRaza.setText(ma.getMascota().getRaza());
@@ -63,6 +64,7 @@ public class MascotaInformacionFragment extends Fragment {
                 startActivity(i);
             }
         });
+
         listaProximosEventos = new ArrayList<>();
         listaProximosEventos.add("Vacuna 1. 23/09/16");
         listaProximosEventos.add("Cita veterinario. 23/07/15");

@@ -2,6 +2,7 @@ package co.edu.udea.pi.sjm.petted.vista;
 
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -21,7 +22,7 @@ import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
 import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
-import co.edu.udea.pi.sjm.petted.vista.mascota_nueva.MascotaNuevaActivity;
+import co.edu.udea.pi.sjm.petted.vista.mascota_nueva.MascotaFormularioActivity;
 
 public class ListadoMascotasActivity extends AppCompatActivity {
 
@@ -84,8 +85,9 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     }
 
     public void iniciarActividadMascotaNueva() {
-        Intent i = new Intent(this, MascotaNuevaActivity.class);
+        Intent i = new Intent(this, MascotaFormularioActivity.class);
         i.putExtra("propietario", usuarioActual);
+//        i.putExtra("mascota", (Mascota) null);
         startActivity(i);
     }
 

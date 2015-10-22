@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +30,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -40,8 +42,9 @@ import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
+import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
 
-public class MascotaNuevaActivity extends AppCompatActivity {
+public class MascotaFormularioActivity extends AppCompatActivity {
 
 
     private EditText etFechaNacimiento;
@@ -80,7 +83,6 @@ public class MascotaNuevaActivity extends AppCompatActivity {
             actionBar.setHomeAsUpIndicator(R.mipmap.ic_close_white);
         }
 
-
         etFechaNacimiento = (EditText) findViewById(R.id.etFechaNacimiento);
         spinnerTipoMascota = (Spinner) findViewById(R.id.spinnerTipoMascota);
         spinnerRazaMascota = (Spinner) findViewById(R.id.spinnerRazaMascota);
@@ -89,7 +91,6 @@ public class MascotaNuevaActivity extends AppCompatActivity {
         ibFechaNacimiento = (ImageButton) findViewById(R.id.ibFechaNacimiento);
         btnFoto = (Button) findViewById(R.id.btnFoto);
         ivFotoPrevia = (ImageView) findViewById(R.id.ivFotoPrevia);
-
 
         formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
@@ -100,11 +101,41 @@ public class MascotaNuevaActivity extends AppCompatActivity {
 
         inicializarSpinners();
 
+        if (this.getIntent().getExtras().getSerializable("mascota") != null) {
+            inicializarFormulario((Mascota) this.getIntent().getExtras().getSerializable("mascota"));
+            super.setTitle("Editar Mascota");
+        }
+
+    }
+
+    private void inicializarFormulario(Mascota mascota) {
+        etNombreMascota.setText(mascota.getNombre());
+        SimpleDateFormat formateadorDeFecha;
+        formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+
+        if (mascota.getFechaNacimiento() != null) {
+            etFechaNacimiento.setText(formateadorDeFecha.format(mascota.getFechaNacimiento()));
+        }
+
+        int posicion = Utility.getIndex(spinnerTipoMascota, mascota.getTipo());
+        spinnerTipoMascota.setSelection(posicion);
+
+        cambiarItemsSpinnerRaza(spinnerTipoMascota.getSelectedItemPosition(), this.findViewById(android.R.id.content));
+
+        spinnerRazaMascota.setSelection(Utility.getIndex(spinnerRazaMascota, mascota.getRaza()));
+
+        spinnerGenero.setSelection(Utility.getIndex(spinnerGenero, mascota.getGenero()));
+
+        if (mascota.getFoto() != null) {
+            foto = Utility.getFoto(mascota.getFoto());
+            ivFotoPrevia.setImageBitmap(foto);
+        }
+
     }
 
     public void onClickFoto(View view) {
         final CharSequence[] opciones = {"Tomar Foto", "Seleccionar foto", "Cancelar"};
-        final AlertDialog.Builder builder = new AlertDialog.Builder(MascotaNuevaActivity.this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MascotaFormularioActivity.this);
         builder.setTitle("Selecciona una opción: ");
         builder.setItems(opciones, new DialogInterface.OnClickListener() {
             @Override
@@ -186,7 +217,7 @@ public class MascotaNuevaActivity extends AppCompatActivity {
         switch (Validacion.validarMascota(m)) {
             case 0:
                 dao.insertarMascota(m, this);
-                Toast.makeText(MascotaNuevaActivity.this, m.getNombre(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MascotaFormularioActivity.this, m.getNombre(), Toast.LENGTH_SHORT).show();
                 finish();
                 break;
             case 1:
@@ -202,15 +233,45 @@ public class MascotaNuevaActivity extends AppCompatActivity {
         m = new Mascota();
         m.setNombre(etNombreMascota.getText().toString());
         m.setPropietario(u);
+        try {
+            m.setFechaNacimiento(formateadorDeFecha.parse(etFechaNacimiento.getText().toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.e("Error en fecha", e.getMessage());
+        }
+        m.setTipo((String) spinnerTipoMascota.getSelectedItem());
+        m.setRaza((String) spinnerRazaMascota.getSelectedItem());
+        m.setGenero((String) spinnerGenero.getSelectedItem());
+
         if (foto != null) {
             m.setFoto(Utility.getBytes(Utility.resizeImage(foto, 300, 300)));
         } else {
             m.setFoto(Utility.getBytes(Utility.resizeImage(this, R.drawable.mascota1, 300, 300)));
         }
+
+        m.setEstado("0");
+        m.setNotificaciones("1");
+
         switch (Validacion.validarMascota(m)) {
             case 0:
-                dao.insertarMascota(m, this);
-                Toast.makeText(MascotaNuevaActivity.this, m.getNombre(), Toast.LENGTH_SHORT).show();
+                if (this.getIntent().getExtras().getSerializable("mascota") != null) {
+                    m.setId(((Mascota) this.getIntent().getExtras().getSerializable("mascota")).getId());
+                    m.setNotificaciones(((Mascota) this.getIntent().getExtras().getSerializable("mascota")).getNotificaciones());
+                    m.setEstado(((Mascota) this.getIntent().getExtras().getSerializable("mascota")).getEstado());
+                    dao.actualizarMascota(m, this);
+
+                    setResult(0);
+
+//                    Intent i = new Intent(this, MascotaActivity.class);
+//                    i.putExtra("id", m.getId() + "");
+//                    i.putExtra("mascota", m);
+//                    startActivity(i);
+
+                    Toast.makeText(MascotaFormularioActivity.this, "Mascota editada", Toast.LENGTH_SHORT).show();
+                } else {
+                    dao.insertarMascota(m, this);
+                    Toast.makeText(MascotaFormularioActivity.this, m.getNombre(), Toast.LENGTH_SHORT).show();
+                }
                 finish();
                 break;
             case 1:
@@ -241,32 +302,36 @@ public class MascotaNuevaActivity extends AppCompatActivity {
 
     private void onSelectedItemTiposDeMascotas(View view, int posicion) {
         try {
-            ArrayAdapter<CharSequence> adapter1 = null;
-            switch (posicion) {
-                case 0:
-                    adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeGatos,
-                            android.R.layout.simple_dropdown_item_1line);
-                    break;
-                case 1:
-                    adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDePerros,
-                            android.R.layout.simple_dropdown_item_1line);
-                    break;
-                case 2:
-                    adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeAves,
-                            android.R.layout.simple_dropdown_item_1line);
-                    break;
-                case 3:
-                    adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeReptiles,
-                            android.R.layout.simple_dropdown_item_1line);
-                    break;
-                case 4:
-                    adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasOtro,
-                            android.R.layout.simple_dropdown_item_1line);
-                    break;
-            }
-            spinnerRazaMascota.setAdapter(adapter1);
+            cambiarItemsSpinnerRaza(posicion, view);
         } catch (Exception e) {
         }
+    }
+
+    private void cambiarItemsSpinnerRaza(int posicion, View view) {
+        ArrayAdapter<CharSequence> adapter1 = null;
+        switch (posicion) {
+            case 0:
+                adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeGatos,
+                        android.R.layout.simple_dropdown_item_1line);
+                break;
+            case 1:
+                adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDePerros,
+                        android.R.layout.simple_dropdown_item_1line);
+                break;
+            case 2:
+                adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeAves,
+                        android.R.layout.simple_dropdown_item_1line);
+                break;
+            case 3:
+                adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeReptiles,
+                        android.R.layout.simple_dropdown_item_1line);
+                break;
+            case 4:
+                adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasOtro,
+                        android.R.layout.simple_dropdown_item_1line);
+                break;
+        }
+        spinnerRazaMascota.setAdapter(adapter1);
     }
 
     private void inicializarSpinners() {

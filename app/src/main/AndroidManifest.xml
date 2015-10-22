@@ -32,7 +32,7 @@
             android:name=".vista.mascota.MascotaActivity"
             android:label="@string/title_activity_mascota" />
         <activity
-            android:name=".vista.mascota_nueva.MascotaNuevaActivity"
+            android:name=".vista.mascota_nueva.MascotaFormularioActivity"
             android:label="@string/title_activity_mascota_nueva" />
         <activity
             android:name=".vista.mascota.AsociarTagNFCActivity"
