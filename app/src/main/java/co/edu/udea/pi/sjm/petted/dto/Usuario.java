@@ -9,6 +9,7 @@ public class Usuario implements Serializable {
     private String nombre;
     private String correo; // PK
     private String contraseña;
+    private String logueado;
 
     public String getNombre() {
         return nombre;
@@ -32,5 +33,13 @@ public class Usuario implements Serializable {
 
     public void setContraseña(String contraseña) {
         this.contraseña = contraseña;
+    }
+
+    public String getLogueado() {
+        return logueado;
+    }
+
+    public void setLogueado(String logueado) {
+        this.logueado = logueado;
     }
 }

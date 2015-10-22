@@ -28,22 +28,26 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
 
     private static final String TABLA_USUARIOS = "usuarios";
     private static final String TABLA_MASCOTAS = "mascotas";
+    private static final String TABLA_CITAS = "citas";
 
     private static final String KEY_USUARIO_CORREO = "correo";
     private static final String KEY_USUARIO_NOMBRE = "nombre";
     private static final String KEY_USUARIO_CONTRASEÑA = "contraseña";
+    private static final String KEY_USUARIO_LOGUEADO = "logueado"; // 0-> No logueado 1-> Logueado
 
-    private static final String KEY_MASCOTAS_ID = "id";
-    private static final String KEY_MASCOTAS_PROPIETARIO = "propietario";
-    private static final String KEY_MASCOTAS_NOMBRE = "nombre";
-    private static final String KEY_MASCOTAS_FECHA_NACIMIENTO = "fechaNacimiento";
-    private static final String KEY_MASCOTAS_TIPO = "tipo";
-    private static final String KEY_MASCOTAS_RAZA = "raza";
-    private static final String KEY_MASCOTAS_GENERO = "genero";
-    private static final String KEY_MASCOTAS_ID_TAG = "idTag";
-    private static final String KEY_MASCOTAS_FOTO = "foto";
-    private static final String KEY_MASCOTAS_NOTIFICACIONES = "notificaciones"; // 0-> Desactivado 1->Activado
-    private static final String KEY_MASCOTAS_ESTADO = "estado"; // 0-> Sin sincronizar 1-> Sincronizado
+    private static final String KEY_MASCOTA_ID = "id";
+    private static final String KEY_MASCOTA_PROPIETARIO = "propietario";
+    private static final String KEY_MASCOTA_NOMBRE = "nombre";
+    private static final String KEY_MASCOTA_FECHA_NACIMIENTO = "fechaNacimiento";
+    private static final String KEY_MASCOTA_TIPO = "tipo";
+    private static final String KEY_MASCOTA_RAZA = "raza";
+    private static final String KEY_MASCOTA_GENERO = "genero";
+    private static final String KEY_MASCOTA_ID_TAG = "idTag";
+    private static final String KEY_MASCOTA_FOTO = "foto";
+    private static final String KEY_MASCOTA_NOTIFICACIONES = "notificaciones"; // 0-> Desactivado 1->Activado
+    private static final String KEY_MASCOTA_ESTADO = "estado"; // 0-> Sin sincronizar 1-> Sincronizado
+    private static final String KEY_MASCOTA_PERDIDA = "perdida"; // 0-> No esta reportada como perdida 1-> Esta perdida
+
 
     public static synchronized PettedDataBaseHelper getInstance(Context context) {
         if (sInstance == null) {
@@ -69,22 +73,24 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 "(" +
                 KEY_USUARIO_CORREO + " TEXT PRIMARY KEY," +
                 KEY_USUARIO_NOMBRE + " TEXT NOT NULL," +
-                KEY_USUARIO_CONTRASEÑA + " TEXT NOT NULL" +
+                KEY_USUARIO_CONTRASEÑA + " TEXT NOT NULL," +
+                KEY_USUARIO_LOGUEADO + " TEXT" +
                 ")";
         String CREATE_TABLA_MASCOTAS = "CREATE TABLE " + TABLA_MASCOTAS +
                 "(" +
-                KEY_MASCOTAS_ID + " INTEGER PRIMARY KEY autoincrement," + // Autoincrementable PK
-                KEY_MASCOTAS_PROPIETARIO + " TEXT NOT NULL," + // TODO: MANEJO DE CLAVE FORANEA, CORREO DE PROPETARIO
-                KEY_MASCOTAS_NOMBRE + " TEXT NOT NULL," +
-                KEY_MASCOTAS_FECHA_NACIMIENTO + " TEXT," + // TODO: MANEJO DE FECHA
-                KEY_MASCOTAS_TIPO + " TEXT," +
-                KEY_MASCOTAS_RAZA + " TEXT," +
-                KEY_MASCOTAS_GENERO + " TEXT," +
-                KEY_MASCOTAS_ID_TAG + " TEXT," +
-                KEY_MASCOTAS_FOTO + " BLOB, " +
-                KEY_MASCOTAS_NOTIFICACIONES + " TEXT, " +
-                KEY_MASCOTAS_ESTADO + " TEXT, " +
-                " FOREIGN KEY(" + KEY_MASCOTAS_PROPIETARIO + ") REFERENCES " + TABLA_USUARIOS +
+                KEY_MASCOTA_ID + " INTEGER PRIMARY KEY autoincrement," + // Autoincrementable PK
+                KEY_MASCOTA_PROPIETARIO + " TEXT NOT NULL," + // TODO: MANEJO DE CLAVE FORANEA, CORREO DE PROPETARIO
+                KEY_MASCOTA_NOMBRE + " TEXT NOT NULL," +
+                KEY_MASCOTA_FECHA_NACIMIENTO + " TEXT," + // TODO: MANEJO DE FECHA
+                KEY_MASCOTA_TIPO + " TEXT," +
+                KEY_MASCOTA_RAZA + " TEXT," +
+                KEY_MASCOTA_GENERO + " TEXT," +
+                KEY_MASCOTA_ID_TAG + " TEXT," +
+                KEY_MASCOTA_FOTO + " BLOB, " +
+                KEY_MASCOTA_NOTIFICACIONES + " TEXT, " +
+                KEY_MASCOTA_ESTADO + " TEXT, " +
+                KEY_MASCOTA_PERDIDA + " TEXT, " +
+                " FOREIGN KEY(" + KEY_MASCOTA_PROPIETARIO + ") REFERENCES " + TABLA_USUARIOS +
                 "(" + KEY_USUARIO_CORREO + "))";
         db.execSQL(CREATE_TABLA_USUARIOS);
         db.execSQL(CREATE_TABLA_MASCOTAS);
@@ -108,6 +114,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             values.put(KEY_USUARIO_CORREO, usuario.getCorreo());
             values.put(KEY_USUARIO_NOMBRE, usuario.getNombre());
             values.put(KEY_USUARIO_CONTRASEÑA, usuario.getContraseña());
+            values.put(KEY_USUARIO_LOGUEADO, "0");
 
             db.insertOrThrow(TABLA_USUARIOS, null, values);
             db.setTransactionSuccessful();
@@ -126,30 +133,31 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             db.beginTransaction();
 
-            values.put(KEY_MASCOTAS_PROPIETARIO, mascota.getPropietario().getCorreo());
-            values.put(KEY_MASCOTAS_NOMBRE, mascota.getNombre());
+            values.put(KEY_MASCOTA_PROPIETARIO, mascota.getPropietario().getCorreo());
+            values.put(KEY_MASCOTA_NOMBRE, mascota.getNombre());
 
             formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
             if (mascota.getFechaNacimiento() != null) {
-                values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, formateadorDeFecha.format(mascota.getFechaNacimiento()));
+                values.put(KEY_MASCOTA_FECHA_NACIMIENTO, formateadorDeFecha.format(mascota.getFechaNacimiento()));
             } else {
-                values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, (byte[]) null);
+                values.put(KEY_MASCOTA_FECHA_NACIMIENTO, (byte[]) null);
             }
 
-            values.put(KEY_MASCOTAS_TIPO, mascota.getTipo());
-            values.put(KEY_MASCOTAS_RAZA, mascota.getRaza());
-            values.put(KEY_MASCOTAS_GENERO, mascota.getGenero());
-            values.put(KEY_MASCOTAS_ID_TAG, mascota.getIdTag());
+            values.put(KEY_MASCOTA_TIPO, mascota.getTipo());
+            values.put(KEY_MASCOTA_RAZA, mascota.getRaza());
+            values.put(KEY_MASCOTA_GENERO, mascota.getGenero());
+            values.put(KEY_MASCOTA_ID_TAG, mascota.getIdTag());
 
             if (mascota.getFoto() != null) {
-                values.put(KEY_MASCOTAS_FOTO, mascota.getFoto()); // Se obtiene el arreglo de bytes
+                values.put(KEY_MASCOTA_FOTO, mascota.getFoto()); // Se obtiene el arreglo de bytes
             } else {
-                values.put(KEY_MASCOTAS_FOTO, (byte[]) null);
+                values.put(KEY_MASCOTA_FOTO, (byte[]) null);
             }
 
-            values.put(KEY_MASCOTAS_NOTIFICACIONES, mascota.getNotificaciones());
-            values.put(KEY_MASCOTAS_ESTADO, mascota.getEstado());
+            values.put(KEY_MASCOTA_NOTIFICACIONES, "1");
+            values.put(KEY_MASCOTA_ESTADO, "0");
+            values.put(KEY_MASCOTA_PERDIDA, "0");
 
             db.insertOrThrow(TABLA_MASCOTAS, null, values);
             db.setTransactionSuccessful();
@@ -179,13 +187,30 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor obtenerUsuarioLogueado(){
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = null;
+
+        db.beginTransaction();
+        try {
+            String selection = KEY_USUARIO_LOGUEADO + " = ? ";//WHERE logueado = ?
+            String selectionArgs[] = new String[]{"1"};
+            c = db.query(TABLA_USUARIOS, null, selection, selectionArgs, null, null, null);
+        } catch (Exception e) {
+            Log.d("ERROR", "Error");
+        } finally {
+            db.endTransaction();
+        }
+        return c;
+    }
+
     public Cursor obtenerMascota(String id) {
         SQLiteDatabase db = getWritableDatabase();
         Cursor c = null;
 
         db.beginTransaction();
         try {
-            String selection = KEY_MASCOTAS_ID + " = ? ";//WHERE ID = ?
+            String selection = KEY_MASCOTA_ID + " = ? ";//WHERE ID = ?
             String selectionArgs[] = new String[]{id + ""};
             c = db.query(TABLA_MASCOTAS, null, selection, selectionArgs, null, null, null);
         } catch (Exception e) {
@@ -207,10 +232,31 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         String correo = u.getCorreo();
         Cursor c;
-        String selection = KEY_MASCOTAS_PROPIETARIO + " = ? ";//WHERE propietario.correo = ?
+        String selection = KEY_MASCOTA_PROPIETARIO + " = ? ";//WHERE propietario.correo = ?
         String selectionArgs[] = new String[]{correo};
         c = db.query(TABLA_MASCOTAS, null, selection, selectionArgs, null, null, null);
         return c;
+    }
+
+    public void actualizarUsuario(Usuario u) {
+        SQLiteDatabase db = getWritableDatabase();
+        try {
+            ContentValues values = new ContentValues();
+            db.beginTransaction();
+
+            values.put(KEY_USUARIO_NOMBRE, u.getNombre());
+            values.put(KEY_USUARIO_CONTRASEÑA, u.getContraseña());
+            values.put(KEY_USUARIO_LOGUEADO, u.getLogueado());
+
+            db.update(TABLA_USUARIOS, values, KEY_USUARIO_CORREO + "= ?", new String[]{u.getCorreo()});
+            db.setTransactionSuccessful();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            Log.d("ERROR", "Error actualizando mascota en la base de datos");
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public void actualizarMascota(Mascota mascota) {
@@ -221,32 +267,32 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             db.beginTransaction();
 
-            values.put(KEY_MASCOTAS_PROPIETARIO, mascota.getPropietario().getCorreo());
-            values.put(KEY_MASCOTAS_NOMBRE, mascota.getNombre());
+            values.put(KEY_MASCOTA_PROPIETARIO, mascota.getPropietario().getCorreo());
+            values.put(KEY_MASCOTA_NOMBRE, mascota.getNombre());
 
             formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
             if (mascota.getFechaNacimiento() != null) {
-                values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, formateadorDeFecha.format(mascota.getFechaNacimiento()));
+                values.put(KEY_MASCOTA_FECHA_NACIMIENTO, formateadorDeFecha.format(mascota.getFechaNacimiento()));
             } else {
-                values.put(KEY_MASCOTAS_FECHA_NACIMIENTO, (byte[]) null);
+                values.put(KEY_MASCOTA_FECHA_NACIMIENTO, (byte[]) null);
             }
 
-            values.put(KEY_MASCOTAS_TIPO, mascota.getTipo());
-            values.put(KEY_MASCOTAS_RAZA, mascota.getRaza());
-            values.put(KEY_MASCOTAS_GENERO, mascota.getGenero());
-            values.put(KEY_MASCOTAS_ID_TAG, mascota.getIdTag());
+            values.put(KEY_MASCOTA_TIPO, mascota.getTipo());
+            values.put(KEY_MASCOTA_RAZA, mascota.getRaza());
+            values.put(KEY_MASCOTA_GENERO, mascota.getGenero());
+            values.put(KEY_MASCOTA_ID_TAG, mascota.getIdTag());
 
             if (mascota.getFoto() != null) {
-                values.put(KEY_MASCOTAS_FOTO, mascota.getFoto()); // Se obtiene el arreglo de bytes
+                values.put(KEY_MASCOTA_FOTO, mascota.getFoto()); // Se obtiene el arreglo de bytes
             } else {
-                values.put(KEY_MASCOTAS_FOTO, (byte[]) null);
+                values.put(KEY_MASCOTA_FOTO, (byte[]) null);
             }
 
-            values.put(KEY_MASCOTAS_NOTIFICACIONES, mascota.getNotificaciones());
-            values.put(KEY_MASCOTAS_ESTADO, mascota.getEstado());
+            values.put(KEY_MASCOTA_NOTIFICACIONES, mascota.getNotificaciones());
+            values.put(KEY_MASCOTA_ESTADO, mascota.getEstado());
 
-            db.update(TABLA_MASCOTAS, values, KEY_MASCOTAS_ID + "= ?", new String[]{mascota.getId()});
+            db.update(TABLA_MASCOTAS, values, KEY_MASCOTA_ID + "= ?", new String[]{mascota.getId()});
             db.setTransactionSuccessful();
 
         } catch (Exception e) {
@@ -260,7 +306,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
 
     public void eliminarMascota(String id) {
         SQLiteDatabase db = getWritableDatabase();
-        db.delete(TABLA_MASCOTAS, KEY_MASCOTAS_ID + "=" + id, null);
+        db.delete(TABLA_MASCOTAS, KEY_MASCOTA_ID + "=" + id, null);
     }
 
 }

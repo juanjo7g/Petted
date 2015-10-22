@@ -14,6 +14,8 @@ public interface UsuarioDAO {
 
     Usuario obtenerUsuario(String correo, Context context);
 
+    Usuario obtenerUsuarioLogueado(Context context);
+
     void actualizarUsuario(Usuario usuario, Context context);
 
     void eliminarUsuario(Usuario usuario, Context context);

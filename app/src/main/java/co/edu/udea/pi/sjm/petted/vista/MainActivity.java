@@ -30,6 +30,19 @@ public class MainActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.etEmail);
         etContraseña = (EditText) findViewById(R.id.etContraseña);
 
+        UsuarioDAO dao = new UsuarioDAOImpl();
+        Usuario u;
+        Intent i;
+        u = dao.obtenerUsuarioLogueado(this);
+
+        if(u!=null){
+            Toast.makeText(MainActivity.this, "YA ESTA LOGUEADO", Toast.LENGTH_SHORT).show();
+            finish();
+            i = new Intent(this, ListadoMascotasActivity.class);
+            i.putExtra("usuario",u);
+            startActivity(i);
+        }
+
     }
 
     public void onClickIniciar(View view) {
@@ -42,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
         if (u != null) {
             if (u.getContraseña().equals(etContraseña.getText().toString())) {
+                u.setLogueado("1");
+                dao.actualizarUsuario(u, this);
                 finish();
                 i = new Intent(this, ListadoMascotasActivity.class);
                 i.putExtra("usuario",u);

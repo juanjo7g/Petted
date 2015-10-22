@@ -40,6 +40,29 @@ public class UsuarioDAOImpl implements UsuarioDAO {
             u.setCorreo(c.getString(0));
             u.setNombre(c.getString(1));
             u.setContraseña(c.getString(2));
+            u.setLogueado(c.getString(3));
+        } catch (Exception e) {
+            // Error
+        }
+        return u;
+    }
+
+    @Override
+    public Usuario obtenerUsuarioLogueado(Context context) {
+        PettedDataBaseHelper helper;
+        Cursor c;
+        Usuario u = null;
+        try {
+            helper = PettedDataBaseHelper.getInstance(context);
+            c = helper.obtenerUsuarioLogueado();
+            u = new Usuario();
+            if (!c.moveToFirst()) {
+                return null;
+            }
+            u.setCorreo(c.getString(0));
+            u.setNombre(c.getString(1));
+            u.setContraseña(c.getString(2));
+            u.setLogueado(c.getString(3));
         } catch (Exception e) {
             // Error
         }
@@ -48,7 +71,9 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 
     @Override
     public void actualizarUsuario(Usuario usuario, Context context) {
-
+        PettedDataBaseHelper helper;
+        helper = PettedDataBaseHelper.getInstance(context);
+        helper.actualizarUsuario(usuario);
     }
 
     @Override

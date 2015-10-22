@@ -2,7 +2,6 @@ package co.edu.udea.pi.sjm.petted.vista;
 
 
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -18,7 +17,9 @@ import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
+import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
 import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
+import co.edu.udea.pi.sjm.petted.dao.impl.UsuarioDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
 import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
@@ -31,7 +32,8 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     private ListView lvMascotas;
     private CustomAdapter customAdapter;
     private ImageButton ibtnNuevaMacota;
-    private MascotaDAO dao;
+    private MascotaDAO mDao;
+    private UsuarioDAO uDao;
     private Usuario usuarioActual;
 
 
@@ -47,8 +49,8 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         ibtnNuevaMacota = (ImageButton) this.findViewById(R.id.ibtnNuevaMascota);
 
         //crearMascotas();
-        dao = new MascotaDAOImpl();
-        listaMascotas = dao.obtenerMascotas(usuarioActual, this);
+        mDao = new MascotaDAOImpl();
+        listaMascotas = mDao.obtenerMascotas(usuarioActual, this);
         customAdapter = new CustomAdapter(this, listaMascotas);
         lvMascotas.setAdapter(customAdapter);
 
@@ -71,8 +73,8 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        dao = new MascotaDAOImpl();
-        listaMascotas = dao.obtenerMascotas(usuarioActual, this);
+        mDao = new MascotaDAOImpl();
+        listaMascotas = mDao.obtenerMascotas(usuarioActual, this);
         customAdapter = new CustomAdapter(this, listaMascotas);
         lvMascotas.setAdapter(customAdapter);
     }
@@ -146,6 +148,25 @@ public class ListadoMascotasActivity extends AppCompatActivity {
             return true;
         }*/
 
+        switch (id) {
+            case R.id.action_ver_perfil:
+                Toast.makeText(ListadoMascotasActivity.this, "Ver perfil", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_cerrar_sesion:
+                Toast.makeText(ListadoMascotasActivity.this, "Cerrar sesión", Toast.LENGTH_SHORT).show();
+                cerrarSesion();
+                break;
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    private void cerrarSesion() {
+        usuarioActual.setLogueado("0");
+        uDao = new UsuarioDAOImpl();
+        uDao.actualizarUsuario(usuarioActual, this);
+        finish();
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
     }
 }

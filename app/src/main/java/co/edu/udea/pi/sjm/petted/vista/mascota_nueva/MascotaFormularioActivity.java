@@ -120,10 +120,6 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         int posicion = Utility.getIndex(spinnerTipoMascota, mascota.getTipo());
         spinnerTipoMascota.setSelection(posicion);
 
-        cambiarItemsSpinnerRaza(spinnerTipoMascota.getSelectedItemPosition(), this.findViewById(android.R.id.content));
-
-        spinnerRazaMascota.setSelection(Utility.getIndex(spinnerRazaMascota, mascota.getRaza()));
-
         spinnerGenero.setSelection(Utility.getIndex(spinnerGenero, mascota.getGenero()));
 
         if (mascota.getFoto() != null) {
@@ -300,38 +296,45 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         }, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH));
     }
 
-    private void onSelectedItemTiposDeMascotas(View view, int posicion) {
+    private void onSelectedItemTiposDeMascotas(View view, int posicion, String raza) {
         try {
             cambiarItemsSpinnerRaza(posicion, view);
+            if (raza != null) {
+                seleccionarItemRaza(raza);
+            }
         } catch (Exception e) {
         }
     }
 
+    private void seleccionarItemRaza(String raza) {
+        spinnerRazaMascota.setSelection(Utility.getIndex(spinnerRazaMascota, raza));
+    }
+
     private void cambiarItemsSpinnerRaza(int posicion, View view) {
-        ArrayAdapter<CharSequence> adapter1 = null;
+        ArrayAdapter<CharSequence> adapter = null;
         switch (posicion) {
             case 0:
-                adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeGatos,
+                adapter = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeGatos,
                         android.R.layout.simple_dropdown_item_1line);
                 break;
             case 1:
-                adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDePerros,
+                adapter = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDePerros,
                         android.R.layout.simple_dropdown_item_1line);
                 break;
             case 2:
-                adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeAves,
+                adapter = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeAves,
                         android.R.layout.simple_dropdown_item_1line);
                 break;
             case 3:
-                adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeReptiles,
+                adapter = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeReptiles,
                         android.R.layout.simple_dropdown_item_1line);
                 break;
             case 4:
-                adapter1 = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasOtro,
+                adapter = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasOtro,
                         android.R.layout.simple_dropdown_item_1line);
                 break;
         }
-        spinnerRazaMascota.setAdapter(adapter1);
+        spinnerRazaMascota.setAdapter(adapter);
     }
 
     private void inicializarSpinners() {
@@ -339,13 +342,19 @@ public class MascotaFormularioActivity extends AppCompatActivity {
 
         adapter = ArrayAdapter.createFromResource(this, R.array.TiposDeMascotas,
                 android.R.layout.simple_spinner_item);
+        final String raza;
+        if (this.getIntent().getExtras().getSerializable("mascota") != null) {
+            raza = ((Mascota) this.getIntent().getExtras().getSerializable("mascota")).getRaza();
+        } else {
+            raza = null;
+        }
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerTipoMascota.setAdapter(adapter);
         spinnerTipoMascota.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                onSelectedItemTiposDeMascotas(view, position);
+                onSelectedItemTiposDeMascotas(view, position, raza);
             }
 
             @Override
