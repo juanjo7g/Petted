@@ -241,6 +241,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
 
         if (foto != null) {
             m.setFoto(Utility.getBytes(Utility.resizeImage(foto, 300, 300)));
+//            m.setFoto(Utility.getBytes(Utility.scaleBitmapAndKeepRation(foto, 300, 300)));
         } else {
             m.setFoto(Utility.getBytes(Utility.resizeImage(this, R.drawable.mascota1, 300, 300)));
         }

@@ -70,7 +70,7 @@ public class CustomAdapter extends BaseAdapter {
         holder.tvRaza.setText(m.getRaza());
 
         if (m.getFoto() != null) {
-            holder.ivImagen.setImageBitmap(Utility.getFoto(m.getFoto()));
+            holder.ivImagen.setImageBitmap(Utility.getCircleBitmap(Utility.getFoto(m.getFoto())));
         }
 
         return convertView;

@@ -55,7 +55,7 @@ public class MascotaInformacionFragment extends Fragment {
         tvNombre.setText(ma.getMascota().getNombre());
         tvTipo.setText(ma.getMascota().getTipo());
         tvRaza.setText(ma.getMascota().getRaza());
-        ivFoto.setImageBitmap(Utility.getFoto(ma.getMascota().getFoto()));
+        ivFoto.setImageBitmap(Utility.getCircleBitmap(Utility.getFoto(ma.getMascota().getFoto())));
 
         btnAsociarTagNFC.setOnClickListener(new View.OnClickListener() {
             @Override
