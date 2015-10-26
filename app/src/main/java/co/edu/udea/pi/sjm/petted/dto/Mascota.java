@@ -19,6 +19,7 @@ public class Mascota implements Serializable {
     private byte[] foto;
     private String notificaciones;
     private String estado;
+    private String perdida;
 
     public Mascota() {
     }
@@ -109,5 +110,13 @@ public class Mascota implements Serializable {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getPerdida() {
+        return perdida;
+    }
+
+    public void setPerdida(String perdida) {
+        this.perdida = perdida;
     }
 }

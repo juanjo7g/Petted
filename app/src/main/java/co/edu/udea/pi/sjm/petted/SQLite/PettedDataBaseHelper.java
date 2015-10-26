@@ -12,6 +12,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
+import co.edu.udea.pi.sjm.petted.dto.Cita;
 import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
@@ -48,6 +49,14 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
     private static final String KEY_MASCOTA_ESTADO = "estado"; // 0-> Sin sincronizar 1-> Sincronizado
     private static final String KEY_MASCOTA_PERDIDA = "perdida"; // 0-> No esta reportada como perdida 1-> Esta perdida
 
+    private static final String KEY_CITA_ID = "id";
+    private static final String KEY_CITA_MASCOTA = "mascota";
+    private static final String KEY_CITA_NOMBRE = "nombre";
+    private static final String KEY_CITA_DESCRIPCION = "descripcion";
+    private static final String KEY_CITA_TIPO = "tipo";
+    private static final String KEY_CITA_FECHA_HORA = "fechaHora";
+    private static final String KEY_CITA_ESTADO = "estado";
+
 
     public static synchronized PettedDataBaseHelper getInstance(Context context) {
         if (sInstance == null) {
@@ -79,9 +88,9 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         String CREATE_TABLA_MASCOTAS = "CREATE TABLE " + TABLA_MASCOTAS +
                 "(" +
                 KEY_MASCOTA_ID + " INTEGER PRIMARY KEY autoincrement," + // Autoincrementable PK
-                KEY_MASCOTA_PROPIETARIO + " TEXT NOT NULL," + // TODO: MANEJO DE CLAVE FORANEA, CORREO DE PROPETARIO
+                KEY_MASCOTA_PROPIETARIO + " TEXT NOT NULL," + // CLAVE FORANEA, CORREO DE PROPETARIO
                 KEY_MASCOTA_NOMBRE + " TEXT NOT NULL," +
-                KEY_MASCOTA_FECHA_NACIMIENTO + " TEXT," + // TODO: MANEJO DE FECHA
+                KEY_MASCOTA_FECHA_NACIMIENTO + " TEXT," +
                 KEY_MASCOTA_TIPO + " TEXT," +
                 KEY_MASCOTA_RAZA + " TEXT," +
                 KEY_MASCOTA_GENERO + " TEXT," +
@@ -92,8 +101,21 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 KEY_MASCOTA_PERDIDA + " TEXT, " +
                 " FOREIGN KEY(" + KEY_MASCOTA_PROPIETARIO + ") REFERENCES " + TABLA_USUARIOS +
                 "(" + KEY_USUARIO_CORREO + "))";
+        String CREATE_TABLA_CITAS = "CREATE TABLE" + TABLA_CITAS +
+                "(" +
+                KEY_CITA_ID + " INTEGER PRIMARY KEY autoincrement," + // Autoincrementable pk
+                KEY_CITA_MASCOTA + " TEXT NOT NULL," + // CLAVE FORANEA, id mascota
+                KEY_CITA_NOMBRE + " TEXT," +
+                KEY_CITA_DESCRIPCION + " TEXT," +
+                KEY_CITA_TIPO + " TEXT," +
+                KEY_CITA_FECHA_HORA + " TEXT," +
+                KEY_CITA_ESTADO + " TEXT," +
+                " FOREIGN KEY(" + KEY_CITA_MASCOTA + ") REFERENCES " + TABLA_MASCOTAS +
+                "(" + KEY_MASCOTA_ID + "))";
+
         db.execSQL(CREATE_TABLA_USUARIOS);
         db.execSQL(CREATE_TABLA_MASCOTAS);
+        db.execSQL(CREATE_TABLA_CITAS);
     }
 
     @Override
@@ -101,6 +123,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         if (oldVersion != newVersion) {
             db.execSQL("DROP TABLE IF EXISTS " + TABLA_USUARIOS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLA_MASCOTAS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLA_CITAS);
             onCreate(db);
         }
     }
@@ -170,6 +193,40 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void insertarCita(Cita cita) {
+        SQLiteDatabase db = getWritableDatabase();
+        SimpleDateFormat formateadorDeFecha;
+
+        try {
+            ContentValues values = new ContentValues();
+            db.beginTransaction();
+
+            values.put(KEY_CITA_MASCOTA, cita.getMascota().getId());
+            values.put(KEY_CITA_NOMBRE, cita.getNombre());
+            values.put(KEY_CITA_DESCRIPCION, cita.getDescripcion());
+            values.put(KEY_CITA_TIPO, cita.getTipo());
+
+            formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.US);
+
+            if (cita.getFechaHora() != null) {
+                values.put(KEY_CITA_FECHA_HORA, formateadorDeFecha.format(cita.getFechaHora()));
+            } else {
+                values.put(KEY_CITA_FECHA_HORA, (byte[]) null);
+            }
+
+            values.put(KEY_CITA_ESTADO, "0");
+
+            db.insertOrThrow(TABLA_CITAS, null, values);
+            db.setTransactionSuccessful();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            Log.d("ERROR", "Error almacenando cita en la base de datos");
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     public Cursor obtenerUsuario(String correo) {
         SQLiteDatabase db = getWritableDatabase();
         Cursor c = null;
@@ -187,7 +244,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
-    public Cursor obtenerUsuarioLogueado(){
+    public Cursor obtenerUsuarioLogueado() {
         SQLiteDatabase db = getWritableDatabase();
         Cursor c = null;
 
@@ -221,6 +278,23 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor obtenerCita(String id) {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = null;
+
+        db.beginTransaction();
+        try {
+            String selection = KEY_CITA_ID + " = ? ";//WHERE ID = ?
+            String selectionArgs[] = new String[]{id + ""};
+            c = db.query(TABLA_CITAS, null, selection, selectionArgs, null, null, null);
+        } catch (Exception e) {
+            Log.d("ERROR", "Error");
+        } finally {
+            db.endTransaction();
+        }
+        return c;
+    }
+
     public Cursor obtenerMascotas() {
         SQLiteDatabase db = getWritableDatabase();
         Cursor c = db.rawQuery(
@@ -235,6 +309,16 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         String selection = KEY_MASCOTA_PROPIETARIO + " = ? ";//WHERE propietario.correo = ?
         String selectionArgs[] = new String[]{correo};
         c = db.query(TABLA_MASCOTAS, null, selection, selectionArgs, null, null, null);
+        return c;
+    }
+
+    public Cursor obtenerCitas(Mascota m) {
+        SQLiteDatabase db = getWritableDatabase();
+        String idMascota = m.getId();
+        Cursor c;
+        String selection = KEY_CITA_MASCOTA + " = ? ";//WHERE mascota.id = ?
+        String selectionArgs[] = new String[]{idMascota};
+        c = db.query(TABLA_CITAS, null, selection, selectionArgs, null, null, null);
         return c;
     }
 
@@ -304,9 +388,49 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public void actualizarCita(Cita cita) {
+        SQLiteDatabase db = getWritableDatabase();
+        SimpleDateFormat formateadorDeFecha;
+
+        try {
+            ContentValues values = new ContentValues();
+            db.beginTransaction();
+
+            values.put(KEY_CITA_MASCOTA, cita.getMascota().getId());
+            values.put(KEY_CITA_NOMBRE, cita.getNombre());
+            values.put(KEY_CITA_DESCRIPCION, cita.getDescripcion());
+            values.put(KEY_CITA_TIPO, cita.getTipo());
+
+            formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.US);
+
+            if (cita.getFechaHora() != null) {
+                values.put(KEY_CITA_FECHA_HORA, formateadorDeFecha.format(cita.getFechaHora()));
+            } else {
+                values.put(KEY_CITA_FECHA_HORA, (byte[]) null);
+            }
+
+            values.put(KEY_CITA_ESTADO, cita.getEstado());
+
+            db.update(TABLA_CITAS, values, KEY_CITA_ID + "= ?", new String[]{cita.getId()});
+            db.setTransactionSuccessful();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            Log.d("ERROR", "Error actualizando cita en la base de datos local");
+        } finally {
+            db.endTransaction();
+        }
+
+    }
+
     public void eliminarMascota(String id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLA_MASCOTAS, KEY_MASCOTA_ID + "=" + id, null);
+    }
+
+    public void eliminarCita(String id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLA_CITAS, KEY_CITA_ID + "=" + id, null);
     }
 
 }

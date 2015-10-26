@@ -388,7 +388,6 @@ public class MascotaFormularioActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.action_guardar:
-                //TODO: Guardar mascota
                 onClickAñadirMascota();
                 break;
         }

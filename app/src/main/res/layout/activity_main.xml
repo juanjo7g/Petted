@@ -16,7 +16,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
-        android:src="@mipmap/ic_launcher_cat" />
+        android:src="@mipmap/ic_launcher_cat"
+        android:layout_alignParentStart="false" />
 
     <EditText
         android:id="@+id/etEmail"
