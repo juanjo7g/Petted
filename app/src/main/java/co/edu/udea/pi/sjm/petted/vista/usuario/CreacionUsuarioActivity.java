@@ -1,4 +1,4 @@
-package co.edu.udea.pi.sjm.petted.vista;
+package co.edu.udea.pi.sjm.petted.vista.usuario;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,7 +24,7 @@ public class CreacionUsuarioActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_creacion_usuario);
+        setContentView(R.layout.activity_formulario_usuario);
         etNombreUsuario = (EditText) findViewById(R.id.etNombreUsuario);
         etCorreoElectronico = (EditText) findViewById(R.id.etCorreoElectronico);
         etContraseña = (EditText) findViewById(R.id.etContraseña);
@@ -56,7 +56,7 @@ public class CreacionUsuarioActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_creacion_usuario, menu);
+        getMenuInflater().inflate(R.menu.menu_formulario_usuario, menu);
         return true;
     }
 

@@ -23,15 +23,15 @@ import co.edu.udea.pi.sjm.petted.util.Utility;
  */
 public class MascotaInformacionFragment extends Fragment {
 
-    TextView tvNombre;
-    TextView tvTipo;
-    TextView tvRaza;
-    Button btnAsociarTagNFC;
-    List<String> listaProximosEventos;
-    ListView lvProximosEventos;
-    ImageView ivFoto;
+    private TextView tvNombre;
+    private TextView tvTipo;
+    private TextView tvRaza;
+    private Button btnAsociarTagNFC;
+    private List<String> listaProximosEventos;
+    private ListView lvProximosEventos;
+    private ImageView ivFoto;
 
-    public MascotaInformacionFragment(){
+    public MascotaInformacionFragment() {
     }
 
     public static MascotaInformacionFragment newInstance() {
@@ -60,7 +60,7 @@ public class MascotaInformacionFragment extends Fragment {
         btnAsociarTagNFC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), AsociarTagNFCActivity.class);
+                Intent i = new Intent(getActivity(), TagNFCFormularioActivity.class);
                 startActivity(i);
             }
         });

@@ -11,10 +11,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import co.edu.udea.pi.sjm.petted.R;
-import co.edu.udea.pi.sjm.petted.SQLite.PettedDataBaseHelper;
 import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
 import co.edu.udea.pi.sjm.petted.dao.impl.UsuarioDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
+import co.edu.udea.pi.sjm.petted.vista.listadoMascotas.ListadoMascotasActivity;
+import co.edu.udea.pi.sjm.petted.vista.usuario.CreacionUsuarioActivity;
 
 public class MainActivity extends AppCompatActivity {
 

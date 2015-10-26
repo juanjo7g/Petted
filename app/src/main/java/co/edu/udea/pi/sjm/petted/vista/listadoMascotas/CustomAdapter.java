@@ -1,4 +1,4 @@
-package co.edu.udea.pi.sjm.petted.vista;
+package co.edu.udea.pi.sjm.petted.vista.listadoMascotas;
 
 import android.app.Activity;
 import android.content.Context;

@@ -102,10 +102,10 @@
         android:layout_below="@+id/spinnerGenero"
         android:layout_marginTop="24dp"
         android:background="@color/ColorPrimary"
+        android:onClick="onClickFoto"
         android:padding="12dp"
         android:text="Foto"
-        android:textColor="@color/blanco"
-        android:onClick="onClickFoto"/>
+        android:textColor="@color/blanco" />
 
     <ImageView
         android:id="@+id/ivFotoPrevia"
@@ -117,6 +117,4 @@
         android:layout_alignTop="@+id/btnFoto"
         android:layout_toEndOf="@+id/btnFoto"
         android:layout_toRightOf="@+id/btnFoto" />
-    />
-
 </RelativeLayout>

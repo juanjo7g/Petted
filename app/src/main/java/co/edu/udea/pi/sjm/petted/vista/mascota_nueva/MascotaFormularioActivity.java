@@ -42,7 +42,6 @@ import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
-import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
 
 public class MascotaFormularioActivity extends AppCompatActivity {
 
@@ -70,7 +69,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mascota_nueva);
+        setContentView(R.layout.activity_formulario_mascota);
 
         // Obtener instancia de la action bar
         ActionBar actionBar = ((AppCompatActivity) this)
@@ -104,6 +103,8 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         if (this.getIntent().getExtras().getSerializable("mascota") != null) {
             inicializarFormulario((Mascota) this.getIntent().getExtras().getSerializable("mascota"));
             super.setTitle("Editar Mascota");
+        } else {
+            super.setTitle("Nueva Mascota");
         }
 
     }
@@ -168,7 +169,6 @@ public class MascotaFormularioActivity extends AppCompatActivity {
             case SELECT_PICTURE:
                 if (resultCode == RESULT_OK) {
                     Uri dir = data.getData();
-                    Bitmap fotoPrevia;
                     try {
                         foto = MediaStore.Images.Media.getBitmap(this.getContentResolver(), dir);
                         ivFotoPrevia.setImageBitmap(foto);
@@ -200,7 +200,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
     }
 
     @Deprecated
-    public void onClickAñadirMascota(View view) {
+    public void onClickGuardarMascota(View view) {
         MascotaDAO dao = new MascotaDAOImpl();
         Mascota m;
         Usuario u;
@@ -221,7 +221,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         }
     }
 
-    public void onClickAñadirMascota() {
+    public void onClickGuardarMascota() {
         MascotaDAO dao = new MascotaDAOImpl();
         Mascota m;
         Usuario u;
@@ -251,21 +251,18 @@ public class MascotaFormularioActivity extends AppCompatActivity {
 
         switch (Validacion.validarMascota(m)) {
             case 0:
-                if (this.getIntent().getExtras().getSerializable("mascota") != null) {
+                if (this.getIntent().getExtras().getSerializable("mascota") != null) { // ACTUALIZAR MASCOTA
+
                     m.setId(((Mascota) this.getIntent().getExtras().getSerializable("mascota")).getId());
                     m.setNotificaciones(((Mascota) this.getIntent().getExtras().getSerializable("mascota")).getNotificaciones());
                     m.setEstado(((Mascota) this.getIntent().getExtras().getSerializable("mascota")).getEstado());
+
                     dao.actualizarMascota(m, this);
 
                     setResult(0);
 
-//                    Intent i = new Intent(this, MascotaActivity.class);
-//                    i.putExtra("id", m.getId() + "");
-//                    i.putExtra("mascota", m);
-//                    startActivity(i);
-
                     Toast.makeText(MascotaFormularioActivity.this, "Mascota editada", Toast.LENGTH_SHORT).show();
-                } else {
+                } else { // CREAR MASCOTA
                     dao.insertarMascota(m, this);
                     Toast.makeText(MascotaFormularioActivity.this, m.getNombre(), Toast.LENGTH_SHORT).show();
                 }
@@ -277,7 +274,6 @@ public class MascotaFormularioActivity extends AppCompatActivity {
     }
 
     private void mostrarFecha() {
-
 
         ibFechaNacimiento.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -373,7 +369,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_mascota_nueva, menu);
+        getMenuInflater().inflate(R.menu.menu_formulario_mascota, menu);
         return true;
     }
 
@@ -389,7 +385,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.action_guardar:
-                onClickAñadirMascota();
+                onClickGuardarMascota();
                 break;
         }
 

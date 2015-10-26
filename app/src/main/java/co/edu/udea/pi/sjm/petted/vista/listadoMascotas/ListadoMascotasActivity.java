@@ -1,4 +1,4 @@
-package co.edu.udea.pi.sjm.petted.vista;
+package co.edu.udea.pi.sjm.petted.vista.listadoMascotas;
 
 
 import android.content.Intent;
@@ -22,6 +22,7 @@ import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dao.impl.UsuarioDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
+import co.edu.udea.pi.sjm.petted.vista.MainActivity;
 import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
 import co.edu.udea.pi.sjm.petted.vista.mascota_nueva.MascotaFormularioActivity;
 
@@ -82,7 +83,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     public void iniciarActividadMascota(Mascota m) {
         Intent i = new Intent(this, MascotaActivity.class);
         i.putExtra("id", m.getId() + "");
-        i.putExtra("mascota", m);
+        // i.putExtra("mascota", m);
         startActivity(i);
     }
 

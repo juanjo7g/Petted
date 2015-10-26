@@ -82,6 +82,13 @@
         <item>Macho</item>
     </string-array>
 
+    <string-array name="TiposDeCitas">
+        <item>Veterinaria</item>
+        <item>Peluquería</item>
+        <item>Vacunación</item>
+        <item>Otra</item>
+    </string-array>
+
     <string name="title_activity_asociar_tag_nfc">AsociarTagNFCActivity</string>
     <string name="title_activity_creacion_usuario">CreacionUsuarioActivity</string>
     <string name="hintNombreUsuario">Nombre de usuario</string>

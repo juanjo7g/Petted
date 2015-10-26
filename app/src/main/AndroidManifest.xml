@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".vista.ListadoMascotasActivity"
+            android:name=".vista.listadoMascotas.ListadoMascotasActivity"
             android:label="@string/title_activity_mascotas" />
         <activity
             android:name=".vista.mascota.MascotaActivity"
@@ -35,12 +35,14 @@
             android:name=".vista.mascota_nueva.MascotaFormularioActivity"
             android:label="@string/title_activity_mascota_nueva" />
         <activity
-            android:name=".vista.mascota.AsociarTagNFCActivity"
+            android:name=".vista.mascota.TagNFCFormularioActivity"
             android:label="@string/title_activity_asociar_tag_nfc" >
         </activity>
         <activity
-            android:name=".vista.CreacionUsuarioActivity"
+            android:name=".vista.usuario.CreacionUsuarioActivity"
             android:label="@string/title_activity_creacion_usuario" >
+        </activity>
+        <activity android:name=".vista.listadoCita.CitaFormularioActivity" >
         </activity>
     </application>
 

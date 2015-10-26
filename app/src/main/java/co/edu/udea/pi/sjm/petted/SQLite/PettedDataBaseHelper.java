@@ -101,7 +101,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 KEY_MASCOTA_PERDIDA + " TEXT, " +
                 " FOREIGN KEY(" + KEY_MASCOTA_PROPIETARIO + ") REFERENCES " + TABLA_USUARIOS +
                 "(" + KEY_USUARIO_CORREO + "))";
-        String CREATE_TABLA_CITAS = "CREATE TABLE" + TABLA_CITAS +
+        String CREATE_TABLA_CITAS = "CREATE TABLE " + TABLA_CITAS +
                 "(" +
                 KEY_CITA_ID + " INTEGER PRIMARY KEY autoincrement," + // Autoincrementable pk
                 KEY_CITA_MASCOTA + " TEXT NOT NULL," + // CLAVE FORANEA, id mascota

@@ -1,6 +1,5 @@
 package co.edu.udea.pi.sjm.petted.vista.mascota;
 
-import android.content.Intent;
 import android.nfc.NfcAdapter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,7 +12,7 @@ import android.widget.Toast;
 
 import co.edu.udea.pi.sjm.petted.R;
 
-public class AsociarTagNFCActivity extends AppCompatActivity {
+public class TagNFCFormularioActivity extends AppCompatActivity {
 
     Button btnAsociar;
     public static final String TAG = "NfcDemo";
@@ -24,7 +23,7 @@ public class AsociarTagNFCActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_asociar_tag_nfc);
+        setContentView(R.layout.activity_formulario_tag_nfc);
         btnAsociar = (Button) findViewById(R.id.btnAsociar);
         btnAsociar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,7 +52,7 @@ public class AsociarTagNFCActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_asociar_tag_nfc, menu);
+        getMenuInflater().inflate(R.menu.menu_formulario_tag_nfc, menu);
         return true;
     }
 
