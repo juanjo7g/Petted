@@ -31,7 +31,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
 
     private List<Mascota> listaMascotas;
     private ListView lvMascotas;
-    private CustomAdapter customAdapter;
+    private MascotaCustomAdapter customAdapter;
     private ImageButton ibtnNuevaMacota;
     private MascotaDAO mDao;
     private UsuarioDAO uDao;
@@ -52,7 +52,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         //crearMascotas();
         mDao = new MascotaDAOImpl();
         listaMascotas = mDao.obtenerMascotas(usuarioActual, this);
-        customAdapter = new CustomAdapter(this, listaMascotas);
+        customAdapter = new MascotaCustomAdapter(this, listaMascotas);
         lvMascotas.setAdapter(customAdapter);
 
         lvMascotas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -76,7 +76,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         super.onResume();
         mDao = new MascotaDAOImpl();
         listaMascotas = mDao.obtenerMascotas(usuarioActual, this);
-        customAdapter = new CustomAdapter(this, listaMascotas);
+        customAdapter = new MascotaCustomAdapter(this, listaMascotas);
         lvMascotas.setAdapter(customAdapter);
     }
 
@@ -128,7 +128,6 @@ public class ListadoMascotasActivity extends AppCompatActivity {
 
         listaMascotas.add(m);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

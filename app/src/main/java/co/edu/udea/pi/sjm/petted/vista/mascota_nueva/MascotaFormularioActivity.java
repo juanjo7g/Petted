@@ -46,14 +46,16 @@ import co.edu.udea.pi.sjm.petted.dto.Usuario;
 public class MascotaFormularioActivity extends AppCompatActivity {
 
 
+    private SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+
     private EditText etFechaNacimiento;
     private DatePickerDialog electorDeFechaDialogo;
-    private SimpleDateFormat formateadorDeFecha;
-    private Spinner spinnerTipoMascota;
-    private Spinner spinnerRazaMascota;
+
+    private Spinner spinnerTipo;
+    private Spinner spinnerRaza;
     private Spinner spinnerGenero;
-    private EditText etNombreMascota;
-    private ImageButton ibFechaNacimiento;
+    private EditText etNombre;
+    private ImageButton ibtnFechaNacimiento;
     private Button btnFoto;
     private ImageView ivFotoPrevia;
     private Bitmap foto;
@@ -82,19 +84,14 @@ public class MascotaFormularioActivity extends AppCompatActivity {
             actionBar.setHomeAsUpIndicator(R.mipmap.ic_close_white);
         }
 
-        etFechaNacimiento = (EditText) findViewById(R.id.etFechaNacimiento);
-        spinnerTipoMascota = (Spinner) findViewById(R.id.spinnerTipoMascota);
-        spinnerRazaMascota = (Spinner) findViewById(R.id.spinnerRazaMascota);
-        spinnerGenero = (Spinner) findViewById(R.id.spinnerGenero);
-        etNombreMascota = (EditText) findViewById(R.id.etNombreMascota);
-        ibFechaNacimiento = (ImageButton) findViewById(R.id.ibFechaNacimiento);
-        btnFoto = (Button) findViewById(R.id.btnFoto);
-        ivFotoPrevia = (ImageView) findViewById(R.id.ivFotoPrevia);
-
-        formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-
-        etFechaNacimiento.setInputType(InputType.TYPE_NULL);
-        etFechaNacimiento.requestFocus();
+        etFechaNacimiento = (EditText) findViewById(R.id.etFechaNacimientoMascota);
+        spinnerTipo = (Spinner) findViewById(R.id.spinnerTipoMascota);
+        spinnerRaza = (Spinner) findViewById(R.id.spinnerRazaMascota);
+        spinnerGenero = (Spinner) findViewById(R.id.spinnerGeneroMascota);
+        etNombre = (EditText) findViewById(R.id.etNombreMascota);
+        ibtnFechaNacimiento = (ImageButton) findViewById(R.id.ibtnFechaNacimientoMascota);
+        btnFoto = (Button) findViewById(R.id.btnFotoMascota);
+        ivFotoPrevia = (ImageView) findViewById(R.id.ivFotoPreviaMascota);
 
         mostrarFecha();
 
@@ -110,16 +107,14 @@ public class MascotaFormularioActivity extends AppCompatActivity {
     }
 
     private void inicializarFormulario(Mascota mascota) {
-        etNombreMascota.setText(mascota.getNombre());
-        SimpleDateFormat formateadorDeFecha;
-        formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+        etNombre.setText(mascota.getNombre());
 
         if (mascota.getFechaNacimiento() != null) {
-            etFechaNacimiento.setText(formateadorDeFecha.format(mascota.getFechaNacimiento()));
+            etFechaNacimiento.setText(formatoFecha.format(mascota.getFechaNacimiento()));
         }
 
-        int posicion = Utility.getIndex(spinnerTipoMascota, mascota.getTipo());
-        spinnerTipoMascota.setSelection(posicion);
+        int posicion = Utility.getIndex(spinnerTipo, mascota.getTipo());
+        spinnerTipo.setSelection(posicion);
 
         spinnerGenero.setSelection(Utility.getIndex(spinnerGenero, mascota.getGenero()));
 
@@ -206,7 +201,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         Usuario u;
         u = (Usuario) this.getIntent().getSerializableExtra("propietario");
         m = new Mascota();
-        m.setNombre(etNombreMascota.getText().toString());
+        m.setNombre(etNombre.getText().toString());
         m.setPropietario(u);
         m.setFoto(Utility.getBytes(Utility.resizeImage(this, R.drawable.mascota1, 300, 300)));
 
@@ -227,16 +222,16 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         Usuario u;
         u = (Usuario) this.getIntent().getSerializableExtra("propietario");
         m = new Mascota();
-        m.setNombre(etNombreMascota.getText().toString());
+        m.setNombre(etNombre.getText().toString());
         m.setPropietario(u);
         try {
-            m.setFechaNacimiento(formateadorDeFecha.parse(etFechaNacimiento.getText().toString()));
+            m.setFechaNacimiento(formatoFecha.parse(etFechaNacimiento.getText().toString()));
         } catch (ParseException e) {
             e.printStackTrace();
             Log.e("Error en fecha", e.getMessage());
         }
-        m.setTipo((String) spinnerTipoMascota.getSelectedItem());
-        m.setRaza((String) spinnerRazaMascota.getSelectedItem());
+        m.setTipo((String) spinnerTipo.getSelectedItem());
+        m.setRaza((String) spinnerRaza.getSelectedItem());
         m.setGenero((String) spinnerGenero.getSelectedItem());
 
         if (foto != null) {
@@ -274,8 +269,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
     }
 
     private void mostrarFecha() {
-
-        ibFechaNacimiento.setOnClickListener(new View.OnClickListener() {
+        ibtnFechaNacimiento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 electorDeFechaDialogo.show();
@@ -284,11 +278,10 @@ public class MascotaFormularioActivity extends AppCompatActivity {
 
         Calendar calendario = Calendar.getInstance();
         electorDeFechaDialogo = new DatePickerDialog(this, new OnDateSetListener() {
-
             public void onDateSet(DatePicker view, int año, int mes, int dia) {
                 Calendar nuevaFecha = Calendar.getInstance();
                 nuevaFecha.set(año, mes, dia);
-                etFechaNacimiento.setText(formateadorDeFecha.format(nuevaFecha.getTime()));
+                etFechaNacimiento.setText(formatoFecha.format(nuevaFecha.getTime()));
             }
         }, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH));
     }
@@ -304,7 +297,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
     }
 
     private void seleccionarItemRaza(String raza) {
-        spinnerRazaMascota.setSelection(Utility.getIndex(spinnerRazaMascota, raza));
+        spinnerRaza.setSelection(Utility.getIndex(spinnerRaza, raza));
     }
 
     private void cambiarItemsSpinnerRaza(int posicion, View view) {
@@ -331,7 +324,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
                         android.R.layout.simple_dropdown_item_1line);
                 break;
         }
-        spinnerRazaMascota.setAdapter(adapter);
+        spinnerRaza.setAdapter(adapter);
     }
 
     private void inicializarSpinners() {
@@ -347,8 +340,8 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         }
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        spinnerTipoMascota.setAdapter(adapter);
-        spinnerTipoMascota.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinnerTipo.setAdapter(adapter);
+        spinnerTipo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 onSelectedItemTiposDeMascotas(view, position, raza);

@@ -1,4 +1,4 @@
-package co.edu.udea.pi.sjm.petted.vista.listadoMascotas;
+package co.edu.udea.pi.sjm.petted.vista.listadoCita;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,20 +12,20 @@ import android.widget.TextView;
 import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.R;
-import co.edu.udea.pi.sjm.petted.dto.Mascota;
+import co.edu.udea.pi.sjm.petted.dto.Cita;
 import co.edu.udea.pi.sjm.petted.util.Utility;
 
 /**
- * Created by Juan on 20/09/2015.
+ * Created by Juan on 26/10/2015.
  */
-public class CustomAdapter extends BaseAdapter {
+public class CitaCustomAdapter extends BaseAdapter {
 
     Context context;
-    List<Mascota> listaMascotas;
+    List<Cita> listaCitas;
 
-    public CustomAdapter(Context context, List<Mascota> listaMascotas) {
+    public CitaCustomAdapter(Context context, List<Cita> listaCitas) {
         this.context = context;
-        this.listaMascotas = listaMascotas;
+        this.listaCitas = listaCitas;
     }
 
     // Cambia dependiendo del layout
@@ -33,13 +33,13 @@ public class CustomAdapter extends BaseAdapter {
         ImageView ivImagen;
         TextView tvNombre;
         TextView tvTipo;
-        TextView tvRaza;
+        TextView tvFecha;
 
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
 
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -52,43 +52,41 @@ public class CustomAdapter extends BaseAdapter {
 
             // No estamos en un activity
             holder.ivImagen = (ImageView) convertView.findViewById(R.id.ivFoto);
-            holder.tvNombre = (TextView) convertView
-                    .findViewById(R.id.tvNombre);
-            holder.tvTipo = (TextView) convertView.findViewById(R.id.tvTipo);
-            holder.tvRaza = (TextView) convertView
-                    .findViewById(R.id.tvRaza);
+            holder.tvNombre = (TextView) convertView.findViewById(R.id.tvNombreCita);
+            holder.tvTipo = (TextView) convertView.findViewById(R.id.tvTipoCita);
+            holder.tvFecha = (TextView) convertView.findViewById(R.id.tvFechaCita);
             convertView.setTag(holder);
 
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        Mascota m = getItem(position);
+        Cita c = getItem(position);
 
-        holder.tvNombre.setText(m.getNombre());
-        holder.tvTipo.setText(m.getTipo());
-        holder.tvRaza.setText(m.getRaza());
+        holder.tvNombre.setText(c.getNombre());
+        holder.tvTipo.setText(c.getTipo());
+        holder.tvFecha.setText(c.getFechaHora().toString());
 
-        if (m.getFoto() != null) {
-            holder.ivImagen.setImageBitmap(Utility.getCircleBitmap(Utility.getFoto(m.getFoto())));
-        }
+//        if (c.getFoto() != null) {
+//            holder.ivImagen.setImageBitmap(Utility.getCircleBitmap(Utility.getFoto(c.getFoto())));
+//        }
 
         return convertView;
     }
 
     @Override
     public int getCount() {
-        return listaMascotas.size();
+        return listaCitas.size();
     }
 
     @Override
-    public Mascota getItem(int arg0) {
-        return listaMascotas.get(arg0);
+    public Cita getItem(int arg0) {
+        return listaCitas.get(arg0);
     }
 
     @Override
     public long getItemId(int arg0) {
-        return listaMascotas.indexOf(getItem(arg0));
+        return listaCitas.indexOf(getItem(arg0));
     }
 
 }

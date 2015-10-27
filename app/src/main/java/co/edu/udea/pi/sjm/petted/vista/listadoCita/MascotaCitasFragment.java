@@ -7,9 +7,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.R;
+import co.edu.udea.pi.sjm.petted.dao.CitaDAO;
+import co.edu.udea.pi.sjm.petted.dao.impl.CitaDAOImpl;
+import co.edu.udea.pi.sjm.petted.dto.Cita;
 import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
 
 /**
@@ -17,7 +26,12 @@ import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
  */
 public class MascotaCitasFragment extends Fragment {
 
-    ImageButton ibNuevaCita;
+    private ListView lvCitas;
+    private ImageButton ibtnNuevaCita;
+    private CitaDAO cDao;
+    private List<Cita> listaCitas;
+    private CitaCustomAdapter customAdapter;
+    private MascotaActivity ma;
 
     public MascotaCitasFragment() {
     }
@@ -31,18 +45,28 @@ public class MascotaCitasFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_mascota_citas, container, false);
-//        ClickMe = (Button) rootView.findViewById(R.id.button);
-//        tv = (TextView) rootView.findViewById(R.id.textView2);
-//        ClickMe.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (tv.getText().toString().contains("Hello")) {
-//                    tv.setText("Hi");
-//                } else tv.setText("Hello");
-//            }
-//        });
-        ibNuevaCita = (ImageButton) rootView.findViewById(R.id.ibtnNuevaCita);
-        ibNuevaCita.setOnClickListener(new View.OnClickListener() {
+
+        lvCitas = (ListView) rootView.findViewById(R.id.lvListaCitas);
+        ibtnNuevaCita = (ImageButton) rootView.findViewById(R.id.ibtnNuevaCita);
+
+        listaCitas = new ArrayList<>();
+
+        cDao = new CitaDAOImpl();
+        ma = (MascotaActivity) getActivity();
+        Toast.makeText(ma, ma.getMascota().getId(), Toast.LENGTH_SHORT).show();
+        //TODO: ARREGLAR METODO-> listaCitas = cDao.obtenerCitas(ma.getMascota(), ma);
+        customAdapter = new CitaCustomAdapter(ma, listaCitas);
+        lvCitas.setAdapter(customAdapter);
+
+        lvCitas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Cita c = customAdapter.getItem(position);
+                // Toast.makeText(view.getContext(), c.getId(), Toast.LENGTH_SHORT).show();
+                // TODO: Dialog mostrando información de la cita
+            }
+        });
+        ibtnNuevaCita.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 iniciarActividadCitaNueva();
@@ -53,7 +77,7 @@ public class MascotaCitasFragment extends Fragment {
 
     private void iniciarActividadCitaNueva() {
         Intent i = new Intent(getActivity(), CitaFormularioActivity.class);
-        i.putExtra("mascotaId",((MascotaActivity)getActivity()).getMascota().getId());
+        i.putExtra("mascotaId", ((MascotaActivity) getActivity()).getMascota().getId());
         startActivity(i);
     }
 }

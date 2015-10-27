@@ -70,7 +70,6 @@
     <string-array name="RazasDeReptiles">
         <item>Iguana</item>
         <item>Gecko</item>
-        <item>Dálmata</item>
         <item>Camaleón</item>
         <item>Otro</item>
     </string-array>
