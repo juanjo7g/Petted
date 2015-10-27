@@ -57,6 +57,8 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
     private static final String KEY_CITA_FECHA_HORA = "fechaHora";
     private static final String KEY_CITA_ESTADO = "estado";
 
+    private static final SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+    private static final SimpleDateFormat formatoFechaHora = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
 
     public static synchronized PettedDataBaseHelper getInstance(Context context) {
         if (sInstance == null) {
@@ -150,19 +152,16 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
 
     public void insertarMascota(Mascota mascota) {
         SQLiteDatabase db = getWritableDatabase();
-        SimpleDateFormat formateadorDeFecha;
 
         try {
-            ContentValues values = new ContentValues();
             db.beginTransaction();
+            ContentValues values = new ContentValues();
 
             values.put(KEY_MASCOTA_PROPIETARIO, mascota.getPropietario().getCorreo());
             values.put(KEY_MASCOTA_NOMBRE, mascota.getNombre());
 
-            formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-
             if (mascota.getFechaNacimiento() != null) {
-                values.put(KEY_MASCOTA_FECHA_NACIMIENTO, formateadorDeFecha.format(mascota.getFechaNacimiento()));
+                values.put(KEY_MASCOTA_FECHA_NACIMIENTO, formatoFecha.format(mascota.getFechaNacimiento()));
             } else {
                 values.put(KEY_MASCOTA_FECHA_NACIMIENTO, (byte[]) null);
             }
@@ -195,21 +194,18 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
 
     public void insertarCita(Cita cita) {
         SQLiteDatabase db = getWritableDatabase();
-        SimpleDateFormat formateadorDeFecha;
 
         try {
-            ContentValues values = new ContentValues();
             db.beginTransaction();
+            ContentValues values = new ContentValues();
 
             values.put(KEY_CITA_MASCOTA, cita.getMascota().getId());
             values.put(KEY_CITA_NOMBRE, cita.getNombre());
             values.put(KEY_CITA_DESCRIPCION, cita.getDescripcion());
             values.put(KEY_CITA_TIPO, cita.getTipo());
 
-            formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.US);
-
             if (cita.getFechaHora() != null) {
-                values.put(KEY_CITA_FECHA_HORA, formateadorDeFecha.format(cita.getFechaHora()));
+                values.put(KEY_CITA_FECHA_HORA, formatoFechaHora.format(cita.getFechaHora()));
             } else {
                 values.put(KEY_CITA_FECHA_HORA, (byte[]) null);
             }
@@ -231,8 +227,8 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         Cursor c = null;
 
-        db.beginTransaction();
         try {
+            db.beginTransaction();
             String selection = KEY_USUARIO_CORREO + " = ? ";//WHERE correo = ?
             String selectionArgs[] = new String[]{correo};
             c = db.query(TABLA_USUARIOS, null, selection, selectionArgs, null, null, null);
@@ -248,8 +244,8 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         Cursor c = null;
 
-        db.beginTransaction();
         try {
+            db.beginTransaction();
             String selection = KEY_USUARIO_LOGUEADO + " = ? ";//WHERE logueado = ?
             String selectionArgs[] = new String[]{"1"};
             c = db.query(TABLA_USUARIOS, null, selection, selectionArgs, null, null, null);
@@ -265,8 +261,8 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         Cursor c = null;
 
-        db.beginTransaction();
         try {
+            db.beginTransaction();
             String selection = KEY_MASCOTA_ID + " = ? ";//WHERE ID = ?
             String selectionArgs[] = new String[]{id + ""};
             c = db.query(TABLA_MASCOTAS, null, selection, selectionArgs, null, null, null);
@@ -282,8 +278,8 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
         Cursor c = null;
 
-        db.beginTransaction();
         try {
+            db.beginTransaction();
             String selection = KEY_CITA_ID + " = ? ";//WHERE ID = ?
             String selectionArgs[] = new String[]{id + ""};
             c = db.query(TABLA_CITAS, null, selection, selectionArgs, null, null, null);
@@ -325,8 +321,8 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
     public void actualizarUsuario(Usuario u) {
         SQLiteDatabase db = getWritableDatabase();
         try {
-            ContentValues values = new ContentValues();
             db.beginTransaction();
+            ContentValues values = new ContentValues();
 
             values.put(KEY_USUARIO_NOMBRE, u.getNombre());
             values.put(KEY_USUARIO_CONTRASEÑA, u.getContraseña());
@@ -345,19 +341,16 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
 
     public void actualizarMascota(Mascota mascota) {
         SQLiteDatabase db = getWritableDatabase();
-        SimpleDateFormat formateadorDeFecha;
 
         try {
-            ContentValues values = new ContentValues();
             db.beginTransaction();
+            ContentValues values = new ContentValues();
 
             values.put(KEY_MASCOTA_PROPIETARIO, mascota.getPropietario().getCorreo());
             values.put(KEY_MASCOTA_NOMBRE, mascota.getNombre());
 
-            formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-
             if (mascota.getFechaNacimiento() != null) {
-                values.put(KEY_MASCOTA_FECHA_NACIMIENTO, formateadorDeFecha.format(mascota.getFechaNacimiento()));
+                values.put(KEY_MASCOTA_FECHA_NACIMIENTO, formatoFecha.format(mascota.getFechaNacimiento()));
             } else {
                 values.put(KEY_MASCOTA_FECHA_NACIMIENTO, (byte[]) null);
             }
@@ -390,21 +383,18 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
 
     public void actualizarCita(Cita cita) {
         SQLiteDatabase db = getWritableDatabase();
-        SimpleDateFormat formateadorDeFecha;
 
         try {
-            ContentValues values = new ContentValues();
             db.beginTransaction();
+            ContentValues values = new ContentValues();
 
             values.put(KEY_CITA_MASCOTA, cita.getMascota().getId());
             values.put(KEY_CITA_NOMBRE, cita.getNombre());
             values.put(KEY_CITA_DESCRIPCION, cita.getDescripcion());
             values.put(KEY_CITA_TIPO, cita.getTipo());
 
-            formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.US);
-
             if (cita.getFechaHora() != null) {
-                values.put(KEY_CITA_FECHA_HORA, formateadorDeFecha.format(cita.getFechaHora()));
+                values.put(KEY_CITA_FECHA_HORA, formatoFechaHora.format(cita.getFechaHora()));
             } else {
                 values.put(KEY_CITA_FECHA_HORA, (byte[]) null);
             }

@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,19 +18,28 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
 import co.edu.udea.pi.sjm.petted.R;
+import co.edu.udea.pi.sjm.petted.dao.CitaDAO;
+import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
+import co.edu.udea.pi.sjm.petted.dao.impl.CitaDAOImpl;
+import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Cita;
+import co.edu.udea.pi.sjm.petted.dto.Mascota;
+import co.edu.udea.pi.sjm.petted.util.Validacion;
 
 public class CitaFormularioActivity extends AppCompatActivity {
 
+    private SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+    private SimpleDateFormat formatoHora = new SimpleDateFormat("hh:mm a", Locale.US);
+    private SimpleDateFormat formatoFechaHora = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
+
     private DatePickerDialog electorDeFechaDialogo;
-    private SimpleDateFormat formateadorDeFecha;
     private TimePickerDialog electorDeHoraDialogo;
-    private SimpleDateFormat formateadorDeHora;
 
     private TextView tvMascotaId;
     private String mascotaId;
@@ -69,9 +79,6 @@ public class CitaFormularioActivity extends AppCompatActivity {
         etHora = (EditText) findViewById(R.id.etHoraCita);
         ibtnHora = (ImageButton) findViewById(R.id.ibtnHoraCita);
 
-        formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-        formateadorDeHora = new SimpleDateFormat("hh:mm a", Locale.US);
-
         mostrarFecha();
         mostrarHora();
 
@@ -84,6 +91,47 @@ public class CitaFormularioActivity extends AppCompatActivity {
             super.setTitle("Nueva Cita");
         }
 
+    }
+
+    public void onClickGuardarCita() {
+        MascotaDAO daoM = new MascotaDAOImpl();
+        CitaDAO daoC = new CitaDAOImpl();
+        Mascota m;
+        Cita c;
+        m = daoM.obtenerMascota(mascotaId, this);
+        c = new Cita();
+        c.setMascota(m);
+        c.setNombre(etNombre.getText().toString());
+        c.setDescripcion(etDescripcion.getText().toString());
+        c.setTipo((String) spinnerTipo.getSelectedItem());
+        try {
+            c.setFechaHora(formatoFechaHora.parse(etFecha.getText().toString() + " " + etHora.getText().toString()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Log.e("Error en fecha", e.getMessage());
+            Toast.makeText(CitaFormularioActivity.this, "ERROR EN LA FECHA Y HORA", Toast.LENGTH_SHORT).show();
+        }
+        c.setEstado("0");
+
+        switch (Validacion.validarCita(c)) {
+            case 0:
+                if (this.getIntent().getExtras().getSerializable("cita") != null) {
+                    c.setId(((Cita) this.getIntent().getExtras().getSerializable("cita")).getId());
+                    c.setEstado(((Cita) this.getIntent().getExtras().getSerializable("cita")).getEstado());
+
+                    daoC.actualizarCita(c, this);
+
+                    setResult(0);
+
+                    Toast.makeText(CitaFormularioActivity.this, "Cita editada", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    daoC.insertarCita(c, this);
+                    Toast.makeText(CitaFormularioActivity.this, "Cita insertada", Toast.LENGTH_SHORT).show();
+                }
+                finish();
+                break;
+        }
     }
 
     private void inicializarSpinner() {
@@ -112,7 +160,10 @@ public class CitaFormularioActivity extends AppCompatActivity {
             public void onDateSet(DatePicker view, int año, int mes, int dia) {
                 Calendar nuevaFecha = Calendar.getInstance();
                 nuevaFecha.set(año, mes, dia);
-                etFecha.setText(formateadorDeFecha.format(nuevaFecha.getTime()));
+                etFecha.setText(formatoFecha.format(nuevaFecha.getTime()));
+                if (etHora.getText().toString().equals("")) {
+                    etHora.setText(formatoHora.format(nuevaFecha.getTime()));
+                }
             }
         }, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH));
     }
@@ -136,7 +187,7 @@ public class CitaFormularioActivity extends AppCompatActivity {
                     nuevaHora.set(Calendar.AM_PM, 1);
                 }
                 nuevaHora.set(Calendar.AM_PM, 0);
-                etHora.setText(formateadorDeHora.format(nuevaHora.getTime()));
+                etHora.setText(formatoHora.format(nuevaHora.getTime()));
             }
         }, calendario.get(Calendar.HOUR), calendario.get(Calendar.MINUTE), false);
     }
@@ -160,7 +211,7 @@ public class CitaFormularioActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.action_guardar:
-                Toast.makeText(CitaFormularioActivity.this, "Guardar", Toast.LENGTH_SHORT).show();
+                onClickGuardarCita();
                 break;
         }
 
