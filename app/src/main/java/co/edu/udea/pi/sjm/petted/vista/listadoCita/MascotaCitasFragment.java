@@ -54,7 +54,9 @@ public class MascotaCitasFragment extends Fragment {
         cDao = new CitaDAOImpl();
         ma = (MascotaActivity) getActivity();
         Toast.makeText(ma, ma.getMascota().getId(), Toast.LENGTH_SHORT).show();
-        //TODO: ARREGLAR METODO-> listaCitas = cDao.obtenerCitas(ma.getMascota(), ma);
+
+        listaCitas = cDao.obtenerCitas(ma.getMascota(), ma);
+
         customAdapter = new CitaCustomAdapter(ma, listaCitas);
         lvCitas.setAdapter(customAdapter);
 
@@ -62,7 +64,7 @@ public class MascotaCitasFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cita c = customAdapter.getItem(position);
-                // Toast.makeText(view.getContext(), c.getId(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(), "Id cita: " + c.getId(), Toast.LENGTH_SHORT).show();
                 // TODO: Dialog mostrando información de la cita
             }
         });
@@ -79,5 +81,14 @@ public class MascotaCitasFragment extends Fragment {
         Intent i = new Intent(getActivity(), CitaFormularioActivity.class);
         i.putExtra("mascotaId", ((MascotaActivity) getActivity()).getMascota().getId());
         startActivity(i);
+    }
+
+    @Override
+    public void onResume() {
+        Toast.makeText(ma, "REINICIAR CITAS", Toast.LENGTH_SHORT).show();
+        listaCitas = cDao.obtenerCitas(ma.getMascota(), ma);
+        customAdapter = new CitaCustomAdapter(ma, listaCitas);
+        lvCitas.setAdapter(customAdapter);
+        super.onResume();
     }
 }

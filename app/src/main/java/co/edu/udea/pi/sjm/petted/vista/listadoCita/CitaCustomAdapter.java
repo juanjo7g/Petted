@@ -6,31 +6,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dto.Cita;
-import co.edu.udea.pi.sjm.petted.util.Utility;
 
 /**
  * Created by Juan on 26/10/2015.
  */
 public class CitaCustomAdapter extends BaseAdapter {
 
-    Context context;
-    List<Cita> listaCitas;
+    private Context context;
+    private List<Cita> listaCitas;
+    private SimpleDateFormat formatoFechaHora = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
+
 
     public CitaCustomAdapter(Context context, List<Cita> listaCitas) {
         this.context = context;
         this.listaCitas = listaCitas;
     }
 
-    // Cambia dependiendo del layout
     private class ViewHolder {
-        ImageView ivImagen;
         TextView tvNombre;
         TextView tvTipo;
         TextView tvFecha;
@@ -46,15 +46,14 @@ public class CitaCustomAdapter extends BaseAdapter {
 
         if (convertView == null) {
 
-            convertView = mInflater.inflate(R.layout.item_mascota_lista, null);
+            convertView = mInflater.inflate(R.layout.item_cita_lista, null);
 
             holder = new ViewHolder();
 
-            // No estamos en un activity
-            holder.ivImagen = (ImageView) convertView.findViewById(R.id.ivFoto);
             holder.tvNombre = (TextView) convertView.findViewById(R.id.tvNombreCita);
-            holder.tvTipo = (TextView) convertView.findViewById(R.id.tvTipoCita);
+            holder.tvTipo = (TextView) convertView.findViewById(R.id.tvTipoCita1);
             holder.tvFecha = (TextView) convertView.findViewById(R.id.tvFechaCita);
+
             convertView.setTag(holder);
 
         } else {
@@ -65,11 +64,9 @@ public class CitaCustomAdapter extends BaseAdapter {
 
         holder.tvNombre.setText(c.getNombre());
         holder.tvTipo.setText(c.getTipo());
-        holder.tvFecha.setText(c.getFechaHora().toString());
-
-//        if (c.getFoto() != null) {
-//            holder.ivImagen.setImageBitmap(Utility.getCircleBitmap(Utility.getFoto(c.getFoto())));
-//        }
+        if (c.getFechaHora() != null) {
+            holder.tvFecha.setText(formatoFechaHora.format(c.getFechaHora()));
+        }
 
         return convertView;
     }
