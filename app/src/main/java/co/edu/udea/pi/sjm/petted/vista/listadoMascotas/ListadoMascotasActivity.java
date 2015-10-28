@@ -2,8 +2,8 @@ package co.edu.udea.pi.sjm.petted.vista.listadoMascotas;
 
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -60,6 +60,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Mascota m = customAdapter.getItem(position);
                 iniciarActividadMascota(m);
+
             }
         });
         ibtnNuevaMacota.setOnClickListener(new View.OnClickListener() {
@@ -70,6 +71,8 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         });
 
     }
+
+
 
     @Override
     protected void onResume() {

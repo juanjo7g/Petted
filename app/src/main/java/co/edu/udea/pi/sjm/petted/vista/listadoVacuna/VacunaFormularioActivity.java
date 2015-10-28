@@ -41,6 +41,7 @@ import co.edu.udea.pi.sjm.petted.dto.Vacuna;
 import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.util.Validacion;
 import co.edu.udea.pi.sjm.petted.vista.listadoCita.CitaFormularioActivity;
+import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
 
 public class VacunaFormularioActivity extends AppCompatActivity {
 
@@ -137,6 +138,10 @@ public class VacunaFormularioActivity extends AppCompatActivity {
                     Toast.makeText(VacunaFormularioActivity.this, "Vacuna Editada", Toast.LENGTH_SHORT).show();
                 } else {
                     vDao.insertarVacuna(v, this);
+                    Intent i = new Intent(this, CitaFormularioActivity.class);
+                    i.putExtra("mascotaId", mascotaId);
+                    i.putExtra("vacuna", v);
+                    startActivity(i);
                 }
                 finish();
                 break;

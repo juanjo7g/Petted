@@ -1,5 +1,6 @@
 package co.edu.udea.pi.sjm.petted.vista.listadoVacuna;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -18,6 +20,7 @@ import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.VacunaDAO;
 import co.edu.udea.pi.sjm.petted.dao.impl.VacunaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Vacuna;
+import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.vista.listadoCita.CitaCustomAdapter;
 import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
 
@@ -65,6 +68,7 @@ public class MascotaVacunasFragment extends Fragment {
                 Vacuna v = customAdapter.getItem(position);
                 Toast.makeText(view.getContext(), "Id vacuna: " + v.getId(), Toast.LENGTH_SHORT).show();
                 // TODO: Dialog mostrando información de la vacuna
+                mostrarFoto(v.getValidacion());
             }
         });
         ibtnNuevaVacuna.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +79,15 @@ public class MascotaVacunasFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    private void mostrarFoto(byte[] v) {
+        Dialog dialog = new Dialog(ma);
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setTitle("Validación de la vacuna");
+        ImageView image = (ImageView) dialog.findViewById(R.id.ivImagen);
+        image.setImageBitmap(Utility.getFoto(v));
+        dialog.show();
     }
 
     private void iniciarActividadVacunaNueva() {

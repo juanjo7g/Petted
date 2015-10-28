@@ -37,6 +37,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
     private static final String KEY_USUARIO_NOMBRE = "nombre";
     private static final String KEY_USUARIO_CONTRASEÑA = "contraseña";
     private static final String KEY_USUARIO_LOGUEADO = "logueado"; // 0-> No logueado 1-> Logueado
+    //TODO: Estado para usuario
 
     private static final String KEY_MASCOTA_ID = "id";
     private static final String KEY_MASCOTA_PROPIETARIO = "propietario";
@@ -125,7 +126,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 KEY_CITA_FECHA_HORA + " TEXT," +
                 KEY_CITA_ESTADO + " TEXT," +
                 " FOREIGN KEY(" + KEY_CITA_MASCOTA + ") REFERENCES " + TABLA_MASCOTAS +
-                "(" + KEY_MASCOTA_ID + "))";
+                "(" + KEY_MASCOTA_ID + ") ON DELETE CASCADE)";
 
         String CREATE_TABLA_VACUNAS = "CREATE TABLE " + TABLA_VACUNAS +
                 "(" +
@@ -137,7 +138,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 KEY_VACUNA_VALIDACION + " BLOB," +
                 KEY_VACUNA_ESTADO + " TEXT," +
                 " FOREIGN KEY(" + KEY_VACUNA_MASCOTA + ") REFERENCES " + TABLA_MASCOTAS +
-                "(" + KEY_MASCOTA_ID + "))";
+                "(" + KEY_MASCOTA_ID + ") ON DELETE CASCADE)";
 
         db.execSQL(CREATE_TABLA_USUARIOS);
         db.execSQL(CREATE_TABLA_MASCOTAS);
@@ -414,7 +415,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         Cursor c;
         String selection = KEY_CITA_MASCOTA + " = ? ";//WHERE mascota.id = ?
         String selectionArgs[] = new String[]{idMascota};
-        c = db.query(TABLA_CITAS, null, selection, selectionArgs, null, null, null);
+        c = db.query(TABLA_CITAS, null, selection, selectionArgs, null, null, KEY_CITA_FECHA_HORA);
         return c;
     }
 

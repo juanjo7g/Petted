@@ -1,5 +1,6 @@
 package co.edu.udea.pi.sjm.petted.vista.mascota;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -31,6 +32,8 @@ public class MascotaInformacionFragment extends Fragment {
     private ListView lvProximosEventos;
     private ImageView ivFoto;
 
+    private MascotaActivity ma;
+
     public MascotaInformacionFragment() {
     }
 
@@ -50,12 +53,19 @@ public class MascotaInformacionFragment extends Fragment {
         lvProximosEventos = (ListView) rootView.findViewById(R.id.lvProximosEventos);
         ivFoto = (ImageView) rootView.findViewById(R.id.ivFoto);
 
-        MascotaActivity ma = (MascotaActivity) getActivity();
+        ma = (MascotaActivity) getActivity();
 
         tvNombre.setText(ma.getMascota().getNombre());
         tvTipo.setText(ma.getMascota().getTipo());
         tvRaza.setText(ma.getMascota().getRaza());
         ivFoto.setImageBitmap(Utility.getCircleBitmap(Utility.getFoto(ma.getMascota().getFoto())));
+
+        ivFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mostrarFoto(ma.getMascota().getFoto(), ma.getMascota().getNombre());
+            }
+        });
 
         btnAsociarTagNFC.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +83,15 @@ public class MascotaInformacionFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         lvProximosEventos.setAdapter(adapter);
         return rootView;
+    }
+
+    private void mostrarFoto(byte[] foto, String titulo) {
+        Dialog dialog = new Dialog(ma);
+        dialog.setContentView(R.layout.custom_dialog);
+        dialog.setTitle(titulo);
+        ImageView image = (ImageView) dialog.findViewById(R.id.ivImagen);
+        image.setImageBitmap(Utility.getFoto(foto));
+        dialog.show();
     }
 
 

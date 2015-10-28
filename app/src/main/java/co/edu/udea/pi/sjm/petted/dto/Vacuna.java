@@ -1,11 +1,12 @@
 package co.edu.udea.pi.sjm.petted.dto;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Juan on 27/10/2015.
  */
-public class Vacuna {
+public class Vacuna implements Serializable{
     private String id; //pk autoincrementable
     private Mascota mascota;
     private String nombre;

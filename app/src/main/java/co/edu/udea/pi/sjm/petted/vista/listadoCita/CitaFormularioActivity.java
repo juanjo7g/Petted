@@ -30,6 +30,7 @@ import co.edu.udea.pi.sjm.petted.dao.impl.CitaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Cita;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
+import co.edu.udea.pi.sjm.petted.dto.Vacuna;
 import co.edu.udea.pi.sjm.petted.util.Validacion;
 
 public class CitaFormularioActivity extends AppCompatActivity {
@@ -90,7 +91,20 @@ public class CitaFormularioActivity extends AppCompatActivity {
         } else {
             super.setTitle("Nueva Cita");
         }
+        if (this.getIntent().getExtras().getSerializable("vacuna") != null) {
+            inicializarFormulario((Vacuna) this.getIntent().getExtras().getSerializable("vacuna"));
+        }
 
+    }
+
+    private void inicializarFormulario(Vacuna vacuna) {
+        etNombre.setText(vacuna.getNombre());
+        etDescripcion.setText("Aplicación de la vacuna " + vacuna.getNombre());
+        spinnerTipo.setSelection(2);
+        spinnerTipo.setEnabled(false);
+        if (vacuna.getFechaProxima() != null) {
+            etFecha.setText(formatoFecha.format(vacuna.getFechaProxima().getTime()));
+        }
     }
 
     public void onClickGuardarCita() {
