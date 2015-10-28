@@ -94,7 +94,7 @@
         android:layout_marginTop="10dp" />
 
     <Button
-        android:id="@+id/btnFotoMascota"
+        android:id="@+id/btnFoto"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/tvTipoMascota"
@@ -111,10 +111,10 @@
         android:id="@+id/ivFotoPreviaMascota"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/btnFotoMascota"
+        android:layout_alignBottom="@+id/btnFoto"
         android:layout_alignEnd="@+id/etFechaNacimientoMascota"
         android:layout_alignRight="@+id/etFechaNacimientoMascota"
-        android:layout_alignTop="@+id/btnFotoMascota"
-        android:layout_toEndOf="@+id/btnFotoMascota"
-        android:layout_toRightOf="@+id/btnFotoMascota" />
+        android:layout_alignTop="@+id/btnFoto"
+        android:layout_toEndOf="@+id/btnFoto"
+        android:layout_toRightOf="@+id/btnFoto" />
 </RelativeLayout>

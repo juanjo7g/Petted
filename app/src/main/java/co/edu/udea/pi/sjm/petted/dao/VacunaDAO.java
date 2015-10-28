@@ -15,7 +15,7 @@ public interface VacunaDAO {
 
     Vacuna obtenerVacuna(String id, Context context);
 
-    void actualizarCita(Vacuna vacuna, Context context);
+    void actualizarVacuna(Vacuna vacuna, Context context);
 
     void eliminarVacuna(Vacuna vacuna, Context context);
 

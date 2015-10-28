@@ -44,6 +44,8 @@
         </activity>
         <activity android:name=".vista.listadoCita.CitaFormularioActivity" >
         </activity>
+        <activity android:name=".vista.listadoVacuna.VacunaFormularioActivity" >
+        </activity>
     </application>
 
 </manifest>

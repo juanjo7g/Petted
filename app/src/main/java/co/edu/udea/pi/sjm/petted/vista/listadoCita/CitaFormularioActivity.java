@@ -94,11 +94,11 @@ public class CitaFormularioActivity extends AppCompatActivity {
     }
 
     public void onClickGuardarCita() {
-        MascotaDAO daoM = new MascotaDAOImpl();
-        CitaDAO daoC = new CitaDAOImpl();
+        MascotaDAO mDao = new MascotaDAOImpl();
+        CitaDAO cDao = new CitaDAOImpl();
         Mascota m;
         Cita c;
-        m = daoM.obtenerMascota(mascotaId, this);
+        m = mDao.obtenerMascota(mascotaId, this);
         c = new Cita();
         c.setMascota(m);
         c.setNombre(etNombre.getText().toString());
@@ -109,7 +109,6 @@ public class CitaFormularioActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
             Log.e("Error en fecha", e.getMessage());
-            Toast.makeText(CitaFormularioActivity.this, "ERROR EN LA FECHA Y HORA", Toast.LENGTH_SHORT).show();
         }
         c.setEstado("0");
 
@@ -119,14 +118,14 @@ public class CitaFormularioActivity extends AppCompatActivity {
                     c.setId(((Cita) this.getIntent().getExtras().getSerializable("cita")).getId());
                     c.setEstado(((Cita) this.getIntent().getExtras().getSerializable("cita")).getEstado());
 
-                    daoC.actualizarCita(c, this);
+                    cDao.actualizarCita(c, this);
 
                     setResult(0);
 
                     Toast.makeText(CitaFormularioActivity.this, "Cita editada", Toast.LENGTH_SHORT).show();
 
                 } else {
-                    daoC.insertarCita(c, this);
+                    cDao.insertarCita(c, this);
                     Toast.makeText(CitaFormularioActivity.this, "Cita insertada", Toast.LENGTH_SHORT).show();
                 }
                 finish();

@@ -1,0 +1,10 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="co.edu.udea.pi.sjm.petted.vista.listadoVacuna.VacunaFormularioActivity">
+    <item
+        android:id="@+id/action_guardar"
+        android:orderInCategory="100"
+        android:title="@string/action_guardar"
+        app:showAsAction="ifRoom" />
+</menu>

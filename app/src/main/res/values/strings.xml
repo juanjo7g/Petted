@@ -105,4 +105,5 @@
     <string name="notas_label">Notas</string>
     <string name="notas_hint">Notas hint</string>
     <string name="action_guardar">Guardar</string>
+    <string name="title_activity_vacuna_formulario">VacunaFormularioActivity</string>
 </resources>

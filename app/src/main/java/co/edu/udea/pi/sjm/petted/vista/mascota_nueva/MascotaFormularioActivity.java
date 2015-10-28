@@ -13,7 +13,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,7 +55,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
     private Spinner spinnerGenero;
     private EditText etNombre;
     private ImageButton ibtnFechaNacimiento;
-    private Button btnFoto;
+    //    private Button btnFoto;
     private ImageView ivFotoPrevia;
     private Bitmap foto;
 
@@ -90,7 +89,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         spinnerGenero = (Spinner) findViewById(R.id.spinnerGeneroMascota);
         etNombre = (EditText) findViewById(R.id.etNombreMascota);
         ibtnFechaNacimiento = (ImageButton) findViewById(R.id.ibtnFechaNacimientoMascota);
-        btnFoto = (Button) findViewById(R.id.btnFotoMascota);
+//        btnFoto = (Button) findViewById(R.id.btnFoto);
         ivFotoPrevia = (ImageView) findViewById(R.id.ivFotoPreviaMascota);
 
         mostrarFecha();
@@ -275,7 +274,6 @@ public class MascotaFormularioActivity extends AppCompatActivity {
                 electorDeFechaDialogo.show();
             }
         });
-
         Calendar calendario = Calendar.getInstance();
         electorDeFechaDialogo = new DatePickerDialog(this, new OnDateSetListener() {
             public void onDateSet(DatePicker view, int año, int mes, int dia) {

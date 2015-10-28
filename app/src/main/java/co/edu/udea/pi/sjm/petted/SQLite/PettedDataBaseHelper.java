@@ -97,6 +97,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 KEY_USUARIO_CONTRASEÑA + " TEXT NOT NULL," +
                 KEY_USUARIO_LOGUEADO + " TEXT" +
                 ")";
+
         String CREATE_TABLA_MASCOTAS = "CREATE TABLE " + TABLA_MASCOTAS +
                 "(" +
                 KEY_MASCOTA_ID + " INTEGER PRIMARY KEY autoincrement," + // Autoincrementable PK
@@ -150,6 +151,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             db.execSQL("DROP TABLE IF EXISTS " + TABLA_USUARIOS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLA_MASCOTAS);
             db.execSQL("DROP TABLE IF EXISTS " + TABLA_CITAS);
+            db.execSQL("DROP TABLE IF EXISTS " + TABLA_VACUNAS);
             onCreate(db);
         }
     }

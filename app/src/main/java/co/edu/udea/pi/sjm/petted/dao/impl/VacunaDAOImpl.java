@@ -66,7 +66,7 @@ public class VacunaDAOImpl implements VacunaDAO {
     }
 
     @Override
-    public void actualizarCita(Vacuna vacuna, Context context) {
+    public void actualizarVacuna(Vacuna vacuna, Context context) {
         PettedDataBaseHelper helper;
         helper = PettedDataBaseHelper.getInstance(context);
         helper.actualizarVacuna(vacuna);
