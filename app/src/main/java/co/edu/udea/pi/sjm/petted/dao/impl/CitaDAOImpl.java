@@ -2,7 +2,6 @@ package co.edu.udea.pi.sjm.petted.dao.impl;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,6 +18,8 @@ import co.edu.udea.pi.sjm.petted.dto.Mascota;
  * Created by Juan on 25/10/2015.
  */
 public class CitaDAOImpl implements CitaDAO {
+    private SimpleDateFormat formatoFechaHora = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
+
     @Override
     public void insertarCita(Cita cita, Context context) {
         PettedDataBaseHelper helper;
@@ -48,9 +49,7 @@ public class CitaDAOImpl implements CitaDAO {
             cita.setTipo(c.getString(4));
 
             if (c.getString(5) != null) {
-                SimpleDateFormat formateadorDeFecha;
-                formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.US);
-                cita.setFechaHora(formateadorDeFecha.parse(c.getString(5)));
+                cita.setFechaHora(formatoFechaHora.parse(c.getString(5)));
             }
             cita.setEstado(c.getString(6));
 
@@ -72,7 +71,7 @@ public class CitaDAOImpl implements CitaDAO {
         PettedDataBaseHelper helper;
         String id = cita.getId();
         helper = PettedDataBaseHelper.getInstance(context);
-        helper.eliminarMascota(id);
+        helper.eliminarCita(id);
     }
 
     @Override
@@ -83,23 +82,18 @@ public class CitaDAOImpl implements CitaDAO {
         helper = PettedDataBaseHelper.getInstance(context);
         c = helper.obtenerCitas(mascota);
         Cita cita;
-        Mascota m;
         MascotaDAO dao = new MascotaDAOImpl();
         try {
             while (c.moveToNext()) {
                 cita = new Cita();
-                m = new Mascota();
-                m = dao.obtenerMascota(c.getString(1), context);
                 cita.setId(c.getString(0));
-                cita.setMascota(m);
+                cita.setMascota(dao.obtenerMascota(c.getString(1), context));
                 cita.setNombre(c.getString(2));
                 cita.setDescripcion(c.getString(3));
                 cita.setTipo(c.getString(4));
 
                 if (c.getString(5) != null) {
-                    SimpleDateFormat formateadorDeFecha;
-                    formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.US);
-                    cita.setFechaHora(formateadorDeFecha.parse(c.getString(5)));
+                    cita.setFechaHora(formatoFechaHora.parse(c.getString(5)));
                 }
                 cita.setEstado(c.getString(6));
 

@@ -19,6 +19,8 @@ import co.edu.udea.pi.sjm.petted.dto.Usuario;
  * Created by Juan on 02/10/2015.
  */
 public class MascotaDAOImpl implements MascotaDAO {
+    private SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+
     @Override
     public void insertarMascota(Mascota mascota, Context context) {
         PettedDataBaseHelper helper;
@@ -45,9 +47,7 @@ public class MascotaDAOImpl implements MascotaDAO {
             m.setPropietario(dao.obtenerUsuario(c.getString(1), context));
             m.setNombre(c.getString(2));
             if (c.getString(3) != null) {
-                SimpleDateFormat formateadorDeFecha;
-                formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-                m.setFechaNacimiento(formateadorDeFecha.parse(c.getString(3)));
+                m.setFechaNacimiento(formatoFecha.parse(c.getString(3)));
             }
             m.setTipo(c.getString(4));
             m.setRaza(c.getString(5));
@@ -98,9 +98,7 @@ public class MascotaDAOImpl implements MascotaDAO {
                 m.setPropietario(dao.obtenerUsuario(c.getString(1), context));
                 m.setNombre(c.getString(2));
                 if (c.getString(3) != null) {
-                    SimpleDateFormat formateadorDeFecha;
-                    formateadorDeFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-                    m.setFechaNacimiento(formateadorDeFecha.parse(c.getString(3)));
+                    m.setFechaNacimiento(formatoFecha.parse(c.getString(3)));
                 }
                 m.setTipo(c.getString(4));
                 m.setRaza(c.getString(5));

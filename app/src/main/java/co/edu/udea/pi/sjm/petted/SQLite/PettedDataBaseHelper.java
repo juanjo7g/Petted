@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import co.edu.udea.pi.sjm.petted.dto.Cita;
+import co.edu.udea.pi.sjm.petted.dto.Vacuna;
 import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
@@ -30,6 +31,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
     private static final String TABLA_USUARIOS = "usuarios";
     private static final String TABLA_MASCOTAS = "mascotas";
     private static final String TABLA_CITAS = "citas";
+    private static final String TABLA_VACUNAS = "vacunas";
 
     private static final String KEY_USUARIO_CORREO = "correo";
     private static final String KEY_USUARIO_NOMBRE = "nombre";
@@ -56,6 +58,14 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
     private static final String KEY_CITA_TIPO = "tipo";
     private static final String KEY_CITA_FECHA_HORA = "fechaHora";
     private static final String KEY_CITA_ESTADO = "estado";
+
+    private static final String KEY_VACUNA_ID = "id";
+    private static final String KEY_VACUNA_MASCOTA = "mascota";
+    private static final String KEY_VACUNA_NOMBRE = "nombre";
+    private static final String KEY_VACUNA_FECHA = "fecha";
+    private static final String KEY_VACUNA_FECHA_PROXIMA = "fechaProxima";
+    private static final String KEY_VACUNA_VALIDACION = "validacion";
+    private static final String KEY_VACUNA_ESTADO = "estado";
 
     private static final SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
     private static final SimpleDateFormat formatoFechaHora = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
@@ -103,6 +113,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 KEY_MASCOTA_PERDIDA + " TEXT, " +
                 " FOREIGN KEY(" + KEY_MASCOTA_PROPIETARIO + ") REFERENCES " + TABLA_USUARIOS +
                 "(" + KEY_USUARIO_CORREO + "))";
+
         String CREATE_TABLA_CITAS = "CREATE TABLE " + TABLA_CITAS +
                 "(" +
                 KEY_CITA_ID + " INTEGER PRIMARY KEY autoincrement," + // Autoincrementable pk
@@ -115,9 +126,22 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
                 " FOREIGN KEY(" + KEY_CITA_MASCOTA + ") REFERENCES " + TABLA_MASCOTAS +
                 "(" + KEY_MASCOTA_ID + "))";
 
+        String CREATE_TABLA_VACUNAS = "CREATE TABLE " + TABLA_VACUNAS +
+                "(" +
+                KEY_VACUNA_ID + " INTEGER PRIMARY KEY autoincrement," + // Autoincrementable pk
+                KEY_VACUNA_MASCOTA + " TEXT NOT NULL," + // CLAVE FORANEA, id mascota
+                KEY_VACUNA_NOMBRE + " TEXT," +
+                KEY_VACUNA_FECHA + " TEXT," +
+                KEY_VACUNA_FECHA_PROXIMA + " TEXT," +
+                KEY_VACUNA_VALIDACION + " BLOB," +
+                KEY_VACUNA_ESTADO + " TEXT," +
+                " FOREIGN KEY(" + KEY_VACUNA_MASCOTA + ") REFERENCES " + TABLA_MASCOTAS +
+                "(" + KEY_MASCOTA_ID + "))";
+
         db.execSQL(CREATE_TABLA_USUARIOS);
         db.execSQL(CREATE_TABLA_MASCOTAS);
         db.execSQL(CREATE_TABLA_CITAS);
+        db.execSQL(CREATE_TABLA_VACUNAS);
     }
 
     @Override
@@ -223,6 +247,46 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void insertarVacuna(Vacuna vacuna) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        try {
+            db.beginTransaction();
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_VACUNA_MASCOTA, vacuna.getMascota().getId());
+            values.put(KEY_VACUNA_NOMBRE, vacuna.getNombre());
+
+            if (vacuna.getFecha() != null) {
+                values.put(KEY_VACUNA_FECHA, formatoFecha.format(vacuna.getFecha()));
+            } else {
+                values.put(KEY_VACUNA_FECHA, (byte[]) null);
+            }
+            if (vacuna.getFecha() != null) {
+                values.put(KEY_VACUNA_FECHA_PROXIMA, formatoFecha.format(vacuna.getFechaProxima()));
+            } else {
+                values.put(KEY_VACUNA_FECHA_PROXIMA, (byte[]) null);
+            }
+
+            if (vacuna.getValidacion() != null) {
+                values.put(KEY_VACUNA_VALIDACION, vacuna.getValidacion()); // Se obtiene el arreglo de bytes
+            } else {
+                values.put(KEY_VACUNA_VALIDACION, (byte[]) null);
+            }
+
+            values.put(KEY_VACUNA_ESTADO, "0");
+
+            db.insertOrThrow(TABLA_VACUNAS, null, values);
+            db.setTransactionSuccessful();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            Log.d("ERROR", "Error almacenando vacuna en la base de datos");
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     public Cursor obtenerUsuario(String correo) {
         SQLiteDatabase db = getWritableDatabase();
         Cursor c = null;
@@ -274,6 +338,23 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         return c;
     }
 
+    public Cursor obtenerMascotaTag(String idTag) {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = null;
+
+        try {
+            db.beginTransaction();
+            String selection = KEY_MASCOTA_ID_TAG + " = ? ";//WHERE ID_tag = ?
+            String selectionArgs[] = new String[]{idTag + ""};
+            c = db.query(TABLA_MASCOTAS, null, selection, selectionArgs, null, null, null);
+        } catch (Exception e) {
+            Log.d("ERROR", "Error");
+        } finally {
+            db.endTransaction();
+        }
+        return c;
+    }
+
     public Cursor obtenerCita(String id) {
         SQLiteDatabase db = getWritableDatabase();
         Cursor c = null;
@@ -283,6 +364,23 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             String selection = KEY_CITA_ID + " = ? ";//WHERE ID = ?
             String selectionArgs[] = new String[]{id + ""};
             c = db.query(TABLA_CITAS, null, selection, selectionArgs, null, null, null);
+        } catch (Exception e) {
+            Log.d("ERROR", "Error");
+        } finally {
+            db.endTransaction();
+        }
+        return c;
+    }
+
+    public Cursor obtenerVacuna(String id) {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor c = null;
+
+        try {
+            db.beginTransaction();
+            String selection = KEY_VACUNA_ID + " = ? ";//WHERE ID = ?
+            String selectionArgs[] = new String[]{id + ""};
+            c = db.query(TABLA_VACUNAS, null, selection, selectionArgs, null, null, null);
         } catch (Exception e) {
             Log.d("ERROR", "Error");
         } finally {
@@ -315,6 +413,16 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
         String selection = KEY_CITA_MASCOTA + " = ? ";//WHERE mascota.id = ?
         String selectionArgs[] = new String[]{idMascota};
         c = db.query(TABLA_CITAS, null, selection, selectionArgs, null, null, null);
+        return c;
+    }
+
+    public Cursor obtenerVacunas(Mascota m) {
+        SQLiteDatabase db = getWritableDatabase();
+        String idMascota = m.getId();
+        Cursor c;
+        String selection = KEY_VACUNA_MASCOTA + " = ? ";//WHERE mascota.id = ?
+        String selectionArgs[] = new String[]{idMascota};
+        c = db.query(TABLA_VACUNAS, null, selection, selectionArgs, null, null, null);
         return c;
     }
 
@@ -413,6 +521,47 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public void actualizarVacuna(Vacuna vacuna) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        try {
+            db.beginTransaction();
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_VACUNA_MASCOTA, vacuna.getMascota().getId());
+            values.put(KEY_VACUNA_NOMBRE, vacuna.getNombre());
+
+            if (vacuna.getFecha() != null) {
+                values.put(KEY_VACUNA_FECHA, formatoFecha.format(vacuna.getFecha()));
+            } else {
+                values.put(KEY_VACUNA_FECHA, (byte[]) null);
+            }
+            if (vacuna.getFecha() != null) {
+                values.put(KEY_VACUNA_FECHA_PROXIMA, formatoFecha.format(vacuna.getFechaProxima()));
+            } else {
+                values.put(KEY_VACUNA_FECHA_PROXIMA, (byte[]) null);
+            }
+
+            if (vacuna.getValidacion() != null) {
+                values.put(KEY_VACUNA_VALIDACION, vacuna.getValidacion()); // Se obtiene el arreglo de bytes
+            } else {
+                values.put(KEY_VACUNA_VALIDACION, (byte[]) null);
+            }
+
+            values.put(KEY_CITA_ESTADO, vacuna.getEstado());
+
+            db.update(TABLA_VACUNAS, values, KEY_VACUNA_ID + "= ?", new String[]{vacuna.getId()});
+            db.setTransactionSuccessful();
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            Log.d("ERROR", "Error actualizando vacuna en la base de datos local");
+        } finally {
+            db.endTransaction();
+        }
+
+    }
+
     public void eliminarMascota(String id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLA_MASCOTAS, KEY_MASCOTA_ID + "=" + id, null);
@@ -421,6 +570,11 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
     public void eliminarCita(String id) {
         SQLiteDatabase db = getWritableDatabase();
         db.delete(TABLA_CITAS, KEY_CITA_ID + "=" + id, null);
+    }
+
+    public void eliminarVacuna(String id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLA_VACUNAS, KEY_VACUNA_ID + "=" + id, null);
     }
 
 }
