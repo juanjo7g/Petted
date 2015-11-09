@@ -34,7 +34,7 @@
             android:name=".vista.mascota.MascotaActivity"
             android:label="@string/title_activity_mascota" />
         <activity
-            android:name=".vista.mascota_nueva.MascotaFormularioActivity"
+            android:name=".vista.mascota.MascotaFormularioActivity"
             android:label="@string/title_activity_mascota_nueva" />
         <activity
             android:name=".vista.mascota.TagNFCFormularioActivity"
@@ -47,7 +47,7 @@
                 <!--android:resource="@xml/nfc_tech_filter" />-->
         </activity>
         <activity
-            android:name=".vista.usuario.CreacionUsuarioActivity"
+            android:name=".vista.usuario.UsuarioFormularioActivity"
             android:label="@string/title_activity_creacion_usuario"></activity>
         <activity android:name=".vista.listadoCita.CitaFormularioActivity"></activity>
         <activity android:name=".vista.listadoVacuna.VacunaFormularioActivity"></activity>

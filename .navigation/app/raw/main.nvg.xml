@@ -14,7 +14,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "co.edu.udea.pi.sjm.petted.vista.usuario.CreacionUsuarioActivity"/>
+        className = "co.edu.udea.pi.sjm.petted.vista.usuario.UsuarioFormularioActivity"/>
       <point      
         x = "2112"      
         y = "196"/>
@@ -38,7 +38,7 @@
     <statePointEntry>
       <state      
         class = "com.android.tools.idea.editors.navigation.model.ActivityState"      
-        className = "co.edu.udea.pi.sjm.petted.vista.mascota_nueva.MascotaFormularioActivity"/>
+        className = "co.edu.udea.pi.sjm.petted.vista.mascota.MascotaFormularioActivity"/>
       <point      
         x = "1008"      
         y = "140"/>

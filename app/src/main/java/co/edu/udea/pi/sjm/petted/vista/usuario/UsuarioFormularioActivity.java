@@ -9,17 +9,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
 import co.edu.udea.pi.sjm.petted.R;
-import co.edu.udea.pi.sjm.petted.util.Validacion;
 import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
 import co.edu.udea.pi.sjm.petted.dao.impl.UsuarioDAOImpl;
+import co.edu.udea.pi.sjm.petted.util.Validacion;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
 
-public class CreacionUsuarioActivity extends AppCompatActivity {
+public class UsuarioFormularioActivity extends AppCompatActivity {
 
     private EditText etNombreUsuario;
     private EditText etCorreoElectronico;
@@ -39,29 +38,14 @@ public class CreacionUsuarioActivity extends AppCompatActivity {
 
     public void onClickCrearUsuario(View v) {
         Usuario u = new Usuario();
+        UsuarioDAO daoU = new UsuarioDAOImpl();
         u.setCorreo(etCorreoElectronico.getText().toString());
         u.setNombre(etNombreUsuario.getText().toString());
         u.setContraseña(etContraseña.getText().toString());
+
         switch (Validacion.validarUsuario(u)) {
             case 0:
-                ParseUser usuario = new ParseUser();
-                usuario.setUsername(u.getNombre());
-                usuario.setPassword(u.getContraseña());
-                usuario.setEmail(u.getCorreo());
-
-                usuario.signUpInBackground(new SignUpCallback() {
-                    @Override
-                    public void done(ParseException e) {
-                        if (e == null) {
-                            Toast.makeText(CreacionUsuarioActivity.this, "Usuario creado con exito",
-                                    Toast.LENGTH_SHORT).show();
-                            finish();
-                        }else{
-                            Toast.makeText(CreacionUsuarioActivity.this, "Error creando usuario",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+                daoU.insertarUsuario(u,this);
                 break;
             case 1:
                 break;

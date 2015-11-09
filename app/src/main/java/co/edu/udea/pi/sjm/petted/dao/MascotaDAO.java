@@ -19,7 +19,5 @@ public interface MascotaDAO {
 
     void eliminarMascota(Mascota mascota, Context context);
 
-    List<Mascota> obtenerMascotas(Usuario usuario, Context context);
-
     List<Mascota> obtenerMascotas(Context context);
 }

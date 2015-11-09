@@ -12,11 +12,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
 import com.parse.LogOutCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.text.SimpleDateFormat;
@@ -25,9 +22,11 @@ import java.util.List;
 import java.util.Locale;
 
 import co.edu.udea.pi.sjm.petted.R;
+import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
+import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
-import co.edu.udea.pi.sjm.petted.vista.mascota_nueva.MascotaFormularioActivity;
+import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaFormularioActivity;
 
 public class ListadoMascotasActivity extends AppCompatActivity {
 
@@ -36,6 +35,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     private ListView lvMascotas;
     private MascotaCustomAdapter customAdapter;
     private ImageButton ibtnNuevaMacota;
+    private MascotaDAO daoM;
 
     private SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
@@ -48,19 +48,10 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         lvMascotas = (ListView) this.findViewById(R.id.lvListaMascotas);
         ibtnNuevaMacota = (ImageButton) this.findViewById(R.id.ibtnNuevaMascota);
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
-        query.fromLocalDatastore();
-        query.whereEqualTo("propietario", ParseUser.getCurrentUser());
-
-        try {
-            List<ParseObject> list = query.find();
-            if (list.size() == 0) {
-                Toast.makeText(ListadoMascotasActivity.this, "No hay mascotas todavia", Toast.LENGTH_SHORT).show();
-            }
-            fromParseObjectsToListaMascotas(list);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        daoM = new MascotaDAOImpl();
+        listaMascotas = daoM.obtenerMascotas(this);
+        customAdapter = new MascotaCustomAdapter(this, listaMascotas);
+        lvMascotas.setAdapter(customAdapter);
 
         lvMascotas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -78,47 +69,13 @@ public class ListadoMascotasActivity extends AppCompatActivity {
 
     }
 
-    public void fromParseObjectsToListaMascotas(List<ParseObject> list) {
-        Mascota m;
-        listaMascotas = new ArrayList<Mascota>();
-
-        for (int i = 0; i < list.size(); i++) {
-
-            m = new Mascota();
-
-            m.setId(list.get(i).getString("id"));
-            m.setNombre(list.get(i).getString("nombre"));
-            m.setPropietario(list.get(i).getParseUser("propietario").getObjectId().toString());
-            m.setTipo(list.get(i).getString("tipo"));
-            m.setRaza(list.get(i).getString("raza"));
-            m.setFoto(list.get(i).getBytes("foto"));
-            m.setFechaNacimiento(list.get(i).getDate("fechaNacimiento"));
-            m.setNotificaciones(list.get(i).getBoolean("notificaciones"));
-
-            listaMascotas.add(m);
-        }
-
-        customAdapter = new MascotaCustomAdapter(this, listaMascotas);
-        lvMascotas.setAdapter(customAdapter);
-
-    }
-
-
     @Override
     protected void onResume() {
         super.onResume();
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
-        query.fromLocalDatastore();
-        query.whereEqualTo("propietario", ParseUser.getCurrentUser());
-        try {
-            List<ParseObject> list = query.find();
-            if (list.size() == 0) {
-                Toast.makeText(ListadoMascotasActivity.this, "No hay mascotas todavia", Toast.LENGTH_SHORT).show();
-            }
-            fromParseObjectsToListaMascotas(list);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        daoM = new MascotaDAOImpl();
+        listaMascotas = daoM.obtenerMascotas(this);
+        customAdapter = new MascotaCustomAdapter(this, listaMascotas);
+        lvMascotas.setAdapter(customAdapter);
     }
 
     public void iniciarActividadMascota(String mascotaId) {
@@ -129,6 +86,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
 
     public void iniciarActividadMascotaNueva() {
         Intent i = new Intent(this, MascotaFormularioActivity.class);
+        i.putExtra("mascotaId", "");
         startActivity(i);
     }
 

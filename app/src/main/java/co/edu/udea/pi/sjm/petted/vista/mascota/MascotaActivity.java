@@ -19,11 +19,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
@@ -31,7 +29,6 @@ import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.vista.listadoCita.MascotaCitasFragment;
 import co.edu.udea.pi.sjm.petted.vista.listadoVacuna.MascotaVacunasFragment;
-import co.edu.udea.pi.sjm.petted.vista.mascota_nueva.MascotaFormularioActivity;
 
 public class MascotaActivity extends AppCompatActivity implements ActionBar.TabListener {
 
@@ -49,11 +46,13 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
-    private Mascota mascota;
-    private MascotaDAO dao;
     private boolean notificaciones;
     private MenuItem miNotificaciones;
+
     private String mascotaId;
+
+    private Mascota mascota;
+    private MascotaDAO daoM;
 
     public Mascota getMascota() {
         return mascota;
@@ -119,46 +118,18 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         mascota = new Mascota();
         mascotaId = this.getIntent().getExtras().getString("mascotaId");
 
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
-        query.fromLocalDatastore();
-        query.whereEqualTo("id", mascotaId);
-        try {
-            fromParseObjectToMascota(query.find());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        notificaciones = false;
+        daoM = new MascotaDAOImpl();
+        mascota = daoM.obtenerMascota(mascotaId, this);
 
     }
 
-    private void fromParseObjectToMascota(List<ParseObject> list) {
-        mascota = new Mascota();
-        mascota.setId(list.get(0).getString("id"));
-        mascota.setPropietario(list.get(0).getParseUser("propietario").getObjectId().toString());
-        mascota.setNombre(list.get(0).getString("nombre"));
-        if (list.get(0).getDate("fechaNacimiento") != null) {
-            mascota.setFechaNacimiento(list.get(0).getDate("fechaNacimiento"));
-        }
-        mascota.setTipo(list.get(0).getString("tipo"));
-        mascota.setRaza(list.get(0).getString("raza"));
-        mascota.setGenero(list.get(0).getString("genero"));
-        mascota.setIdTag(list.get(0).getString("IdTag"));
-        if (list.get(0).getBytes("foto") != null) {
-            mascota.setFoto(list.get(0).getBytes("foto"));
-        }
-        mascota.setNotificaciones(list.get(0).getBoolean("notificaciones"));
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_mascota, menu);
-        if (mascota.getNotificaciones()) {
-            notificaciones = true;
-        }
         miNotificaciones = menu.findItem(R.id.action_notificaciones);
-        if (notificaciones) {
+        if (mascota.getNotificaciones()) {
             miNotificaciones.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_white));
         } else {
             miNotificaciones.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_off_white));
@@ -177,7 +148,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         switch (id) {
             case R.id.action_notificaciones: //TODO: Notificaciones!
                 s = "notificaciones";
-                if (notificaciones) {
+                if (mascota.getNotificaciones()) {
                     mascota.setNotificaciones(false);
                     item.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_off_white));
                     notificaciones = false;
@@ -187,25 +158,14 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
                     notificaciones = true;
                 }
 
-                ParseObject m;
-                ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
-                query.fromLocalDatastore();
-                query.whereEqualTo("id", mascota.getId());
-                try {
-                    m = query.find().get(0);
-                    m.put("notificaciones", mascota.getNotificaciones());
-                    m.pinInBackground();
-                    m.saveEventually();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                daoM = new MascotaDAOImpl();
+                daoM.actualizarMascota(mascota, this);
 
                 break;
             case R.id.action_editar:
 
                 Intent i = new Intent(this, MascotaFormularioActivity.class);
-                i.putExtra("propietario", mascota.getPropietario());
-                i.putExtra("mascota", mascota);
+                i.putExtra("mascotaId", mascotaId);
                 startActivityForResult(i, 0);
 
                 s = "Editar";
@@ -216,19 +176,8 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
                         .setMessage("¿Desea eliminar a " + mascota.getNombre() + "?")
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                ParseObject m;
-                                ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
-                                query.fromLocalDatastore();
-                                query.whereEqualTo("id", mascota.getId());
-                                try {
-                                    m = query.find().get(0);
-                                    m.unpin();
-                                    m.deleteEventually();
-                                    Toast.makeText(MascotaActivity.this, "Mascota eliminada", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
+                                daoM = new MascotaDAOImpl();
+                                daoM.eliminarMascota(mascota, MascotaActivity.this);
                             }
                         })
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {

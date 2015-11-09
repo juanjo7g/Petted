@@ -15,7 +15,7 @@ public class Validacion {
         return 0;
     }
 
-    public static int validarMascota(ParseObject m) {
+    public static int validarMascota(Mascota m) {
         return 0;
     }
 
