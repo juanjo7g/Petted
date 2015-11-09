@@ -1,5 +1,7 @@
 package co.edu.udea.pi.sjm.petted.util;
 
+import com.parse.ParseObject;
+
 import co.edu.udea.pi.sjm.petted.dto.Cita;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
@@ -13,7 +15,7 @@ public class Validacion {
         return 0;
     }
 
-    public static int validarMascota(Mascota m) {
+    public static int validarMascota(ParseObject m) {
         return 0;
     }
 

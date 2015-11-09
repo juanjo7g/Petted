@@ -1,6 +1,8 @@
 package co.edu.udea.pi.sjm.petted.vista;
 
 import android.content.Intent;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,10 +12,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
 import co.edu.udea.pi.sjm.petted.dao.impl.UsuarioDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
+import co.edu.udea.pi.sjm.petted.dtoParse.MascotaPO;
+import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.vista.listadoMascotas.ListadoMascotasActivity;
 import co.edu.udea.pi.sjm.petted.vista.usuario.CreacionUsuarioActivity;
 
@@ -31,43 +41,34 @@ public class MainActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.etEmail);
         etContraseña = (EditText) findViewById(R.id.etContraseña);
 
-        UsuarioDAO dao = new UsuarioDAOImpl();
-        Usuario u;
         Intent i;
-        u = dao.obtenerUsuarioLogueado(this);
 
-        if(u!=null){
-            Toast.makeText(MainActivity.this, "YA ESTA LOGUEADO", Toast.LENGTH_SHORT).show();
-            finish();
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser != null) {
             i = new Intent(this, ListadoMascotasActivity.class);
-            i.putExtra("usuario",u);
             startActivity(i);
+            finish();
+            Toast.makeText(MainActivity.this, "Ya esta logueado: " + currentUser.getEmail(), Toast.LENGTH_SHORT).show();
         }
 
     }
 
     public void onClickIniciar(View view) {
-        Intent i;
-        UsuarioDAO dao = new UsuarioDAOImpl();
-        Usuario u;
-        String correo = etEmail.getText().toString();
-
-        u = dao.obtenerUsuario(correo, this);
-
-        if (u != null) {
-            if (u.getContraseña().equals(etContraseña.getText().toString())) {
-                u.setLogueado("1");
-                dao.actualizarUsuario(u, this);
-                finish();
-                i = new Intent(this, ListadoMascotasActivity.class);
-                i.putExtra("usuario",u);
-                startActivity(i);
-            } else {
-                Toast.makeText(MainActivity.this, R.string.errorContraseña, Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            Toast.makeText(MainActivity.this, R.string.errorUsuarioNoExiste, Toast.LENGTH_SHORT).show();
-        }
+        ParseUser.logInInBackground(etEmail.getText().toString(), etContraseña.getText().toString(),
+                new LogInCallback() {
+                    @Override
+                    public void done(ParseUser parseUser, ParseException e) {
+                        if (parseUser != null) {
+                            Intent i = new Intent(MainActivity.this, ListadoMascotasActivity.class);
+                            startActivity(i);
+                            finish();
+                            Toast.makeText(MainActivity.this, "Bienvenido: " + parseUser.getEmail(),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Error en el logueo", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     public void iniciarCreacionUsuario(View view) {

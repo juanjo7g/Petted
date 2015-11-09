@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.AlteredCharSequence;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,12 +28,18 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.parse.Parse;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.UUID;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.util.Validacion;
@@ -63,23 +70,20 @@ public class MascotaFormularioActivity extends AppCompatActivity {
     private String MEDIA_DIRECTORY = APP_DIRECTORY + "media";
     private String TEMPORAL_PICTURE_NAME = "temporal.jpg";
 
-
     private final int PHOTO_CODE = 100;
     private final int SELECT_PICTURE = 200;
+
+    private ParseObject mascota;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_mascota);
 
-        // Obtener instancia de la action bar
-        ActionBar actionBar = ((AppCompatActivity) this)
-                .getSupportActionBar();
+        ActionBar actionBar = ((AppCompatActivity) this).getSupportActionBar();
 
         if (actionBar != null) {
-            // Habilitar el Up Button
             actionBar.setDisplayHomeAsUpEnabled(true);
-            // Cambiar icono del Up Button
             actionBar.setHomeAsUpIndicator(R.mipmap.ic_close_white);
         }
 
@@ -89,38 +93,36 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         spinnerGenero = (Spinner) findViewById(R.id.spinnerGeneroMascota);
         etNombre = (EditText) findViewById(R.id.etNombreMascota);
         ibtnFechaNacimiento = (ImageButton) findViewById(R.id.ibtnFechaNacimientoMascota);
-//        btnFoto = (Button) findViewById(R.id.btnFoto);
         ivFotoPrevia = (ImageView) findViewById(R.id.ivFotoPreviaMascota);
 
         mostrarFecha();
 
         inicializarSpinners();
 
-        if (this.getIntent().getExtras().getSerializable("mascota") != null) {
-            inicializarFormulario((Mascota) this.getIntent().getExtras().getSerializable("mascota"));
+        if (false) { // TODO: SI ES EDICIÓN
+            inicializarFormulario(this.getIntent().getExtras().getString("mascotaId"));
             super.setTitle("Editar Mascota");
         } else {
             super.setTitle("Nueva Mascota");
         }
-
     }
 
-    private void inicializarFormulario(Mascota mascota) {
-        etNombre.setText(mascota.getNombre());
-
-        if (mascota.getFechaNacimiento() != null) {
-            etFechaNacimiento.setText(formatoFecha.format(mascota.getFechaNacimiento()));
-        }
-
-        int posicion = Utility.getIndex(spinnerTipo, mascota.getTipo());
-        spinnerTipo.setSelection(posicion);
-
-        spinnerGenero.setSelection(Utility.getIndex(spinnerGenero, mascota.getGenero()));
-
-        if (mascota.getFoto() != null) {
-            foto = Utility.getFoto(mascota.getFoto());
-            ivFotoPrevia.setImageBitmap(foto);
-        }
+    private void inicializarFormulario(String mascota) { //TODO:
+//        etNombre.setText(mascota.getNombre());
+//
+//        if (mascota.getFechaNacimiento() != null) {
+//            etFechaNacimiento.setText(formatoFecha.format(mascota.getFechaNacimiento()));
+//        }
+//
+//        int posicion = Utility.getIndex(spinnerTipo, mascota.getTipo());
+//        spinnerTipo.setSelection(posicion);
+//
+//        spinnerGenero.setSelection(Utility.getIndex(spinnerGenero, mascota.getGenero()));
+//
+//        if (mascota.getFoto() != null) {
+//            foto = Utility.getFoto(mascota.getFoto());
+//            ivFotoPrevia.setImageBitmap(foto);
+//        }
 
     }
 
@@ -193,74 +195,73 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(i, "Selecciona app de imagen"), SELECT_PICTURE);
     }
 
-    @Deprecated
-    public void onClickGuardarMascota(View view) {
-        MascotaDAO dao = new MascotaDAOImpl();
-        Mascota m;
-        Usuario u;
-        u = (Usuario) this.getIntent().getSerializableExtra("propietario");
-        m = new Mascota();
-        m.setNombre(etNombre.getText().toString());
-        m.setPropietario(u);
-        m.setFoto(Utility.getBytes(Utility.resizeImage(this, R.drawable.mascota1, 300, 300)));
-
-        switch (Validacion.validarMascota(m)) {
-            case 0:
-                dao.insertarMascota(m, this);
-                Toast.makeText(MascotaFormularioActivity.this, m.getNombre(), Toast.LENGTH_SHORT).show();
-                finish();
-                break;
-            case 1:
-                break;
-        }
-    }
-
     public void onClickGuardarMascota() {
-        MascotaDAO dao = new MascotaDAOImpl();
-        Mascota m;
-        Usuario u;
-        u = (Usuario) this.getIntent().getSerializableExtra("propietario");
-        m = new Mascota();
-        m.setNombre(etNombre.getText().toString());
-        m.setPropietario(u);
-        try {
-            m.setFechaNacimiento(formatoFecha.parse(etFechaNacimiento.getText().toString()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Log.e("Error en fecha", e.getMessage());
+        mascota = new ParseObject("Mascota");
+        ParseUser propietario = ParseUser.getCurrentUser();
+        UUID uuid = UUID.randomUUID();
+
+        mascota.put("id", uuid.toString());
+
+        mascota.put("nombre", etNombre.getText().toString());
+        mascota.put("propietario", propietario);
+
+        if (!etFechaNacimiento.getText().toString().equals("")) {
+            try {
+                mascota.put("fechaNacimiento", formatoFecha.parse(etFechaNacimiento.getText().toString()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
-        m.setTipo((String) spinnerTipo.getSelectedItem());
-        m.setRaza((String) spinnerRaza.getSelectedItem());
-        m.setGenero((String) spinnerGenero.getSelectedItem());
+
+        mascota.put("tipo", (String) spinnerTipo.getSelectedItem());
+        mascota.put("raza", (String) spinnerRaza.getSelectedItem());
+        mascota.put("genero", (String) spinnerGenero.getSelectedItem());
 
         if (foto != null) {
-            m.setFoto(Utility.getBytes(Utility.resizeImage(foto, 300, 300)));
-//            m.setFoto(Utility.getBytes(Utility.scaleBitmapAndKeepRation(foto, 300, 300)));
+            mascota.put("foto", Utility.getBytes(Utility.resizeImage(foto, 100, 100)));
         } else {
-            m.setFoto(Utility.getBytes(Utility.resizeImage(this, R.drawable.mascota1, 300, 300)));
+            mascota.put("foto", Utility.getBytes(Utility.resizeImage(this, R.drawable.mascota1, 100, 100)));
         }
 
-        m.setEstado("0");
-        m.setNotificaciones("1");
+        mascota.put("notificaciones", true);
 
-        switch (Validacion.validarMascota(m)) {
+        switch (Validacion.validarMascota(mascota)) {
             case 0:
-                if (this.getIntent().getExtras().getSerializable("mascota") != null) { // ACTUALIZAR MASCOTA
-
-                    m.setId(((Mascota) this.getIntent().getExtras().getSerializable("mascota")).getId());
-                    m.setNotificaciones(((Mascota) this.getIntent().getExtras().getSerializable("mascota")).getNotificaciones());
-                    m.setEstado(((Mascota) this.getIntent().getExtras().getSerializable("mascota")).getEstado());
-
-                    dao.actualizarMascota(m, this);
-
+                if (false) { // TODO: ACTUALIZAR MASCOTA
                     setResult(0);
-
-                    Toast.makeText(MascotaFormularioActivity.this, "Mascota editada", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MascotaFormularioActivity.this, "Mascota editada",
+                            Toast.LENGTH_SHORT).show();
+                    finish();
                 } else { // CREAR MASCOTA
-                    dao.insertarMascota(m, this);
-                    Toast.makeText(MascotaFormularioActivity.this, m.getNombre(), Toast.LENGTH_SHORT).show();
+
+                    mascota.pinInBackground(new SaveCallback() {
+                        @Override
+                        public void done(com.parse.ParseException e) {
+                            if (e == null) {
+                                Toast.makeText(MascotaFormularioActivity.this, "Mascota guardada " +
+                                                "localmente, intentando almacenar remoto...",
+                                        Toast.LENGTH_SHORT).show();
+                                mascota.saveEventually(new SaveCallback() {
+                                    @Override
+                                    public void done(com.parse.ParseException e) {
+                                        if (e == null) {
+                                            Toast.makeText(MascotaFormularioActivity.this, "Mascota " +
+                                                    "guardada remotamente", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(MascotaFormularioActivity.this, e.getMessage(),
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                                finish();
+                            } else {
+                                Toast.makeText(MascotaFormularioActivity.this, "Error guardado mascota",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 }
-                finish();
+
                 break;
             case 1:
                 break;
@@ -331,7 +332,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         adapter = ArrayAdapter.createFromResource(this, R.array.TiposDeMascotas,
                 android.R.layout.simple_spinner_item);
         final String raza;
-        if (this.getIntent().getExtras().getSerializable("mascota") != null) {
+        if (false) { //TODO: SI ES EDICIÓN
             raza = ((Mascota) this.getIntent().getExtras().getSerializable("mascota")).getRaza();
         } else {
             raza = null;

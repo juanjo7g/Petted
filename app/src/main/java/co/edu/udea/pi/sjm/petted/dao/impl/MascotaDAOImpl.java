@@ -44,7 +44,7 @@ public class MascotaDAOImpl implements MascotaDAO {
                 return null;
             }
             m.setId(c.getString(0));
-            m.setPropietario(dao.obtenerUsuario(c.getString(1), context));
+//            m.setPropietario(dao.obtenerUsuario(c.getString(1), context));
             m.setNombre(c.getString(2));
             if (c.getString(3) != null) {
                 m.setFechaNacimiento(formatoFecha.parse(c.getString(3)));
@@ -58,7 +58,7 @@ public class MascotaDAOImpl implements MascotaDAO {
                 m.setFoto(c.getBlob(8));
             }
 
-            m.setNotificaciones(c.getString(9));
+//            m.setNotificaciones(c.getString(9));
             m.setEstado(c.getString(10));
 
         } catch (Exception e) {
@@ -95,7 +95,7 @@ public class MascotaDAOImpl implements MascotaDAO {
             while (c.moveToNext()) {
                 m = new Mascota();
                 m.setId(c.getString(0));
-                m.setPropietario(dao.obtenerUsuario(c.getString(1), context));
+//                m.setPropietario(dao.obtenerUsuario(c.getString(1), context));
                 m.setNombre(c.getString(2));
                 if (c.getString(3) != null) {
                     m.setFechaNacimiento(formatoFecha.parse(c.getString(3)));
@@ -109,7 +109,7 @@ public class MascotaDAOImpl implements MascotaDAO {
                     m.setFoto(c.getBlob(8));
                 }
 
-                m.setNotificaciones(c.getString(9));
+//                m.setNotificaciones(c.getString(9));
                 m.setEstado(c.getString(10));
                 listaMascotas.add(m);
             }
@@ -132,7 +132,7 @@ public class MascotaDAOImpl implements MascotaDAO {
 
         while (c.moveToNext()) {
             m.setId(c.getString(0));
-            m.setPropietario(dao.obtenerUsuario(c.getString(1), context));
+//            m.setPropietario(dao.obtenerUsuario(c.getString(1), context));
             m.setNombre(c.getString(2));
             listaMascotas.add(m);
         }

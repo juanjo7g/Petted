@@ -49,31 +49,31 @@ public class MascotaCitasFragment extends Fragment {
         lvCitas = (ListView) rootView.findViewById(R.id.lvListaCitas);
         ibtnNuevaCita = (ImageButton) rootView.findViewById(R.id.ibtnNuevaCita);
 
-        listaCitas = new ArrayList<>();
-
-        cDao = new CitaDAOImpl();
-        ma = (MascotaActivity) getActivity();
-        Toast.makeText(ma, ma.getMascota().getId(), Toast.LENGTH_SHORT).show();
-
-        listaCitas = cDao.obtenerCitas(ma.getMascota(), ma);
-
-        customAdapter = new CitaCustomAdapter(ma, listaCitas);
-        lvCitas.setAdapter(customAdapter);
-
-        lvCitas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cita c = customAdapter.getItem(position);
-                Toast.makeText(view.getContext(), "Id cita: " + c.getId(), Toast.LENGTH_SHORT).show();
-                // TODO: Dialog mostrando información de la cita
-            }
-        });
-        ibtnNuevaCita.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                iniciarActividadCitaNueva();
-            }
-        });
+//        listaCitas = new ArrayList<>();
+//
+//        cDao = new CitaDAOImpl();
+//        ma = (MascotaActivity) getActivity();
+//        Toast.makeText(ma, ma.getMascota().getId(), Toast.LENGTH_SHORT).show();
+//
+//        listaCitas = cDao.obtenerCitas(ma.getMascota(), ma);
+//
+//        customAdapter = new CitaCustomAdapter(ma, listaCitas);
+//        lvCitas.setAdapter(customAdapter);
+//
+//        lvCitas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Cita c = customAdapter.getItem(position);
+//                Toast.makeText(view.getContext(), "Id cita: " + c.getId(), Toast.LENGTH_SHORT).show();
+//                // TODO: Dialog mostrando información de la cita
+//            }
+//        });
+//        ibtnNuevaCita.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                iniciarActividadCitaNueva();
+//            }
+//        });
         return rootView;
     }
 
@@ -83,12 +83,12 @@ public class MascotaCitasFragment extends Fragment {
         startActivity(i);
     }
 
-    @Override
-    public void onResume() {
-        Toast.makeText(ma, "REINICIAR CITAS", Toast.LENGTH_SHORT).show();
-        listaCitas = cDao.obtenerCitas(ma.getMascota(), ma);
-        customAdapter = new CitaCustomAdapter(ma, listaCitas);
-        lvCitas.setAdapter(customAdapter);
-        super.onResume();
-    }
+//    @Override
+//    public void onResume() {
+//        Toast.makeText(ma, "REINICIAR CITAS", Toast.LENGTH_SHORT).show();
+////        listaCitas = cDao.obtenerCitas(ma.getMascota(), ma);
+////        customAdapter = new CitaCustomAdapter(ma, listaCitas);
+////        lvCitas.setAdapter(customAdapter);
+//        super.onResume();
+//    }
 }

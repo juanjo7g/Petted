@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="co.edu.udea.pi.sjm.petted" >
+    package="co.edu.udea.pi.sjm.petted">
 
     <uses-permission android:name="android.permission.NFC" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature
         android:name="android.hardware.nfc"
-        android:required="true" />
+        android:required="false" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:name="co.edu.udea.pi.sjm.petted.UseParse">
         <activity
             android:name=".vista.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -36,16 +38,19 @@
             android:label="@string/title_activity_mascota_nueva" />
         <activity
             android:name=".vista.mascota.TagNFCFormularioActivity"
-            android:label="@string/title_activity_asociar_tag_nfc" >
+            android:label="@string/title_activity_asociar_tag_nfc">
+            <!--<intent-filter>-->
+            <!--<action android:name="android.nfc.action.TECH_DISCOVERED" />-->
+            <!--</intent-filter>-->
+            <!--<meta-data-->
+                <!--android:name="android.nfc.action.TECH_DISCOVERED"-->
+                <!--android:resource="@xml/nfc_tech_filter" />-->
         </activity>
         <activity
             android:name=".vista.usuario.CreacionUsuarioActivity"
-            android:label="@string/title_activity_creacion_usuario" >
-        </activity>
-        <activity android:name=".vista.listadoCita.CitaFormularioActivity" >
-        </activity>
-        <activity android:name=".vista.listadoVacuna.VacunaFormularioActivity" >
-        </activity>
+            android:label="@string/title_activity_creacion_usuario"></activity>
+        <activity android:name=".vista.listadoCita.CitaFormularioActivity"></activity>
+        <activity android:name=".vista.listadoVacuna.VacunaFormularioActivity"></activity>
     </application>
 
 </manifest>

@@ -8,6 +8,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
+
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.util.Validacion;
 import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
@@ -29,21 +34,34 @@ public class CreacionUsuarioActivity extends AppCompatActivity {
         etCorreoElectronico = (EditText) findViewById(R.id.etCorreoElectronico);
         etContraseña = (EditText) findViewById(R.id.etContraseña);
         etContraseñaRep = (EditText) findViewById(R.id.etContraseñaRep);
+
     }
 
     public void onClickCrearUsuario(View v) {
-        UsuarioDAO dao;
         Usuario u = new Usuario();
         u.setCorreo(etCorreoElectronico.getText().toString());
         u.setNombre(etNombreUsuario.getText().toString());
         u.setContraseña(etContraseña.getText().toString());
         switch (Validacion.validarUsuario(u)) {
             case 0:
-                dao = new UsuarioDAOImpl();
-                dao.insertarUsuario(u, this);
+                ParseUser usuario = new ParseUser();
+                usuario.setUsername(u.getNombre());
+                usuario.setPassword(u.getContraseña());
+                usuario.setEmail(u.getCorreo());
 
-                Toast.makeText(this, "Usuario creado con exito", Toast.LENGTH_SHORT).show();
-                finish();
+                usuario.signUpInBackground(new SignUpCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e == null) {
+                            Toast.makeText(CreacionUsuarioActivity.this, "Usuario creado con exito",
+                                    Toast.LENGTH_SHORT).show();
+                            finish();
+                        }else{
+                            Toast.makeText(CreacionUsuarioActivity.this, "Error creando usuario",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
                 break;
             case 1:
                 break;

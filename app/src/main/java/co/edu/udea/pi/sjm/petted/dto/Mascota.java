@@ -8,8 +8,8 @@ import java.util.Date;
  */
 public class Mascota implements Serializable {
 
-    private String id; //pk autoincrementable
-    private Usuario propietario;
+    private String id; //pk  v
+    private String propietario;
     private String nombre;
     private Date fechaNacimiento;
     private String tipo;
@@ -17,7 +17,7 @@ public class Mascota implements Serializable {
     private String genero;
     private String idTag;
     private byte[] foto;
-    private String notificaciones;
+    private Boolean notificaciones;
     private String estado;
     private String perdida;
 
@@ -32,11 +32,11 @@ public class Mascota implements Serializable {
         this.id = id;
     }
 
-    public Usuario getPropietario() {
+    public String getPropietario() {
         return propietario;
     }
 
-    public void setPropietario(Usuario propietario) {
+    public void setPropietario(String propietario) {
         this.propietario = propietario;
     }
 
@@ -96,11 +96,11 @@ public class Mascota implements Serializable {
         this.foto = foto;
     }
 
-    public String getNotificaciones() {
+    public Boolean getNotificaciones() {
         return notificaciones;
     }
 
-    public void setNotificaciones(String notificaciones) {
+    public void setNotificaciones(Boolean notificaciones) {
         this.notificaciones = notificaciones;
     }
 

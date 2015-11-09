@@ -184,7 +184,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             db.beginTransaction();
             ContentValues values = new ContentValues();
 
-            values.put(KEY_MASCOTA_PROPIETARIO, mascota.getPropietario().getCorreo());
+//            values.put(KEY_MASCOTA_PROPIETARIO, mascota.getPropietario().getCorreo());
             values.put(KEY_MASCOTA_NOMBRE, mascota.getNombre());
 
             if (mascota.getFechaNacimiento() != null) {
@@ -457,7 +457,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             db.beginTransaction();
             ContentValues values = new ContentValues();
 
-            values.put(KEY_MASCOTA_PROPIETARIO, mascota.getPropietario().getCorreo());
+//            values.put(KEY_MASCOTA_PROPIETARIO, mascota.getPropietario().getCorreo());
             values.put(KEY_MASCOTA_NOMBRE, mascota.getNombre());
 
             if (mascota.getFechaNacimiento() != null) {

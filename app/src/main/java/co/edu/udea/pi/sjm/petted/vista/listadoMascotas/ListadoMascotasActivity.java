@@ -12,17 +12,20 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.LogOutCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import co.edu.udea.pi.sjm.petted.R;
-import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
-import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
-import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
-import co.edu.udea.pi.sjm.petted.dao.impl.UsuarioDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
-import co.edu.udea.pi.sjm.petted.dto.Usuario;
-import co.edu.udea.pi.sjm.petted.vista.MainActivity;
 import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
 import co.edu.udea.pi.sjm.petted.vista.mascota_nueva.MascotaFormularioActivity;
 
@@ -33,34 +36,37 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     private ListView lvMascotas;
     private MascotaCustomAdapter customAdapter;
     private ImageButton ibtnNuevaMacota;
-    private MascotaDAO mDao;
-    private UsuarioDAO uDao;
-    private Usuario usuarioActual;
 
+    private SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado_mascotas);
-
-        usuarioActual = (Usuario) this.getIntent().getSerializableExtra("usuario");
-        Toast.makeText(ListadoMascotasActivity.this, "BIENVENIDO " + usuarioActual.getNombre(), Toast.LENGTH_LONG).show();
 
         lvMascotas = (ListView) this.findViewById(R.id.lvListaMascotas);
         ibtnNuevaMacota = (ImageButton) this.findViewById(R.id.ibtnNuevaMascota);
 
-        //crearMascotas();
-        mDao = new MascotaDAOImpl();
-        listaMascotas = mDao.obtenerMascotas(usuarioActual, this);
-        customAdapter = new MascotaCustomAdapter(this, listaMascotas);
-        lvMascotas.setAdapter(customAdapter);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
+        query.fromLocalDatastore();
+        query.whereEqualTo("propietario", ParseUser.getCurrentUser());
+
+        try {
+            List<ParseObject> list = query.find();
+            if (list.size() == 0) {
+                Toast.makeText(ListadoMascotasActivity.this, "No hay mascotas todavia", Toast.LENGTH_SHORT).show();
+            }
+            fromParseObjectsToListaMascotas(list);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         lvMascotas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Mascota m = customAdapter.getItem(position);
-                iniciarActividadMascota(m);
-
+                iniciarActividadMascota(m.getId());
             }
         });
         ibtnNuevaMacota.setOnClickListener(new View.OnClickListener() {
@@ -72,28 +78,57 @@ public class ListadoMascotasActivity extends AppCompatActivity {
 
     }
 
+    public void fromParseObjectsToListaMascotas(List<ParseObject> list) {
+        Mascota m;
+        listaMascotas = new ArrayList<Mascota>();
+
+        for (int i = 0; i < list.size(); i++) {
+
+            m = new Mascota();
+
+            m.setId(list.get(i).getString("id"));
+            m.setNombre(list.get(i).getString("nombre"));
+            m.setPropietario(list.get(i).getParseUser("propietario").getObjectId().toString());
+            m.setTipo(list.get(i).getString("tipo"));
+            m.setRaza(list.get(i).getString("raza"));
+            m.setFoto(list.get(i).getBytes("foto"));
+            m.setFechaNacimiento(list.get(i).getDate("fechaNacimiento"));
+            m.setNotificaciones(list.get(i).getBoolean("notificaciones"));
+
+            listaMascotas.add(m);
+        }
+
+        customAdapter = new MascotaCustomAdapter(this, listaMascotas);
+        lvMascotas.setAdapter(customAdapter);
+
+    }
 
 
     @Override
     protected void onResume() {
         super.onResume();
-        mDao = new MascotaDAOImpl();
-        listaMascotas = mDao.obtenerMascotas(usuarioActual, this);
-        customAdapter = new MascotaCustomAdapter(this, listaMascotas);
-        lvMascotas.setAdapter(customAdapter);
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
+        query.fromLocalDatastore();
+        query.whereEqualTo("propietario", ParseUser.getCurrentUser());
+        try {
+            List<ParseObject> list = query.find();
+            if (list.size() == 0) {
+                Toast.makeText(ListadoMascotasActivity.this, "No hay mascotas todavia", Toast.LENGTH_SHORT).show();
+            }
+            fromParseObjectsToListaMascotas(list);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void iniciarActividadMascota(Mascota m) {
+    public void iniciarActividadMascota(String mascotaId) {
         Intent i = new Intent(this, MascotaActivity.class);
-        i.putExtra("id", m.getId() + "");
-        // i.putExtra("mascota", m);
+        i.putExtra("mascotaId", mascotaId);
         startActivity(i);
     }
 
     public void iniciarActividadMascotaNueva() {
         Intent i = new Intent(this, MascotaFormularioActivity.class);
-        i.putExtra("propietario", usuarioActual);
-//        i.putExtra("mascota", (Mascota) null);
         startActivity(i);
     }
 
@@ -146,11 +181,6 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-       /* if (id == R.id.action_settings) {
-            return true;
-        }*/
-
         switch (id) {
             case R.id.action_ver_perfil:
                 Toast.makeText(ListadoMascotasActivity.this, "Ver perfil", Toast.LENGTH_SHORT).show();
@@ -165,11 +195,21 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     }
 
     private void cerrarSesion() {
-        usuarioActual.setLogueado("0");
-        uDao = new UsuarioDAOImpl();
-        uDao.actualizarUsuario(usuarioActual, this);
+        ParseUser.logOutInBackground(new LogOutCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e == null) {
+                    Toast.makeText(ListadoMascotasActivity.this, "Desconectado con éxito",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ListadoMascotasActivity.this, "Error cerrando sesión",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         finish();
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
+//        System.exit(0);
+//        Intent i = new Intent(this, MainActivity.class);
+//        startActivity(i);
     }
 }

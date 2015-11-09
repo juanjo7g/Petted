@@ -1,8 +1,11 @@
 package co.edu.udea.pi.sjm.petted.vista.mascota;
 
+import android.content.Intent;
 import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,11 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import co.edu.udea.pi.sjm.petted.R;
+import co.edu.udea.pi.sjm.petted.util.Utility;
 
 public class TagNFCFormularioActivity extends AppCompatActivity {
 
-    Button btnAsociar;
-    public static final String TAG = "NfcDemo";
+    private Button btnAsociar;
 
     private TextView tvIdTag;
     private NfcAdapter mNfcAdapter;
@@ -45,7 +48,7 @@ public class TagNFCFormularioActivity extends AppCompatActivity {
         if (!mNfcAdapter.isEnabled()) {
             tvIdTag.setText("NFC deshabilitado.");
         } else {
-            tvIdTag.setText(NfcAdapter.EXTRA_ID);
+
         }
     }
 

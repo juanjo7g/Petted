@@ -19,6 +19,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
 import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
@@ -47,7 +53,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
     private MascotaDAO dao;
     private boolean notificaciones;
     private MenuItem miNotificaciones;
-    private String REFRESCAR;
+    private String mascotaId;
 
     public Mascota getMascota() {
         return mascota;
@@ -111,18 +117,44 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         }
 
         mascota = new Mascota();
-        dao = new MascotaDAOImpl();
-        //mascota = (Mascota) this.getIntent().getExtras().getSerializable("mascota");
-        mascota = dao.obtenerMascota(this.getIntent().getStringExtra("id"), this);
+        mascotaId = this.getIntent().getExtras().getString("mascotaId");
+
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
+        query.fromLocalDatastore();
+        query.whereEqualTo("id", mascotaId);
+        try {
+            fromParseObjectToMascota(query.find());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         notificaciones = false;
 
+    }
+
+    private void fromParseObjectToMascota(List<ParseObject> list) {
+        mascota = new Mascota();
+        mascota.setId(list.get(0).getString("id"));
+        mascota.setPropietario(list.get(0).getParseUser("propietario").getObjectId().toString());
+        mascota.setNombre(list.get(0).getString("nombre"));
+        if (list.get(0).getDate("fechaNacimiento") != null) {
+            mascota.setFechaNacimiento(list.get(0).getDate("fechaNacimiento"));
+        }
+        mascota.setTipo(list.get(0).getString("tipo"));
+        mascota.setRaza(list.get(0).getString("raza"));
+        mascota.setGenero(list.get(0).getString("genero"));
+        mascota.setIdTag(list.get(0).getString("IdTag"));
+        if (list.get(0).getBytes("foto") != null) {
+            mascota.setFoto(list.get(0).getBytes("foto"));
+        }
+        mascota.setNotificaciones(list.get(0).getBoolean("notificaciones"));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_mascota, menu);
-        if (mascota.getNotificaciones().equals("1")) {
+        if (mascota.getNotificaciones()) {
             notificaciones = true;
         }
         miNotificaciones = menu.findItem(R.id.action_notificaciones);
@@ -143,19 +175,31 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
 
         String s = "";
         switch (id) {
-            case R.id.action_notificaciones:
+            case R.id.action_notificaciones: //TODO: Notificaciones!
                 s = "notificaciones";
                 if (notificaciones) {
-                    mascota.setNotificaciones("0");
-                    dao.actualizarMascota(mascota, this);
+                    mascota.setNotificaciones(false);
                     item.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_off_white));
                     notificaciones = false;
                 } else {
-                    mascota.setNotificaciones("1");
-                    dao.actualizarMascota(mascota, this);
+                    mascota.setNotificaciones(true);
                     item.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_white));
                     notificaciones = true;
                 }
+
+                ParseObject m;
+                ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
+                query.fromLocalDatastore();
+                query.whereEqualTo("id", mascota.getId());
+                try {
+                    m = query.find().get(0);
+                    m.put("notificaciones", mascota.getNotificaciones());
+                    m.pinInBackground();
+                    m.saveEventually();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
                 break;
             case R.id.action_editar:
 
@@ -172,9 +216,19 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
                         .setMessage("¿Desea eliminar a " + mascota.getNombre() + "?")
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                dao.eliminarMascota(mascota, MascotaActivity.this);
-                                Toast.makeText(MascotaActivity.this, "Mascota eliminada", Toast.LENGTH_SHORT).show();
-                                finish();
+                                ParseObject m;
+                                ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
+                                query.fromLocalDatastore();
+                                query.whereEqualTo("id", mascota.getId());
+                                try {
+                                    m = query.find().get(0);
+                                    m.unpin();
+                                    m.deleteEventually();
+                                    Toast.makeText(MascotaActivity.this, "Mascota eliminada", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         })
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -185,7 +239,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
                         .show();
                 break;
         }
-        Toast.makeText(MascotaActivity.this, s, Toast.LENGTH_SHORT).show(); // Eliminar despues
+        Toast.makeText(MascotaActivity.this, s, Toast.LENGTH_SHORT).show();
 
         return super.onOptionsItemSelected(item);
     }
