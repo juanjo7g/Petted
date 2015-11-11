@@ -226,7 +226,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             db.beginTransaction();
             ContentValues values = new ContentValues();
 
-            values.put(KEY_CITA_MASCOTA, cita.getMascota().getId());
+//            values.put(KEY_CITA_MASCOTA, cita.getMascota().getId());
             values.put(KEY_CITA_NOMBRE, cita.getNombre());
             values.put(KEY_CITA_DESCRIPCION, cita.getDescripcion());
             values.put(KEY_CITA_TIPO, cita.getTipo());
@@ -499,7 +499,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             db.beginTransaction();
             ContentValues values = new ContentValues();
 
-            values.put(KEY_CITA_MASCOTA, cita.getMascota().getId());
+//            values.put(KEY_CITA_MASCOTA, cita.getMascota().getId());
             values.put(KEY_CITA_NOMBRE, cita.getNombre());
             values.put(KEY_CITA_DESCRIPCION, cita.getDescripcion());
             values.put(KEY_CITA_TIPO, cita.getTipo());

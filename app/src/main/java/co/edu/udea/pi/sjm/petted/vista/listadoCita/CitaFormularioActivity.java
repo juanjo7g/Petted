@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.UUID;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.CitaDAO;
@@ -51,6 +52,8 @@ public class CitaFormularioActivity extends AppCompatActivity {
     private ImageButton ibtnFecha;
     private EditText etHora;
     private ImageButton ibtnHora;
+
+    private CitaDAO daoC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,11 +88,11 @@ public class CitaFormularioActivity extends AppCompatActivity {
 
         inicializarSpinner();
 
-        if (this.getIntent().getExtras().getSerializable("cita") != null) {
+        if (this.getIntent().getExtras().getString("citaId").equals("")) {
+            super.setTitle("Nueva Cita");
+        } else {
             inicializarFormulario((Cita) this.getIntent().getExtras().getSerializable("cita"));
             super.setTitle("Editar Cita");
-        } else {
-            super.setTitle("Nueva Cita");
         }
         if (this.getIntent().getExtras().getSerializable("vacuna") != null) {
             inicializarFormulario((Vacuna) this.getIntent().getExtras().getSerializable("vacuna"));
@@ -108,39 +111,44 @@ public class CitaFormularioActivity extends AppCompatActivity {
     }
 
     public void onClickGuardarCita() {
-        MascotaDAO mDao = new MascotaDAOImpl();
-        CitaDAO cDao = new CitaDAOImpl();
-        Mascota m;
+//        MascotaDAO mDao = new MascotaDAOImpl();
         Cita c;
-        m = mDao.obtenerMascota(mascotaId, this);
+//        Mascota m;
+        UUID uuid = UUID.randomUUID();
         c = new Cita();
-        c.setMascota(m);
+//        m = mDao.obtenerMascota(mascotaId, this);
+
+        c.setId(uuid.toString());
+        c.setMascota(mascotaId);
         c.setNombre(etNombre.getText().toString());
         c.setDescripcion(etDescripcion.getText().toString());
         c.setTipo((String) spinnerTipo.getSelectedItem());
-        try {
-            c.setFechaHora(formatoFechaHora.parse(etFecha.getText().toString() + " " + etHora.getText().toString()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Log.e("Error en fecha", e.getMessage());
+        if (!etFecha.getText().toString().equals("")) {
+            try {
+                c.setFechaHora(formatoFechaHora.parse(etFecha.getText().toString() + " " + etHora.getText().toString()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+                Log.e("Error en fecha", e.getMessage());
+            }
         }
-        c.setEstado("0");
 
         switch (Validacion.validarCita(c)) {
             case 0:
-                if (this.getIntent().getExtras().getSerializable("cita") != null) {
+                if (this.getIntent().getExtras().getString("citaId").equals("")) {
+                    daoC = new CitaDAOImpl();
+                    daoC.insertarCita(c, this);
+                    Toast.makeText(CitaFormularioActivity.this, "Cita insertada", Toast.LENGTH_SHORT).show();
+
+                } else {
+
                     c.setId(((Cita) this.getIntent().getExtras().getSerializable("cita")).getId());
                     c.setEstado(((Cita) this.getIntent().getExtras().getSerializable("cita")).getEstado());
 
-                    cDao.actualizarCita(c, this);
+                    daoC.actualizarCita(c, this);
 
                     setResult(0);
 
                     Toast.makeText(CitaFormularioActivity.this, "Cita editada", Toast.LENGTH_SHORT).show();
-
-                } else {
-                    cDao.insertarCita(c, this);
-                    Toast.makeText(CitaFormularioActivity.this, "Cita insertada", Toast.LENGTH_SHORT).show();
                 }
                 finish();
                 break;

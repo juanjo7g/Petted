@@ -6,8 +6,8 @@ import java.util.Date;
  * Created by Juan on 25/10/2015.
  */
 public class Cita {
-    private String id; //pk autoincrementable
-    private Mascota mascota;
+    private String id; //pk
+    private String mascota;
     private String nombre;
     private String descripcion;
     private String tipo;
@@ -25,11 +25,11 @@ public class Cita {
         this.id = id;
     }
 
-    public Mascota getMascota() {
+    public String getMascota() {
         return mascota;
     }
 
-    public void setMascota(Mascota mascota) {
+    public void setMascota(String mascota) {
         this.mascota = mascota;
     }
 

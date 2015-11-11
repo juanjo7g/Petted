@@ -2,6 +2,12 @@ package co.edu.udea.pi.sjm.petted.dao.impl;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Parcel;
+import android.widget.Toast;
+
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,11 +28,29 @@ public class CitaDAOImpl implements CitaDAO {
 
     @Override
     public void insertarCita(Cita cita, Context context) {
-        PettedDataBaseHelper helper;
+        ParseObject c;
+        ParseObject mascota;
+        ParseQuery<ParseObject> query;
         try {
-            helper = PettedDataBaseHelper.getInstance(context);
-            helper.insertarCita(cita);
+            c = new ParseObject("Cita");
+
+            query = ParseQuery.getQuery("Mascota");
+            query.fromLocalDatastore();
+            query.whereEqualTo("id", cita.getMascota());
+
+            c.put("id", cita.getId());
+            c.put("mascota", query.find().get(0));
+            c.put("nombre", cita.getNombre());
+            c.put("descripcion", cita.getDescripcion());
+            c.put("tipo", cita.getTipo());
+            if (cita.getFechaHora() != null) {
+                c.put("fechaHora", cita.getFechaHora());
+            }
+            c.pin();
+            c.saveEventually();
+
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -43,7 +67,7 @@ public class CitaDAOImpl implements CitaDAO {
                 return null;
             }
             cita.setId(c.getString(0));
-            cita.setMascota(dao.obtenerMascota(c.getString(1), context));
+//            cita.setMascota(dao.obtenerMascota(c.getString(1), context));
             cita.setNombre(c.getString(2));
             cita.setDescripcion(c.getString(3));
             cita.setTipo(c.getString(4));
@@ -75,32 +99,45 @@ public class CitaDAOImpl implements CitaDAO {
     }
 
     @Override
-    public List<Cita> obtenerCitas(Mascota mascota, Context context) {
-        PettedDataBaseHelper helper;
+    public List<Cita> obtenerCitas(String mascotaId, Context context) {
         List<Cita> listaCitas = new ArrayList<>();
-        Cursor c;
-        helper = PettedDataBaseHelper.getInstance(context);
-        c = helper.obtenerCitas(mascota);
-        Cita cita;
-        MascotaDAO dao = new MascotaDAOImpl();
+        Cita c;
+        ParseQuery<ParseObject> queryC;
+        ParseQuery<ParseObject> queryM;
+        List<ParseObject> list;
+        ParseObject mascota;
         try {
-            while (c.moveToNext()) {
-                cita = new Cita();
-                cita.setId(c.getString(0));
-                cita.setMascota(dao.obtenerMascota(c.getString(1), context));
-                cita.setNombre(c.getString(2));
-                cita.setDescripcion(c.getString(3));
-                cita.setTipo(c.getString(4));
+            queryC = ParseQuery.getQuery("Cita");
+            queryC.fromLocalDatastore();
 
-                if (c.getString(5) != null) {
-                    cita.setFechaHora(formatoFechaHora.parse(c.getString(5)));
-                }
-                cita.setEstado(c.getString(6));
+            queryM = ParseQuery.getQuery("Mascota");
+            queryM.fromLocalDatastore();
+            queryM.whereEqualTo("id", mascotaId);
 
-                listaCitas.add(cita);
+            mascota = queryM.find().get(0);
+            queryC.whereEqualTo("mascota", mascota);
+
+            list = queryC.find();
+
+            if (list.size() == 0) {
+                Toast.makeText(context, "No hay citas todavia", Toast.LENGTH_SHORT).show();
             }
-        } catch (Exception e) {
-            // Error
+            for (int i = 0; i < list.size(); i++) {
+
+                c = new Cita();
+
+                c.setId(list.get(i).getString("id"));
+                c.setMascota(list.get(i).getParseObject("mascota").getObjectId());
+                c.setNombre(list.get(i).getString("nombre"));
+                c.setDescripcion(list.get(i).getString("descripcion"));
+                c.setTipo(list.get(i).getString("tipo"));
+                c.setFechaHora(list.get(i).getDate("fechaHora"));
+
+                listaCitas.add(c);
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         return listaCitas;
     }

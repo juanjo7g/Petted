@@ -27,15 +27,17 @@ import co.edu.udea.pi.sjm.petted.dto.Usuario;
  * Created by Juan on 02/10/2015.
  */
 public class MascotaDAOImpl implements MascotaDAO {
-    private SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
 
     @Override
     public void insertarMascota(Mascota mascota, final Context context) {
-        final ParseObject m = new ParseObject("Mascota");
+        final ParseObject m;
+        ParseObject propietario;
         try {
+            m = new ParseObject("Mascota");
+            propietario = ParseObject.createWithoutData("_User", mascota.getPropietario());
+
             m.put("id", mascota.getId());
             m.put("nombre", mascota.getNombre());
-            ParseObject propietario = ParseObject.createWithoutData("_User", mascota.getPropietario());
             m.put("propietario", propietario);
             if (mascota.getFechaNacimiento() != null) {
                 m.put("fechaNacimiento", mascota.getFechaNacimiento());
@@ -81,11 +83,15 @@ public class MascotaDAOImpl implements MascotaDAO {
     @Override
     public Mascota obtenerMascota(String id, Context context) {
         Mascota m = new Mascota();
+        ParseQuery<ParseObject> query;
+        List<ParseObject> list;
         try {
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
+            query = ParseQuery.getQuery("Mascota");
+
             query.fromLocalDatastore();
             query.whereEqualTo("id", id);
-            List<ParseObject> list = query.find();
+
+            list = query.find();
 
             m.setId(list.get(0).getString("id"));
             m.setPropietario(list.get(0).getParseUser("propietario").getObjectId());
@@ -111,11 +117,15 @@ public class MascotaDAOImpl implements MascotaDAO {
     @Override
     public void actualizarMascota(Mascota mascota, Context context) {
         ParseObject m;
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
-        query.fromLocalDatastore();
-        query.whereEqualTo("id", mascota.getId());
+        ParseQuery<ParseObject> query;
         try {
+            query = ParseQuery.getQuery("Mascota");
+
+            query.fromLocalDatastore();
+            query.whereEqualTo("id", mascota.getId());
+
             m = query.find().get(0);
+
             m.put("nombre", mascota.getNombre());
             if (mascota.getFechaNacimiento() != null) {
                 m.put("fechaNacimiento", mascota.getFechaNacimiento());
@@ -137,11 +147,14 @@ public class MascotaDAOImpl implements MascotaDAO {
     @Override
     public void eliminarMascota(Mascota mascota, Context context) {
         ParseObject m;
-        ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
-        query.fromLocalDatastore();
-        query.whereEqualTo("id", mascota.getId());
+        ParseQuery<ParseObject> query;
         try {
+            query = ParseQuery.getQuery("Mascota");
+            query.fromLocalDatastore();
+            query.whereEqualTo("id", mascota.getId());
+
             m = query.find().get(0);
+
             m.unpin();
             m.deleteEventually();
             Toast.makeText(context, "Mascota eliminada", Toast.LENGTH_SHORT).show();
@@ -155,12 +168,14 @@ public class MascotaDAOImpl implements MascotaDAO {
     public List<Mascota> obtenerMascotas(Context context) {
         List<Mascota> listaMascotas = new ArrayList<>();
         Mascota m;
+        ParseQuery<ParseObject> query;
+        List<ParseObject> list;
         try {
-            ParseQuery<ParseObject> query = ParseQuery.getQuery("Mascota");
+            query = ParseQuery.getQuery("Mascota");
             query.fromLocalDatastore();
             query.whereEqualTo("propietario", ParseUser.getCurrentUser());
 
-            List<ParseObject> list = query.find();
+            list = query.find();
 
             if (list.size() == 0) {
                 Toast.makeText(context, "No hay mascotas todavia", Toast.LENGTH_SHORT).show();

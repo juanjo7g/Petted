@@ -48,6 +48,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
 
         daoM = new MascotaDAOImpl();
         listaMascotas = daoM.obtenerMascotas(this);
+
         customAdapter = new MascotaCustomAdapter(this, listaMascotas);
         lvMascotas.setAdapter(customAdapter);
 

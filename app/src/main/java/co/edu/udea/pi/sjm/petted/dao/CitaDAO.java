@@ -19,7 +19,7 @@ public interface CitaDAO {
 
     void eliminarCita(Cita cita, Context context);
 
-    List<Cita> obtenerCitas(Mascota mascota, Context context);
+    List<Cita> obtenerCitas(String mascotaId, Context context);
 
     List<Cita> obtenerCitas(Context context);
 }
