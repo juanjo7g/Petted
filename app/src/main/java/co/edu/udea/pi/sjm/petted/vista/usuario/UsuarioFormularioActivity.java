@@ -1,5 +1,7 @@
 package co.edu.udea.pi.sjm.petted.vista.usuario;
 
+import android.app.ProgressDialog;
+import android.support.v4.widget.ContentLoadingProgressBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -37,21 +39,26 @@ public class UsuarioFormularioActivity extends AppCompatActivity {
     }
 
     public void onClickCrearUsuario(View v) {
-        Usuario u = new Usuario();
-        UsuarioDAO daoU = new UsuarioDAOImpl();
+
+        final Usuario u = new Usuario();
+        final UsuarioDAO daoU = new UsuarioDAOImpl();
         u.setCorreo(etCorreoElectronico.getText().toString());
         u.setNombre(etNombreUsuario.getText().toString());
         u.setContraseña(etContraseña.getText().toString());
 
+
         switch (Validacion.validarUsuario(u)) {
             case 0:
-                daoU.insertarUsuario(u,this);
+                daoU.insertarUsuario(u, UsuarioFormularioActivity.this);
                 break;
             case 1:
+                Toast.makeText(UsuarioFormularioActivity.this, "Error, datos vacios", Toast.LENGTH_SHORT).show();
                 break;
             case 2:
                 break;
         }
+
+
     }
 
 

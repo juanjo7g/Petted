@@ -26,24 +26,36 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     @Override
     public void insertarUsuario(Usuario u, final Context context) {
         ParseUser usuario = new ParseUser();
-        usuario.setUsername(u.getNombre());
-        usuario.setPassword(u.getContraseña());
-        usuario.setEmail(u.getCorreo());
 
-        usuario.signUpInBackground(new SignUpCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    Toast.makeText(context, "Usuario creado con exito",
-                            Toast.LENGTH_SHORT).show();
-                    ((Activity) context).finish();
-                    ParseUser.logOut();
-                } else {
-                    Toast.makeText(context, "Error creando usuario",
-                            Toast.LENGTH_SHORT).show();
-                }
+        try {
+            usuario.setUsername(u.getNombre());
+            usuario.setPassword(u.getContraseña());
+            usuario.setEmail(u.getCorreo());
+            usuario.signUp();
+            if (ParseUser.getCurrentUser() != null) {
+                Toast.makeText(context, "Usuario creado con exito",
+                        Toast.LENGTH_SHORT).show();
+                ((Activity) context).finish();
+                ParseUser.logOut();
             }
-        });
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(context, "Error creando usuario",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+
+//        usuario.signUpInBackground(new SignUpCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//                if (e == null) {
+//
+//                } else {
+//                    Toast.makeText(context, "Error creando usuario",
+//                            Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
     }
 

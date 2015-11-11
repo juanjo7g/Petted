@@ -37,8 +37,6 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     private ImageButton ibtnNuevaMacota;
     private MascotaDAO daoM;
 
-    private SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

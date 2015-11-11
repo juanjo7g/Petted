@@ -1,7 +1,5 @@
 package co.edu.udea.pi.sjm.petted.util;
 
-import com.parse.ParseObject;
-
 import co.edu.udea.pi.sjm.petted.dto.Cita;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
@@ -12,6 +10,9 @@ import co.edu.udea.pi.sjm.petted.dto.Vacuna;
  */
 public class Validacion {
     public static int validarUsuario(Usuario u) {
+        if(u.getNombre().equals("")||u.getContraseña().equals("")){
+            return 1;
+        }
         return 0;
     }
 

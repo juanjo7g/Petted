@@ -1,8 +1,10 @@
 package co.edu.udea.pi.sjm.petted.vista;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,7 +14,11 @@ import android.widget.Toast;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
+
+import java.util.Arrays;
+import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.vista.listadoMascotas.ListadoMascotasActivity;
@@ -46,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickIniciar(View view) {
+        final ProgressDialog progress = new ProgressDialog(this);
+        progress.setMessage("Iniciando sesión...");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setIndeterminate(true);
+        progress.show();
 
         ParseUser.logInInBackground(etEmail.getText().toString(), etContraseña.getText().toString(),
                 new LogInCallback() {
@@ -60,8 +71,29 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             Toast.makeText(MainActivity.this, "Error en el logueo", Toast.LENGTH_SHORT).show();
                         }
+                        progress.dismiss();
                     }
                 });
+
+    }
+
+    public void onClickIniciarConFacebook(View view) {
+        List<String> permissions = Arrays.asList("public_profile");
+        ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException err) {
+                if (user == null) {
+                    Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
+                    Toast.makeText(MainActivity.this, "Uh oh. The user cancelled the Facebook login.", Toast.LENGTH_SHORT).show();
+                } else if (user.isNew()) {
+                    Log.d("MyApp", "User signed up and logged in through Facebook!");
+                    Toast.makeText(MainActivity.this, "User signed up and logged in through Facebook!"+user.toString(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Log.d("MyApp", "User logged in through Facebook!");
+                    Toast.makeText(MainActivity.this, "User logged in through Facebook!"+user.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     public void iniciarCreacionUsuario(View view) {

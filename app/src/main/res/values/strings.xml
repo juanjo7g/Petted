@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Petted</string>
+    <string name="facebook_app_id">1654333841481673</string>
+
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_mascotas">Mis Mascotas</string>
