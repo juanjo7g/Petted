@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParsePush;
 import com.parse.ParseQuery;
 
 import java.text.SimpleDateFormat;
@@ -45,6 +46,9 @@ public class CitaDAOImpl implements CitaDAO {
             c.put("tipo", cita.getTipo());
             if (cita.getFechaHora() != null) {
                 c.put("fechaHora", cita.getFechaHora());
+                ParsePush push = new ParsePush();
+                push.setMessage(cita.getNombre());
+                push.sendInBackground();
             }
             c.pin();
             c.saveEventually();

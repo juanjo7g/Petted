@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvCrearUsuario = (TextView) findViewById(R.id.tvCrearUsuario);
-        etEmail = (EditText) findViewById(R.id.etEmail);
+        etEmail = (EditText) findViewById(R.id.etUsuario);
         etContraseña = (EditText) findViewById(R.id.etContraseña);
 
         Intent i;
@@ -64,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
                     public void done(ParseUser parseUser, ParseException e) {
                         if (parseUser != null) {
                             Intent i = new Intent(MainActivity.this, ListadoMascotasActivity.class);
+                            if (!parseUser.getBoolean("emailVerified")) {
+                                Toast.makeText(MainActivity.this, "Por favor verificar el e-mail " +
+                                                "proximamente sera requerido para acceder a la aplicación.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
                             startActivity(i);
                             finish();
                             Toast.makeText(MainActivity.this, "Bienvenido: " + parseUser.getEmail(),
@@ -87,10 +92,10 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(MainActivity.this, "Uh oh. The user cancelled the Facebook login.", Toast.LENGTH_SHORT).show();
                 } else if (user.isNew()) {
                     Log.d("MyApp", "User signed up and logged in through Facebook!");
-                    Toast.makeText(MainActivity.this, "User signed up and logged in through Facebook!"+user.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "User signed up and logged in through Facebook!" + user.toString(), Toast.LENGTH_SHORT).show();
                 } else {
                     Log.d("MyApp", "User logged in through Facebook!");
-                    Toast.makeText(MainActivity.this, "User logged in through Facebook!"+user.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "User logged in through Facebook!" + user.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
