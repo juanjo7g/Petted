@@ -71,6 +71,7 @@ public class MascotaInformacionFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), TagNFCFormularioActivity.class);
+                i.putExtra("mascotaId", ma.getMascota().getId());
                 startActivity(i);
             }
         });

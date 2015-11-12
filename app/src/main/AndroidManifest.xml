@@ -59,17 +59,17 @@
         <activity
             android:name=".vista.mascota.TagNFCFormularioActivity"
             android:label="@string/title_activity_asociar_tag_nfc"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".vista.usuario.UsuarioFormularioActivity"
             android:label="@string/title_activity_creacion_usuario"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".vista.listadoCita.CitaFormularioActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".vista.listadoVacuna.VacunaFormularioActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name="com.facebook.FacebookActivity"

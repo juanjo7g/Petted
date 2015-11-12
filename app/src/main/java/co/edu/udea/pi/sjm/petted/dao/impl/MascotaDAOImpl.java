@@ -137,6 +137,7 @@ public class MascotaDAOImpl implements MascotaDAO {
                 m.put("foto", mascota.getFoto());
             }
             m.put("notificaciones", mascota.getNotificaciones());
+            m.put("idTag", mascota.getIdTag());
             m.pinInBackground();
             m.saveEventually();
         } catch (ParseException e) {
