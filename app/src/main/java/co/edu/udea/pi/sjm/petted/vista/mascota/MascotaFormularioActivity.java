@@ -146,9 +146,11 @@ public class MascotaFormularioActivity extends AppCompatActivity {
                     daoM = new MascotaDAOImpl();
                     m.setId(mascota.getId());
                     m.setNotificaciones(mascota.getNotificaciones());
+                    m.setIdTag(mascota.getIdTag());
+
                     daoM.actualizarMascota(m, this);
                     setResult(0);
-                    Toast.makeText(MascotaFormularioActivity.this, "Mascota editada",
+                    Toast.makeText(MascotaFormularioActivity.this, "Mascota editada " + m.getIdTag(),
                             Toast.LENGTH_SHORT).show();
                     finish();
                 }

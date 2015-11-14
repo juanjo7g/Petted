@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -27,6 +31,7 @@ import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
 import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
+import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.vista.listadoCita.MascotaCitasFragment;
 import co.edu.udea.pi.sjm.petted.vista.listadoVacuna.MascotaVacunasFragment;
 
@@ -53,6 +58,9 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
 
     private Mascota mascota;
     private MascotaDAO daoM;
+
+    private String idTag = "";
+    private NfcAdapter myNfcAdapter;
 
     public Mascota getMascota() {
         return mascota;
@@ -117,6 +125,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
 
         mascota = new Mascota();
         mascotaId = this.getIntent().getExtras().getString("mascotaId");
+
 
         daoM = new MascotaDAOImpl();
         mascota = daoM.obtenerMascota(mascotaId, this);
@@ -282,6 +291,6 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
             finish();
             startActivity(getIntent());
         }
-
     }
+
 }

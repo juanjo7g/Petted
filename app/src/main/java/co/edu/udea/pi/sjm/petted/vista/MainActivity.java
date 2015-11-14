@@ -15,6 +15,8 @@ import android.widget.Toast;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.Arrays;
@@ -69,6 +71,21 @@ public class MainActivity extends AppCompatActivity {
                                                 "proximamente sera requerido para acceder a la aplicación.",
                                         Toast.LENGTH_SHORT).show();
                             }
+                            try {
+                                ParseQuery<ParseObject> query;
+                                List<ParseObject> list;
+                                query = ParseQuery.getQuery("Mascota");
+                                query.whereEqualTo("propietario", ParseUser.getCurrentUser());
+                                list = query.find();
+                                if (list.size() > 0) {
+                                    progress.setMessage("Cargando mascotas...");
+                                }
+                                for (int j = 0; j < list.size(); j++) {
+                                    list.get(j).pin();
+                                }
+                            } catch (ParseException e1) {
+                                e1.printStackTrace();
+                            }
                             startActivity(i);
                             finish();
                             Toast.makeText(MainActivity.this, "Bienvenido: " + parseUser.getEmail(),
@@ -79,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
                         progress.dismiss();
                     }
                 });
-
     }
 
     public void onClickIniciarConFacebook(View view) {

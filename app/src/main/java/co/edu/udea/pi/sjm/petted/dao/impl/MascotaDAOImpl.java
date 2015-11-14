@@ -102,7 +102,7 @@ public class MascotaDAOImpl implements MascotaDAO {
             m.setTipo(list.get(0).getString("tipo"));
             m.setRaza(list.get(0).getString("raza"));
             m.setGenero(list.get(0).getString("genero"));
-            m.setIdTag(list.get(0).getString("IdTag"));
+            m.setIdTag(list.get(0).getString("idTag"));
             if (list.get(0).getBytes("foto") != null) {
                 m.setFoto(list.get(0).getBytes("foto"));
             }
@@ -112,6 +112,22 @@ public class MascotaDAOImpl implements MascotaDAO {
             e.printStackTrace();
         }
         return m;
+    }
+
+    @Override
+    public String obtenerMascotaId(String idTag, Context context) {
+        String id = "";
+        ParseQuery<ParseObject> query;
+        List<ParseObject> list;
+        try {
+            query = ParseQuery.getQuery("Mascota");
+            query.whereEqualTo("idTag", idTag);
+            list = query.find();
+            id = list.get(0).getString("id");
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return id;
     }
 
     @Override
@@ -138,7 +154,7 @@ public class MascotaDAOImpl implements MascotaDAO {
             }
             m.put("notificaciones", mascota.getNotificaciones());
             m.put("idTag", mascota.getIdTag());
-            m.pinInBackground();
+            m.pin();
             m.saveEventually();
         } catch (ParseException e) {
             e.printStackTrace();

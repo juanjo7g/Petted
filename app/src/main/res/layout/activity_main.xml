@@ -12,20 +12,21 @@
         android:id="@+id/ivIcono"
         android:layout_width="match_parent"
         android:layout_height="140dp"
+        android:layout_alignParentStart="false"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="24dp"
-        android:src="@mipmap/ic_launcher_cat"
-        android:layout_alignParentStart="false" />
+        android:src="@mipmap/ic_launcher_cat" />
 
     <EditText
         android:id="@+id/etUsuario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Usuario"
-        android:layout_below="@+id/ivIcono"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/ivIcono"
+        android:hint="Usuario"
+        android:inputType="textEmailAddress" />
 
     <EditText
         android:id="@+id/etContraseña"
@@ -42,41 +43,43 @@
         android:id="@+id/btnIniciar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/etContraseña"
         android:layout_marginTop="36dp"
         android:background="@color/ColorPrimary"
+        android:elevation="10dp"
         android:onClick="onClickIniciar"
         android:padding="12dp"
         android:text="@string/btn_iniciar"
-        android:textColor="@color/blanco"
-        android:elevation="10dp"
-        android:layout_below="@+id/etContraseña"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:textColor="@color/blanco" />
+
     <Button
         android:id="@+id/btnIniciarFB"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/btnIniciar"
         android:layout_marginTop="16dp"
         android:background="#4e69a2"
+        android:elevation="10dp"
         android:onClick="onClickIniciarConFacebook"
         android:padding="12dp"
         android:text="Iniciar con Facebook"
-        android:textColor="@color/blanco"
-        android:elevation="10dp"
-        android:layout_below="@+id/btnIniciar"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:textColor="@color/blanco" />
+
     <TextView
         android:id="@+id/tvCrearUsuario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Crear usuario"
-        android:onClick="iniciarCreacionUsuario"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:gravity="center"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_below="@+id/btnIniciarFB"
         android:layout_marginTop="10dp"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:gravity="center"
+        android:onClick="iniciarCreacionUsuario"
+        android:text="Crear usuario"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

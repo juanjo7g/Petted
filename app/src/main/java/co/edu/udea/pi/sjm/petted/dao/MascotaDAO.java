@@ -15,6 +15,8 @@ public interface MascotaDAO {
 
     Mascota obtenerMascota(String id, Context context);
 
+    String obtenerMascotaId(String id, Context context);
+
     void actualizarMascota(Mascota mascota, Context context);
 
     void eliminarMascota(Mascota mascota, Context context);
