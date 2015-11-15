@@ -140,6 +140,7 @@ public class VacunaFormularioActivity extends AppCompatActivity {
 //                    v.setId(((Vacuna) this.getIntent().getExtras().getSerializable("vacuna")).getId());
 //                    v.setEstado(((Vacuna) this.getIntent().getExtras().getSerializable("vacuna")).getEstado());
 
+                    daoV = new VacunaDAOImpl();
                     daoV.actualizarVacuna(v, this);
 
                     Toast.makeText(VacunaFormularioActivity.this, "Vacuna Editada", Toast.LENGTH_SHORT).show();

@@ -1,7 +1,10 @@
 package co.edu.udea.pi.sjm.petted.vista.listadoCita;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,7 +46,6 @@ public class CitaFormularioActivity extends AppCompatActivity {
     private DatePickerDialog electorDeFechaDialogo;
     private TimePickerDialog electorDeHoraDialogo;
 
-    private TextView tvMascotaId;
     private String mascotaId;
     private EditText etNombre;
     private EditText etDescripcion;
@@ -60,19 +62,14 @@ public class CitaFormularioActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario_cita);
 
-        // Obtener instancia de la action bar
         ActionBar actionBar = ((AppCompatActivity) this)
                 .getSupportActionBar();
 
         if (actionBar != null) {
-            // Habilitar el Up Button
             actionBar.setDisplayHomeAsUpEnabled(true);
-            // Cambiar icono del Up Button
             actionBar.setHomeAsUpIndicator(R.mipmap.ic_close_white);
         }
 
-        tvMascotaId = (TextView) findViewById(R.id.tvMascotaId);
-        tvMascotaId.setText(this.getIntent().getExtras().getString("mascotaId"));
         mascotaId = this.getIntent().getExtras().getString("mascotaId");
 
         etNombre = (EditText) findViewById(R.id.etNombreCita);
@@ -94,8 +91,22 @@ public class CitaFormularioActivity extends AppCompatActivity {
             inicializarFormulario((Cita) this.getIntent().getExtras().getSerializable("cita"));
             super.setTitle("Editar Cita");
         }
-        if (this.getIntent().getExtras().getString("vacuna") != null) {
+        if (this.getIntent().getExtras().getSerializable("vacuna") != null) {
             inicializarFormulario((Vacuna) this.getIntent().getExtras().getSerializable("vacuna"));
+            new AlertDialog.Builder(this)
+                    .setTitle("Asignar Cita")
+                    .setMessage("Cree una cita con la fecha proxima de la vacuna.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setNegativeButton("Crear despues", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .show();
         }
     }
 
@@ -193,7 +204,6 @@ public class CitaFormularioActivity extends AppCompatActivity {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 Calendar nuevaHora = Calendar.getInstance();
-                //Toast.makeText(CitaFormularioActivity.this, nuevaHora.get(Calendar.AM_PM), Toast.LENGTH_SHORT).show();
                 nuevaHora.set(Calendar.HOUR, selectedHour);
                 nuevaHora.set(Calendar.MINUTE, selectedMinute);
                 if (Calendar.AM_PM == 0) {
