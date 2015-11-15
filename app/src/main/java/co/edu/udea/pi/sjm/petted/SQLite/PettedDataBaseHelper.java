@@ -257,7 +257,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             db.beginTransaction();
             ContentValues values = new ContentValues();
 
-            values.put(KEY_VACUNA_MASCOTA, vacuna.getMascota().getId());
+//            values.put(KEY_VACUNA_MASCOTA, vacuna.getMascota().getId());
             values.put(KEY_VACUNA_NOMBRE, vacuna.getNombre());
 
             if (vacuna.getFecha() != null) {
@@ -531,7 +531,7 @@ public class PettedDataBaseHelper extends SQLiteOpenHelper {
             db.beginTransaction();
             ContentValues values = new ContentValues();
 
-            values.put(KEY_VACUNA_MASCOTA, vacuna.getMascota().getId());
+//            values.put(KEY_VACUNA_MASCOTA, vacuna.getMascota().getId());
             values.put(KEY_VACUNA_NOMBRE, vacuna.getNombre());
 
             if (vacuna.getFecha() != null) {

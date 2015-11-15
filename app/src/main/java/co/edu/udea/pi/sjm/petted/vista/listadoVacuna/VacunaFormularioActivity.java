@@ -29,6 +29,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.UUID;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
@@ -59,6 +60,8 @@ public class VacunaFormularioActivity extends AppCompatActivity {
     private Bitmap foto;
 
     private String mascotaId;
+
+    private VacunaDAO daoV;
 
     private String APP_DIRECTORY = "myPictureApp/";
     private String MEDIA_DIRECTORY = APP_DIRECTORY + "media";
@@ -94,23 +97,22 @@ public class VacunaFormularioActivity extends AppCompatActivity {
 
         mostrarFecha();
 
-        if (this.getIntent().getExtras().getSerializable("vacuna") != null) {
-            inicializarFormulario((Vacuna) this.getIntent().getExtras().getSerializable("vacuna"));
-            super.setTitle("Editar Vacuna");
-        } else {
+        if (this.getIntent().getExtras().getString("vacunaId") == null) {
             super.setTitle("Nueva Vacuna");
+        } else {
+//            inicializarFormulario((Vacuna) this.getIntent().getExtras().getSerializable("vacuna"));
+            super.setTitle("Editar Vacuna");
         }
 
     }
 
     private void onClickGuardarVacuna() {
-        MascotaDAO mDao = new MascotaDAOImpl();
-        VacunaDAO vDao = new VacunaDAOImpl();
-        Mascota m;
         Vacuna v;
-        m = mDao.obtenerMascota(mascotaId, this);
+        UUID uuid = UUID.randomUUID();
         v = new Vacuna();
-        v.setMascota(m);
+
+        v.setId(uuid.toString());
+        v.setMascota(mascotaId);
         v.setNombre(etNombre.getText().toString());
         try {
             v.setFecha(formatoFecha.parse(etFecha.getText().toString()));
@@ -124,24 +126,23 @@ public class VacunaFormularioActivity extends AppCompatActivity {
             v.setValidacion(Utility.getBytes(Utility.resizeImage(this, R.drawable.no_valido, 200, 200)));
         }
 
-        v.setEstado("0");
-
         switch (Validacion.validarVacuna(v)) {
             case 0:
-                if (this.getIntent().getExtras().getSerializable("vacuna") != null) {
-                    // TODO: EDITAR VACUNA
-                    v.setId(((Vacuna) this.getIntent().getExtras().getSerializable("vacuna")).getId());
-                    v.setEstado(((Vacuna) this.getIntent().getExtras().getSerializable("vacuna")).getEstado());
-
-                    vDao.actualizarVacuna(v, this);
-
-                    Toast.makeText(VacunaFormularioActivity.this, "Vacuna Editada", Toast.LENGTH_SHORT).show();
-                } else {
-                    vDao.insertarVacuna(v, this);
+                if (this.getIntent().getExtras().getSerializable("vacuna") == null) {
+                    daoV = new VacunaDAOImpl();
+                    daoV.insertarVacuna(v, this);
                     Intent i = new Intent(this, CitaFormularioActivity.class);
                     i.putExtra("mascotaId", mascotaId);
                     i.putExtra("vacuna", v);
                     startActivity(i);
+                } else {
+                    // TODO: EDITAR VACUNA
+//                    v.setId(((Vacuna) this.getIntent().getExtras().getSerializable("vacuna")).getId());
+//                    v.setEstado(((Vacuna) this.getIntent().getExtras().getSerializable("vacuna")).getEstado());
+
+                    daoV.actualizarVacuna(v, this);
+
+                    Toast.makeText(VacunaFormularioActivity.this, "Vacuna Editada", Toast.LENGTH_SHORT).show();
                 }
                 finish();
                 break;

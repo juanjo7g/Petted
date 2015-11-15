@@ -15,11 +15,13 @@ public interface MascotaDAO {
 
     Mascota obtenerMascota(String id, Context context);
 
-    String obtenerMascotaId(String id, Context context);
+    String obtenerMascotaId(String idTag);
 
     void actualizarMascota(Mascota mascota, Context context);
 
     void eliminarMascota(Mascota mascota, Context context);
 
     List<Mascota> obtenerMascotas(Context context);
+
+    Mascota obtenerMascotaConIdTag(String idTag);
 }

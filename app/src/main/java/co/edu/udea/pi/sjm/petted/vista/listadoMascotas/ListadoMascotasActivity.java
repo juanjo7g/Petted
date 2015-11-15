@@ -1,6 +1,7 @@
 package co.edu.udea.pi.sjm.petted.vista.listadoMascotas;
 
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -85,7 +86,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
 
     public void iniciarActividadMascotaNueva() {
         Intent i = new Intent(this, MascotaFormularioActivity.class);
-        i.putExtra("mascotaId", "");
+        i.putExtra("extra", "");
         startActivity(i);
     }
 
@@ -146,12 +147,48 @@ public class ListadoMascotasActivity extends AppCompatActivity {
                 Toast.makeText(ListadoMascotasActivity.this, "Cerrar sesión", Toast.LENGTH_SHORT).show();
                 cerrarSesion();
                 break;
+            case R.id.action_settings:
+
+                Mascota mascotaNoMia;
+                daoM = new MascotaDAOImpl();
+                String idTemp = daoM.obtenerMascotaId("0x407a21fe");
+                Toast.makeText(ListadoMascotasActivity.this, "Id: " + idTemp, Toast.LENGTH_SHORT).show();
+                if (!idTemp.equals("")) { // Esta local
+                    if (daoM.obtenerMascota(idTemp, ListadoMascotasActivity.this).getPropietario()
+                            .equals(ParseUser.getCurrentUser().getObjectId())) { // Es del usuario actual
+                        Intent i = new Intent(this, MascotaActivity.class);
+                        i.putExtra("mascotaId", idTemp);
+                        startActivity(i);
+                    } else {
+                        Toast.makeText(ListadoMascotasActivity.this, "Esta mascota es de otro " +
+                                "usuario que uso este dispositivo", Toast.LENGTH_SHORT).show();
+                    }
+                } else { // Esta remota
+                    Toast.makeText(ListadoMascotasActivity.this, "Esta mascota no esta acá por lo " +
+                            "tanto no le pertenece  a ud, se va a buscar en la base de datos remota " +
+                            "para ver si existe", Toast.LENGTH_LONG).show();
+                    mascotaNoMia = daoM.obtenerMascotaConIdTag("0x407a21fe");
+                    if (mascotaNoMia == null) {
+                        Toast.makeText(ListadoMascotasActivity.this, "El tag no esta asociado a " +
+                                "ninguna mascota", Toast.LENGTH_SHORT).show();
+                    } else { //Mostrar mascota que no es mia
+                        Toast.makeText(ListadoMascotasActivity.this, "Nombre: " + mascotaNoMia.getNombre(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     private void cerrarSesion() {
+        final ProgressDialog progress = new ProgressDialog(this);
+        progress.setMessage("Cerrando sesión...");
+        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progress.setIndeterminate(true);
+        progress.show();
+
         ParseUser.logOutInBackground(new LogOutCallback() {
             @Override
             public void done(ParseException e) {
@@ -162,6 +199,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
                     Toast.makeText(ListadoMascotasActivity.this, "Error cerrando sesión",
                             Toast.LENGTH_SHORT).show();
                 }
+                progress.dismiss();
             }
         });
         finish();

@@ -21,7 +21,6 @@ import co.edu.udea.pi.sjm.petted.dao.VacunaDAO;
 import co.edu.udea.pi.sjm.petted.dao.impl.VacunaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Vacuna;
 import co.edu.udea.pi.sjm.petted.util.Utility;
-import co.edu.udea.pi.sjm.petted.vista.listadoCita.CitaCustomAdapter;
 import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
 
 /**
@@ -31,7 +30,7 @@ public class MascotaVacunasFragment extends Fragment {
 
     private ListView lvVacunas;
     private ImageButton ibtnNuevaVacuna;
-    private VacunaDAO vDao;
+    private VacunaDAO daoV;
     private List<Vacuna> listaVacunas;
     private VacunaCustomAdapter customAdapter;
     private MascotaActivity ma;
@@ -52,31 +51,31 @@ public class MascotaVacunasFragment extends Fragment {
         lvVacunas = (ListView) rootView.findViewById(R.id.lvListaVacunas);
         ibtnNuevaVacuna = (ImageButton) rootView.findViewById(R.id.ibtnNuevaVacuna);
 
-//        listaVacunas = new ArrayList<>();
-//
-//        vDao = new VacunaDAOImpl();
-//        ma = (MascotaActivity) getActivity();
-//
-//        listaVacunas = vDao.obtenerVacunas(ma.getMascota(), ma);
-//
-//        customAdapter = new VacunaCustomAdapter(ma, listaVacunas);
-//        lvVacunas.setAdapter(customAdapter);
-//
-//        lvVacunas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Vacuna v = customAdapter.getItem(position);
-//                Toast.makeText(view.getContext(), "Id vacuna: " + v.getId(), Toast.LENGTH_SHORT).show();
-//                // TODO: Dialog mostrando información de la vacuna
-//                mostrarFoto(v.getValidacion());
-//            }
-//        });
-//        ibtnNuevaVacuna.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                iniciarActividadVacunaNueva();
-//            }
-//        });
+        listaVacunas = new ArrayList<>();
+
+        daoV = new VacunaDAOImpl();
+        ma = (MascotaActivity) getActivity();
+
+        listaVacunas = daoV.obtenerVacunas(ma.getMascota().getId(), ma);
+
+        customAdapter = new VacunaCustomAdapter(ma, listaVacunas);
+        lvVacunas.setAdapter(customAdapter);
+
+        lvVacunas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Vacuna v = customAdapter.getItem(position);
+                Toast.makeText(view.getContext(), "Id vacuna: " + v.getId(), Toast.LENGTH_SHORT).show();
+                // TODO: Dialog mostrando información de la vacuna
+                mostrarFoto(v.getValidacion());
+            }
+        });
+        ibtnNuevaVacuna.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iniciarActividadVacunaNueva();
+            }
+        });
 
         return rootView;
     }
@@ -96,12 +95,12 @@ public class MascotaVacunasFragment extends Fragment {
         startActivity(i);
     }
 
-//    @Override
-//    public void onResume() {
-//        Toast.makeText(ma, "REINICIAR VACUNAS", Toast.LENGTH_SHORT).show();
-//        listaVacunas = vDao.obtenerVacunas(ma.getMascota(), ma);
-//        customAdapter = new VacunaCustomAdapter(ma, listaVacunas);
-//        lvVacunas.setAdapter(customAdapter);
-//        super.onResume();
-//    }
+    @Override
+    public void onResume() {
+        Toast.makeText(ma, "REINICIAR VACUNAS", Toast.LENGTH_SHORT).show();
+        listaVacunas = daoV.obtenerVacunas(ma.getMascota().getId(), ma);
+        customAdapter = new VacunaCustomAdapter(ma, listaVacunas);
+        lvVacunas.setAdapter(customAdapter);
+        super.onResume();
+    }
 }

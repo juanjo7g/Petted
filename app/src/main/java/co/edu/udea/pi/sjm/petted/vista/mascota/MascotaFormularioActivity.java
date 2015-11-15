@@ -90,17 +90,19 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         ibtnFechaNacimiento = (ImageButton) findViewById(R.id.ibtnFechaNacimientoMascota);
         ivFotoPrevia = (ImageView) findViewById(R.id.ivFotoPreviaMascota);
 
+        if (this.getIntent().getExtras().getString("mascotaId") == null){
+            Toast.makeText(MascotaFormularioActivity.this, "Hola", Toast.LENGTH_SHORT).show();
+        }
         mostrarFecha();
 
-
-        if (!this.getIntent().getExtras().getString("mascotaId").equals("")) {
+        if (this.getIntent().getExtras().getString("mascotaId") != null) {
             daoM = new MascotaDAOImpl();
             mascota = daoM.obtenerMascota(this.getIntent().getExtras().getString("mascotaId"), this);
         }
 
         inicializarSpinners();
 
-        if (this.getIntent().getExtras().getString("mascotaId").equals("")) {
+        if (this.getIntent().getExtras().getString("mascotaId") == null) {
             super.setTitle("Nueva Mascota");
         } else {
             inicializarFormulario();
@@ -139,7 +141,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
 
         switch (Validacion.validarMascota(m)) {
             case 0:
-                if (this.getIntent().getExtras().getString("mascotaId").equals("")) {
+                if (this.getIntent().getExtras().getString("mascotaId") == null) {
                     daoM = new MascotaDAOImpl();
                     daoM.insertarMascota(m, this);
                 } else {
@@ -273,7 +275,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         adapter = ArrayAdapter.createFromResource(this, R.array.TiposDeMascotas,
                 android.R.layout.simple_spinner_item);
         final String raza;
-        if (this.getIntent().getExtras().getString("mascotaId").equals("")) {
+        if (this.getIntent().getExtras().getString("mascotaId") == null) {
             raza = null;
         } else {
             raza = mascota.getRaza();

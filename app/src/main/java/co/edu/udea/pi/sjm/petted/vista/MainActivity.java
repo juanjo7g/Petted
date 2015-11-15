@@ -75,13 +75,37 @@ public class MainActivity extends AppCompatActivity {
                                 ParseQuery<ParseObject> query;
                                 List<ParseObject> list;
                                 query = ParseQuery.getQuery("Mascota");
+
+                                ParseQuery<ParseObject> queryC;
+                                List<ParseObject> listC;
+                                queryC = ParseQuery.getQuery("Cita");
+
+                                ParseQuery<ParseObject> queryV;
+                                List<ParseObject> listV;
+                                queryV = ParseQuery.getQuery("Vacuna");
+
                                 query.whereEqualTo("propietario", ParseUser.getCurrentUser());
                                 list = query.find();
-                                if (list.size() > 0) {
-                                    progress.setMessage("Cargando mascotas...");
-                                }
+//                                if (list.size() > 0) {
+//                                    progress.setMessage("Cargando mascotas...");
+//                                }
                                 for (int j = 0; j < list.size(); j++) {
                                     list.get(j).pin();
+
+                                    queryC.whereEqualTo("mascota", list.get(j));
+                                    listC = queryC.find();
+
+                                    for (int k = 0; k < listC.size(); k++) {
+                                        listC.get(k).pin();
+                                    }
+
+                                    queryV.whereEqualTo("mascota", list.get(j));
+                                    listV = queryV.find();
+
+                                    for (int k = 0; k < listV.size(); k++) {
+                                        listV.get(k).pin();
+                                    }
+
                                 }
                             } catch (ParseException e1) {
                                 e1.printStackTrace();

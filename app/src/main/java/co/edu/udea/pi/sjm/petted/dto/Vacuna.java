@@ -8,7 +8,7 @@ import java.util.Date;
  */
 public class Vacuna implements Serializable{
     private String id; //pk autoincrementable
-    private Mascota mascota;
+    private String mascota;
     private String nombre;
     private Date fecha;
     private Date fechaProxima;
@@ -26,11 +26,11 @@ public class Vacuna implements Serializable{
         this.id = id;
     }
 
-    public Mascota getMascota() {
+    public String getMascota() {
         return mascota;
     }
 
-    public void setMascota(Mascota mascota) {
+    public void setMascota(String mascota) {
         this.mascota = mascota;
     }
 

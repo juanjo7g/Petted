@@ -19,7 +19,7 @@ public interface VacunaDAO {
 
     void eliminarVacuna(Vacuna vacuna, Context context);
 
-    List<Vacuna> obtenerVacunas(Mascota mascota, Context context);
+    List<Vacuna> obtenerVacunas(String mascotaId, Context context);
 
     List<Vacuna> obtenerVacunas(Context context);
 }

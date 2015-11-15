@@ -88,16 +88,15 @@ public class CitaFormularioActivity extends AppCompatActivity {
 
         inicializarSpinner();
 
-        if (this.getIntent().getExtras().getString("citaId").equals("")) {
+        if (this.getIntent().getExtras().getString("citaId") == null) {
             super.setTitle("Nueva Cita");
         } else {
             inicializarFormulario((Cita) this.getIntent().getExtras().getSerializable("cita"));
             super.setTitle("Editar Cita");
         }
-        if (this.getIntent().getExtras().getSerializable("vacuna") != null) {
+        if (this.getIntent().getExtras().getString("vacuna") != null) {
             inicializarFormulario((Vacuna) this.getIntent().getExtras().getSerializable("vacuna"));
         }
-
     }
 
     private void inicializarFormulario(Vacuna vacuna) {
@@ -111,12 +110,9 @@ public class CitaFormularioActivity extends AppCompatActivity {
     }
 
     public void onClickGuardarCita() {
-//        MascotaDAO mDao = new MascotaDAOImpl();
         Cita c;
-//        Mascota m;
         UUID uuid = UUID.randomUUID();
         c = new Cita();
-//        m = mDao.obtenerMascota(mascotaId, this);
 
         c.setId(uuid.toString());
         c.setMascota(mascotaId);
@@ -134,20 +130,16 @@ public class CitaFormularioActivity extends AppCompatActivity {
 
         switch (Validacion.validarCita(c)) {
             case 0:
-                if (this.getIntent().getExtras().getString("citaId").equals("")) {
+                if (this.getIntent().getExtras().getString("citaId") == null) {
                     daoC = new CitaDAOImpl();
                     daoC.insertarCita(c, this);
                     Toast.makeText(CitaFormularioActivity.this, "Cita insertada", Toast.LENGTH_SHORT).show();
 
                 } else {
-
-                    c.setId(((Cita) this.getIntent().getExtras().getSerializable("cita")).getId());
-                    c.setEstado(((Cita) this.getIntent().getExtras().getSerializable("cita")).getEstado());
-
+//                    c.setId(((Cita) this.getIntent().getExtras().getSerializable("cita")).getId());
+//                    c.setEstado(((Cita) this.getIntent().getExtras().getSerializable("cita")).getEstado());
                     daoC.actualizarCita(c, this);
-
                     setResult(0);
-
                     Toast.makeText(CitaFormularioActivity.this, "Cita editada", Toast.LENGTH_SHORT).show();
                 }
                 finish();

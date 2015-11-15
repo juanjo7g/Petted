@@ -1,13 +1,17 @@
 package co.edu.udea.pi.sjm.petted.vista.listadoCita;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.DialogPreference;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -66,6 +70,28 @@ public class MascotaCitasFragment extends Fragment {
                 Cita c = customAdapter.getItem(position);
                 Toast.makeText(view.getContext(), "Id cita: " + c.getId(), Toast.LENGTH_SHORT).show();
                 // TODO: Dialog mostrando información de la cita
+                AlertDialog ad = new AlertDialog.Builder(ma)
+                        .setTitle("Cita -> " + c.getNombre())
+                        .setMessage("Descrpción: " + c.getDescripcion() +
+                                "\nTipo: " + c.getTipo() +
+                                "\nFechaHora: ")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(ma, "Cerrar cita", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNeutralButton("Editar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(ma, "Editar cita", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(ma, "Eliminar cita", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .show();
             }
         });
         ibtnNuevaCita.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +106,6 @@ public class MascotaCitasFragment extends Fragment {
     private void iniciarActividadCitaNueva() {
         Intent i = new Intent(getActivity(), CitaFormularioActivity.class);
         i.putExtra("mascotaId", ((MascotaActivity) getActivity()).getMascota().getId());
-        i.putExtra("citaId", "");
         startActivity(i);
     }
 

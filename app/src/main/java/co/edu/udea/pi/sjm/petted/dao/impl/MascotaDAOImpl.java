@@ -115,15 +115,56 @@ public class MascotaDAOImpl implements MascotaDAO {
     }
 
     @Override
-    public String obtenerMascotaId(String idTag, Context context) {
+    public Mascota obtenerMascotaConIdTag(String idTag) {
+        Mascota m = new Mascota();
+        ParseQuery<ParseObject> query;
+        List<ParseObject> list;
+        try {
+            query = ParseQuery.getQuery("Mascota");
+
+            query.whereEqualTo("idTag", idTag);
+
+            list = query.find();
+
+            if (list.size() == 0) {
+                return null;
+            }
+            m.setId(list.get(0).getString("id"));
+            m.setPropietario(list.get(0).getParseUser("propietario").getObjectId());
+            m.setNombre(list.get(0).getString("nombre"));
+            if (list.get(0).getDate("fechaNacimiento") != null) {
+                m.setFechaNacimiento(list.get(0).getDate("fechaNacimiento"));
+            }
+            m.setTipo(list.get(0).getString("tipo"));
+            m.setRaza(list.get(0).getString("raza"));
+            m.setGenero(list.get(0).getString("genero"));
+            m.setIdTag(list.get(0).getString("idTag"));
+            if (list.get(0).getBytes("foto") != null) {
+                m.setFoto(list.get(0).getBytes("foto"));
+            }
+            m.setNotificaciones(list.get(0).getBoolean("notificaciones"));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return m;
+    }
+
+    @Override
+    public String obtenerMascotaId(String idTag) {
         String id = "";
         ParseQuery<ParseObject> query;
         List<ParseObject> list;
         try {
             query = ParseQuery.getQuery("Mascota");
+            query.fromLocalDatastore();
             query.whereEqualTo("idTag", idTag);
             list = query.find();
-            id = list.get(0).getString("id");
+            if (list.size() == 0) {
+                return "";
+            } else {
+                id = list.get(0).getString("id");
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -219,4 +260,6 @@ public class MascotaDAOImpl implements MascotaDAO {
         }
         return listaMascotas;
     }
+
+
 }

@@ -34,7 +34,6 @@ public class CitaCustomAdapter extends BaseAdapter {
         TextView tvNombre;
         TextView tvTipo;
         TextView tvFecha;
-
     }
 
     @Override

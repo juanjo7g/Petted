@@ -1,7 +1,10 @@
 package co.edu.udea.pi.sjm.petted.vista.mascota;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -58,7 +61,7 @@ public class MascotaInformacionFragment extends Fragment {
         tvNombre.setText(ma.getMascota().getNombre());
         tvTipo.setText(ma.getMascota().getTipo());
         tvRaza.setText(ma.getMascota().getRaza());
-       ivFoto.setImageBitmap(Utility.getCircleBitmap(Utility.getFoto(ma.getMascota().getFoto())));
+        ivFoto.setImageBitmap(Utility.getCircleBitmap(Utility.getFoto(ma.getMascota().getFoto())));
 
         ivFoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,9 +73,8 @@ public class MascotaInformacionFragment extends Fragment {
         btnAsociarTagNFC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(getActivity(), TagNFCFormularioActivity.class);
-                i.putExtra("mascotaId", ma.getMascota().getId());
-                startActivity(i);
+                onclickAsociarTagNFC();
+
             }
         });
 
@@ -84,6 +86,24 @@ public class MascotaInformacionFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         lvProximosEventos.setAdapter(adapter);
         return rootView;
+    }
+
+    private void onclickAsociarTagNFC() {
+        if (NfcAdapter.getDefaultAdapter(ma) == null) {
+            new AlertDialog.Builder(ma)
+                    .setTitle("No tiene NFC")
+                    .setMessage("Esta funcionalidad está disponible solo para dispositivos con NFC.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        } else {
+            Intent i = new Intent(getActivity(), TagNFCFormularioActivity.class);
+            i.putExtra("mascotaId", ma.getMascota().getId());
+            startActivity(i);
+        }
     }
 
     private void mostrarFoto(byte[] foto, String titulo) {

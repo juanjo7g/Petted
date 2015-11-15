@@ -2,6 +2,12 @@ package co.edu.udea.pi.sjm.petted.dao.impl;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.widget.Toast;
+
+import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParsePush;
+import com.parse.ParseQuery;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,11 +28,31 @@ public class VacunaDAOImpl implements VacunaDAO {
 
     @Override
     public void insertarVacuna(Vacuna vacuna, Context context) {
-        PettedDataBaseHelper helper;
+        ParseObject v;
+        ParseQuery<ParseObject> query;
         try {
-            helper = PettedDataBaseHelper.getInstance(context);
-            helper.insertarVacuna(vacuna);
+            v = new ParseObject("Vacuna");
+
+            query = ParseQuery.getQuery("Mascota");
+            query.fromLocalDatastore();
+            query.whereEqualTo("id", vacuna.getMascota());
+
+            v.put("id", vacuna.getId());
+            v.put("mascota", query.find().get(0));
+            v.put("nombre", vacuna.getNombre());
+            if (vacuna.getFecha() != null) {
+                v.put("fecha", vacuna.getFecha());
+            }
+            if (vacuna.getFechaProxima() != null) {
+                v.put("fechaProxima", vacuna.getFechaProxima());
+            }
+            if (vacuna.getValidacion() != null) {
+                v.put("validacion", vacuna.getValidacion());
+            }
+            v.pin();
+            v.saveEventually();
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -43,7 +69,7 @@ public class VacunaDAOImpl implements VacunaDAO {
                 return null;
             }
             vacuna.setId(c.getString(0));
-            vacuna.setMascota(dao.obtenerMascota(c.getString(1), context));
+//            vacuna.setMascota(dao.obtenerMascota(c.getString(1), context));
             vacuna.setNombre(c.getString(2));
 
             if (c.getString(3) != null) {
@@ -81,39 +107,43 @@ public class VacunaDAOImpl implements VacunaDAO {
     }
 
     @Override
-    public List<Vacuna> obtenerVacunas(Mascota mascota, Context context) {
-        PettedDataBaseHelper helper;
+    public List<Vacuna> obtenerVacunas(String mascotaId, Context context) {
         List<Vacuna> listaVacunas = new ArrayList<>();
-        Cursor c;
-        helper = PettedDataBaseHelper.getInstance(context);
-        c = helper.obtenerVacunas(mascota);
-        Vacuna vacuna;
-        MascotaDAO dao = new MascotaDAOImpl();
+        Vacuna v;
+        ParseQuery<ParseObject> queryV;
+        ParseQuery<ParseObject> queryM;
+        List<ParseObject> list;
+        ParseObject mascota;
         try {
-            while (c.moveToNext()) {
-                vacuna = new Vacuna();
+            queryV = ParseQuery.getQuery("Vacuna");
+            queryV.fromLocalDatastore();
 
-                vacuna.setId(c.getString(0));
-                vacuna.setMascota(dao.obtenerMascota(c.getString(1), context));
-                vacuna.setNombre(c.getString(2));
+            queryM = ParseQuery.getQuery("Mascota");
+            queryM.fromLocalDatastore();
+            queryM.whereEqualTo("id", mascotaId);
 
-                if (c.getString(3) != null) {
-                    vacuna.setFecha(formatoFecha.parse(c.getString(3)));
-                }
-                if (c.getString(4) != null) {
-                    vacuna.setFechaProxima(formatoFecha.parse(c.getString(4)));
-                }
+            mascota = queryM.find().get(0);
+            queryV.whereEqualTo("mascota", mascota);
 
-                if (c.getBlob(5) != null) {
-                    vacuna.setValidacion(c.getBlob(5));
-                }
+            list = queryV.find();
 
-                vacuna.setEstado(c.getString(6));
-
-                listaVacunas.add(vacuna);
+            if (list.size() == 0) {
+                Toast.makeText(context, "No hay vacunas todavia", Toast.LENGTH_SHORT).show();
             }
-        } catch (Exception e) {
-            // Error
+            for (int i = 0; i < list.size(); i++) {
+                v = new Vacuna();
+
+                v.setId(list.get(i).getString("id"));
+                v.setMascota(list.get(i).getParseObject("mascota").getObjectId());
+                v.setNombre(list.get(i).getString("nombre"));
+                v.setFecha(list.get(i).getDate("fecha"));
+                v.setFechaProxima(list.get(i).getDate("fechaProxima"));
+                v.setValidacion(list.get(i).getBytes("validacion"));
+
+                listaVacunas.add(v);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
         return listaVacunas;
     }

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
@@ -49,20 +50,6 @@ public class TagNFCFormularioActivity extends AppCompatActivity {
         mascotaId = this.getIntent().getExtras().getString("mascotaId");
 
         myNfcAdapter = NfcAdapter.getDefaultAdapter(this);
-
-        if (myNfcAdapter == null) {
-            new AlertDialog.Builder(this)
-                    .setTitle("No tiene NFC")
-                    .setMessage("Esta funcionalidad está disponible solo para dispositivos con NFC.")
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
-            finish();
-            return;
-        }
 
         if (!myNfcAdapter.isEnabled()) {
             new AlertDialog.Builder(this)

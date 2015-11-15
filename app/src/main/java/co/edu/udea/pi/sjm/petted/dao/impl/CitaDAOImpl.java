@@ -30,7 +30,6 @@ public class CitaDAOImpl implements CitaDAO {
     @Override
     public void insertarCita(Cita cita, Context context) {
         ParseObject c;
-        ParseObject mascota;
         ParseQuery<ParseObject> query;
         try {
             c = new ParseObject("Cita");
@@ -46,9 +45,6 @@ public class CitaDAOImpl implements CitaDAO {
             c.put("tipo", cita.getTipo());
             if (cita.getFechaHora() != null) {
                 c.put("fechaHora", cita.getFechaHora());
-                ParsePush push = new ParsePush();
-                push.setMessage(cita.getNombre());
-                push.sendInBackground();
             }
             c.pin();
             c.saveEventually();
