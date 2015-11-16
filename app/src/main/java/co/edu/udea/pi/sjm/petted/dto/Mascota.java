@@ -8,7 +8,7 @@ import java.util.Date;
  */
 public class Mascota implements Serializable {
 
-    private String id; //pk  v
+    private String id; //pk
     private String propietario;
     private String nombre;
     private Date fechaNacimiento;

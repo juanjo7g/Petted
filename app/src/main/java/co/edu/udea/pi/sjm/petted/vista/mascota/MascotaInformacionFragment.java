@@ -10,13 +10,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.R;
@@ -30,6 +28,8 @@ public class MascotaInformacionFragment extends Fragment {
     private TextView tvNombre;
     private TextView tvTipo;
     private TextView tvRaza;
+    private TextView tvEdad;
+    private TextView tvGenero;
     private Button btnAsociarTagNFC;
     private List<String> listaProximosEventos;
     private ListView lvProximosEventos;
@@ -53,8 +53,9 @@ public class MascotaInformacionFragment extends Fragment {
         tvTipo = (TextView) rootView.findViewById(R.id.tvTipo);
         tvRaza = (TextView) rootView.findViewById(R.id.tvRaza);
         btnAsociarTagNFC = (Button) rootView.findViewById(R.id.btnAsociarTagNFC);
-        lvProximosEventos = (ListView) rootView.findViewById(R.id.lvProximosEventos);
         ivFoto = (ImageView) rootView.findViewById(R.id.ivFoto);
+        tvEdad = (TextView) rootView.findViewById(R.id.tvEdad);
+        tvGenero = (TextView) rootView.findViewById(R.id.tvGenero);
 
         ma = (MascotaActivity) getActivity();
 
@@ -69,6 +70,24 @@ public class MascotaInformacionFragment extends Fragment {
                 mostrarFoto(ma.getMascota().getFoto(), ma.getMascota().getNombre());
             }
         });
+        if (ma.getMascota().getFechaNacimiento() != null) {
+            int edad = Utility.getAge(ma.getMascota().getFechaNacimiento());
+            int meses = Utility.getMonths(ma.getMascota().getFechaNacimiento());
+            if (edad < 0) {
+                tvEdad.setText(R.string.no_ha_nacido);
+            } else if (edad == 0) {
+                if (meses == 1) {
+                    tvEdad.setText(R.string.un_mes);
+                } else {
+                    tvEdad.setText(meses + ma.getString(R.string._meses));
+                }
+            } else if (edad == 1) {
+                tvEdad.setText(R.string.un_año);
+            } else {
+                tvEdad.setText(edad + ma.getString(R.string._años));
+            }
+        }
+        tvGenero.setText(ma.getMascota().getGenero());
 
         btnAsociarTagNFC.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,21 +97,14 @@ public class MascotaInformacionFragment extends Fragment {
             }
         });
 
-        listaProximosEventos = new ArrayList<>();
-        listaProximosEventos.add("Vacuna 1. 23/09/16");
-        listaProximosEventos.add("Cita veterinario. 23/07/15");
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_spinner_item, listaProximosEventos);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        lvProximosEventos.setAdapter(adapter);
         return rootView;
     }
 
     private void onclickAsociarTagNFC() {
         if (NfcAdapter.getDefaultAdapter(ma) == null) {
             new AlertDialog.Builder(ma)
-                    .setTitle("No tiene NFC")
-                    .setMessage("Esta funcionalidad está disponible solo para dispositivos con NFC.")
+                    .setTitle(R.string.no_nfc)
+                    .setMessage(R.string.no_funcionalidad_nfc)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                         }

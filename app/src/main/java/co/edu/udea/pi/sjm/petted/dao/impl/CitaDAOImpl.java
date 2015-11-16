@@ -1,5 +1,6 @@
 package co.edu.udea.pi.sjm.petted.dao.impl;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Parcel;
@@ -92,10 +93,22 @@ public class CitaDAOImpl implements CitaDAO {
 
     @Override
     public void eliminarCita(Cita cita, Context context) {
-        PettedDataBaseHelper helper;
-        String id = cita.getId();
-        helper = PettedDataBaseHelper.getInstance(context);
-        helper.eliminarCita(id);
+        ParseObject c;
+        ParseQuery<ParseObject> query;
+        try {
+            query = ParseQuery.getQuery("Cita");
+            query.fromLocalDatastore();
+            query.whereEqualTo("id", cita.getId());
+
+            c = query.find().get(0);
+
+            c.unpin();
+            c.deleteEventually();
+
+            Toast.makeText(context, "Cita eliminada", Toast.LENGTH_SHORT).show();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

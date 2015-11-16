@@ -5,13 +5,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.DialogPreference;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -67,11 +65,10 @@ public class MascotaCitasFragment extends Fragment {
         lvCitas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Cita c = customAdapter.getItem(position);
+                final Cita c = customAdapter.getItem(position);
                 Toast.makeText(view.getContext(), "Id cita: " + c.getId(), Toast.LENGTH_SHORT).show();
-                // TODO: Dialog mostrando información de la cita
-                AlertDialog ad = new AlertDialog.Builder(ma)
-                        .setTitle("Cita -> " + c.getNombre())
+                new AlertDialog.Builder(ma)
+                        .setTitle("Cita " + c.getNombre())
                         .setMessage("Descrpción: " + c.getDescripcion() +
                                 "\nTipo: " + c.getTipo() +
                                 "\nFechaHora: ")
@@ -87,7 +84,22 @@ public class MascotaCitasFragment extends Fragment {
                         })
                         .setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(ma, "Eliminar cita", Toast.LENGTH_SHORT).show();
+                                new AlertDialog.Builder(ma)
+                                        .setTitle("Eliminar cita")
+                                        .setMessage("¿Desea eliminar a " + c.getNombre() + "?")
+                                        .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                daoC.eliminarCita(c, ma);
+                                                onResume();
+                                            }
+                                        })
+                                        .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_delete)
+                                        .show();
+
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_info)

@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import android.app.PendingIntent;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
-import android.nfc.Tag;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -23,15 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.parse.ParseException;
-import com.parse.ParseObject;
-import com.parse.ParseQuery;
-
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
 import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
-import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.vista.listadoCita.MascotaCitasFragment;
 import co.edu.udea.pi.sjm.petted.vista.listadoVacuna.MascotaVacunasFragment;
 
@@ -80,6 +72,12 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         // Set up the action bar.
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.mipmap.ic_arrow_back_white);
+        }
+
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -155,7 +153,10 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
 
         String s = "";
         switch (id) {
-            case R.id.action_notificaciones: //TODO: Notificaciones!
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.action_notificaciones:
                 s = "notificaciones";
                 if (mascota.getNotificaciones()) {
                     mascota.setNotificaciones(false);

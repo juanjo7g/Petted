@@ -90,7 +90,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         ibtnFechaNacimiento = (ImageButton) findViewById(R.id.ibtnFechaNacimientoMascota);
         ivFotoPrevia = (ImageView) findViewById(R.id.ivFotoPreviaMascota);
 
-        if (this.getIntent().getExtras().getString("mascotaId") == null){
+        if (this.getIntent().getExtras().getString("mascotaId") == null) {
             Toast.makeText(MascotaFormularioActivity.this, "Hola", Toast.LENGTH_SHORT).show();
         }
         mostrarFecha();
@@ -132,12 +132,11 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         m.setRaza((String) spinnerRaza.getSelectedItem());
         m.setGenero((String) spinnerGenero.getSelectedItem());
         if (foto != null) {
-            m.setFoto(Utility.getBytes(Utility.resizeImage(foto, 100, 100)));
+            m.setFoto(Utility.getBytes(Utility.resizeImage(foto, 207, 207)));
         } else {
-            m.setFoto(Utility.getBytes(Utility.resizeImage(this, R.drawable.mascota1, 100, 100)));
+            m.setFoto(Utility.getBytes(Utility.resizeImage(this, R.drawable.mascota1, 207, 207)));
         }
         m.setNotificaciones(true);
-
 
         switch (Validacion.validarMascota(m)) {
             case 0:
@@ -149,11 +148,8 @@ public class MascotaFormularioActivity extends AppCompatActivity {
                     m.setId(mascota.getId());
                     m.setNotificaciones(mascota.getNotificaciones());
                     m.setIdTag(mascota.getIdTag());
-
                     daoM.actualizarMascota(m, this);
                     setResult(0);
-                    Toast.makeText(MascotaFormularioActivity.this, "Mascota editada " + m.getIdTag(),
-                            Toast.LENGTH_SHORT).show();
                     finish();
                 }
 
@@ -213,7 +209,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     String dir = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY
                             + File.separator + TEMPORAL_PICTURE_NAME;
-                    foto = BitmapFactory.decodeFile(dir);
+                    foto = Utility.cutImage(BitmapFactory.decodeFile(dir));
                     ivFotoPrevia.setImageBitmap(foto);
                 }
                 break;
@@ -221,7 +217,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     Uri dir = data.getData();
                     try {
-                        foto = MediaStore.Images.Media.getBitmap(this.getContentResolver(), dir);
+                        foto = Utility.cutImage(MediaStore.Images.Media.getBitmap(this.getContentResolver(), dir));
                         ivFotoPrevia.setImageBitmap(foto);
                     } catch (IOException e) {
                         e.printStackTrace();

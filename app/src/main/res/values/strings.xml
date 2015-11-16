@@ -108,4 +108,11 @@
     <string name="notas_hint">Notas hint</string>
     <string name="action_guardar">Guardar</string>
     <string name="title_activity_vacuna_formulario">VacunaFormularioActivity</string>
+    <string name="no_ha_nacido">No ha nacido</string>
+    <string name="un_mes">1 mes</string>
+    <string name="_meses">" meses"</string>
+    <string name="un_año">1 año</string>
+    <string name="_años">" años"</string>
+    <string name="no_nfc">No tiene NFC</string>
+    <string name="no_funcionalidad_nfc">Esta funcionalidad está disponible solo para dispositivos con NFC.</string>
 </resources>

@@ -1,6 +1,12 @@
 package co.edu.udea.pi.sjm.petted.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,6 +21,7 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.widget.Spinner;
 
 /**
@@ -91,16 +98,27 @@ public class Utility {
         return resizedBitmap;
     }
 
-    public static int getIndex(Spinner spinner, String myString) {
+    public static Bitmap cutImage(Bitmap srcBmp) {
+        Bitmap dstBmp;
+        if (srcBmp.getWidth() >= srcBmp.getHeight()) {
+            dstBmp = Bitmap.createBitmap(
+                    srcBmp,
+                    srcBmp.getWidth() / 2 - srcBmp.getHeight() / 2,
+                    0,
+                    srcBmp.getHeight(),
+                    srcBmp.getHeight()
+            );
+        } else {
 
-        int index = 0;
-
-        for (int i = 0; i < spinner.getCount(); i++) {
-            if (spinner.getItemAtPosition(i).equals(myString)) {
-                index = i;
-            }
+            dstBmp = Bitmap.createBitmap(
+                    srcBmp,
+                    0,
+                    srcBmp.getHeight() / 2 - srcBmp.getWidth() / 2,
+                    srcBmp.getWidth(),
+                    srcBmp.getWidth()
+            );
         }
-        return index;
+        return dstBmp;
     }
 
     public static Bitmap getCircleBitmap(Bitmap bitmap) {
@@ -126,12 +144,75 @@ public class Utility {
         return output;
     }
 
-    public static Bitmap scaleBitmapAndKeepRation(Bitmap TargetBmp, int reqHeightInPixels, int reqWidthInPixels) {
-        Matrix m = new Matrix();
-        m.setRectToRect(new RectF(0, 0, TargetBmp.getWidth(), TargetBmp.getHeight()), new RectF(0, 0, reqWidthInPixels, reqHeightInPixels), Matrix.ScaleToFit.CENTER);
-        Bitmap scaledBitmap = Bitmap.createBitmap(TargetBmp, 0, 0, TargetBmp.getWidth(), TargetBmp.getHeight(), m, true);
-        return scaledBitmap;
+    public static byte[] compreesByteArray(byte[] input) {
+        byte[] i = input;
+
+        // Compressor with highest level of compression
+        Deflater compressor = new Deflater();
+        compressor.setLevel(Deflater.BEST_COMPRESSION);
+
+        // Give the compressor the data to compress
+        compressor.setInput(i);
+        compressor.finish();
+
+        // Create an expandable byte array to hold the compressed data.
+        // It is not necessary that the compressed data will be smaller than
+        // the uncompressed data.
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(i.length);
+
+        // Compress the data
+        byte[] buf = new byte[1024];
+        while (!compressor.finished()) {
+            int count = compressor.deflate(buf);
+            bos.write(buf, 0, count);
+        }
+        try {
+            bos.close();
+        } catch (IOException e) {
+        }
+
+        // Get the compressed data
+        return bos.toByteArray();
     }
+
+    public static byte[] descompressByteArray(byte[] compressedData) {
+        // Create the decompressor and give it the data to compress
+        Inflater decompressor = new Inflater();
+        decompressor.setInput(compressedData);
+
+        // Create an expandable byte array to hold the decompressed data
+        ByteArrayOutputStream bos = new ByteArrayOutputStream(compressedData.length);
+
+        // Decompress the data
+        byte[] buf = new byte[1024];
+        while (!decompressor.finished()) {
+            try {
+                int count = decompressor.inflate(buf);
+                bos.write(buf, 0, count);
+            } catch (DataFormatException e) {
+            }
+        }
+        try {
+            bos.close();
+        } catch (IOException e) {
+        }
+
+        // Get the decompressed data
+        return bos.toByteArray();
+    }
+
+    public static int getIndex(Spinner spinner, String myString) {
+
+        int index = 0;
+
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).equals(myString)) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
 
     public static String bytesToHexString(byte[] src) {
         StringBuilder stringBuilder = new StringBuilder("0x");
@@ -148,5 +229,43 @@ public class Utility {
         }
 
         return stringBuilder.toString();
+    }
+
+    public static int getAge(Date dateOfBirth) {
+
+        Calendar today = Calendar.getInstance();
+        Calendar birthDate = Calendar.getInstance();
+
+        int age = 0;
+
+        birthDate.setTime(dateOfBirth);
+        if (birthDate.after(today)) {
+            return -1;
+        }
+
+        age = today.get(Calendar.YEAR) - birthDate.get(Calendar.YEAR);
+
+        // If birth date is greater than todays date (after 2 days adjustment of leap year) then decrement age one year
+        if ((birthDate.get(Calendar.DAY_OF_YEAR) - today.get(Calendar.DAY_OF_YEAR) > 3) ||
+                (birthDate.get(Calendar.MONTH) > today.get(Calendar.MONTH))) {
+            age--;
+
+            // If birth date and todays date are of same month and birth day of month is greater than todays day of month then decrement age
+        } else if ((birthDate.get(Calendar.MONTH) == today.get(Calendar.MONTH)) &&
+                (birthDate.get(Calendar.DAY_OF_MONTH) > today.get(Calendar.DAY_OF_MONTH))) {
+            age--;
+        }
+
+        return age;
+    }
+
+    public static int getMonths(Date dateOfBirth) {
+
+        Calendar today = Calendar.getInstance();
+        Calendar birthDate = Calendar.getInstance();
+
+        birthDate.setTime(dateOfBirth);
+
+        return today.get(Calendar.MONTH) - birthDate.get(Calendar.MONTH);
     }
 }

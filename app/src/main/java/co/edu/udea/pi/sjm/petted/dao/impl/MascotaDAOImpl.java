@@ -2,8 +2,6 @@ package co.edu.udea.pi.sjm.petted.dao.impl;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -12,16 +10,12 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import co.edu.udea.pi.sjm.petted.SQLite.PettedDataBaseHelper;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
-import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
-import co.edu.udea.pi.sjm.petted.dto.Usuario;
+import co.edu.udea.pi.sjm.petted.util.Utility;
 
 /**
  * Created by Juan on 02/10/2015.
@@ -46,7 +40,7 @@ public class MascotaDAOImpl implements MascotaDAO {
             m.put("raza", mascota.getRaza());
             m.put("genero", mascota.getGenero());
             if (mascota.getFoto() != null) {
-                m.put("foto", mascota.getFoto());
+                m.put("foto", Utility.compreesByteArray(mascota.getFoto()));
             }
             m.put("notificaciones", mascota.getNotificaciones());
             m.pinInBackground(new SaveCallback() {
@@ -104,7 +98,7 @@ public class MascotaDAOImpl implements MascotaDAO {
             m.setGenero(list.get(0).getString("genero"));
             m.setIdTag(list.get(0).getString("idTag"));
             if (list.get(0).getBytes("foto") != null) {
-                m.setFoto(list.get(0).getBytes("foto"));
+                m.setFoto(Utility.descompressByteArray(list.get(0).getBytes("foto")));
             }
             m.setNotificaciones(list.get(0).getBoolean("notificaciones"));
 
@@ -140,7 +134,7 @@ public class MascotaDAOImpl implements MascotaDAO {
             m.setGenero(list.get(0).getString("genero"));
             m.setIdTag(list.get(0).getString("idTag"));
             if (list.get(0).getBytes("foto") != null) {
-                m.setFoto(list.get(0).getBytes("foto"));
+                m.setFoto(Utility.descompressByteArray(list.get(0).getBytes("foto")));
             }
             m.setNotificaciones(list.get(0).getBoolean("notificaciones"));
 
@@ -191,10 +185,12 @@ public class MascotaDAOImpl implements MascotaDAO {
             m.put("raza", mascota.getRaza());
             m.put("genero", mascota.getGenero());
             if (mascota.getFoto() != null) {
-                m.put("foto", mascota.getFoto());
+                m.put("foto", Utility.compreesByteArray(mascota.getFoto()));
             }
             m.put("notificaciones", mascota.getNotificaciones());
-            m.put("idTag", mascota.getIdTag());
+            if (mascota.getIdTag() != null) {
+                m.put("idTag", mascota.getIdTag());
+            }
             m.pin();
             m.saveEventually();
         } catch (ParseException e) {
@@ -248,7 +244,7 @@ public class MascotaDAOImpl implements MascotaDAO {
                 m.setPropietario(list.get(i).getParseUser("propietario").getObjectId());
                 m.setTipo(list.get(i).getString("tipo"));
                 m.setRaza(list.get(i).getString("raza"));
-                m.setFoto(list.get(i).getBytes("foto"));
+                m.setFoto(Utility.descompressByteArray(list.get(i).getBytes("foto")));
                 m.setFechaNacimiento(list.get(i).getDate("fechaNacimiento"));
                 m.setNotificaciones(list.get(i).getBoolean("notificaciones"));
 

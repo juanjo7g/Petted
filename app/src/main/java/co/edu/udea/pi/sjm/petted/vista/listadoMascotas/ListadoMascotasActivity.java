@@ -17,10 +17,8 @@ import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
@@ -47,11 +45,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         lvMascotas = (ListView) this.findViewById(R.id.lvListaMascotas);
         ibtnNuevaMacota = (ImageButton) this.findViewById(R.id.ibtnNuevaMascota);
 
-        daoM = new MascotaDAOImpl();
-        listaMascotas = daoM.obtenerMascotas(this);
-
-        customAdapter = new MascotaCustomAdapter(this, listaMascotas);
-        lvMascotas.setAdapter(customAdapter);
+        onResume();
 
         lvMascotas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -76,6 +70,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
         listaMascotas = daoM.obtenerMascotas(this);
         customAdapter = new MascotaCustomAdapter(this, listaMascotas);
         lvMascotas.setAdapter(customAdapter);
+        lvMascotas.setEmptyView(findViewById(R.id.llNoMascotas));
     }
 
     public void iniciarActividadMascota(String mascotaId) {
@@ -203,8 +198,5 @@ public class ListadoMascotasActivity extends AppCompatActivity {
             }
         });
         finish();
-//        System.exit(0);
-//        Intent i = new Intent(this, MainActivity.class);
-//        startActivity(i);
     }
 }
