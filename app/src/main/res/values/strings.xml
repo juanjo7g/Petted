@@ -116,4 +116,6 @@
     <string name="no_nfc">No tiene NFC</string>
     <string name="no_funcionalidad_nfc">Esta funcionalidad está disponible solo para dispositivos con NFC.</string>
     <string name="presione_mas_sin_mascotas">Presione el botón \'+\' para agregar mascotas.</string>
+    <string name="presione_mas_sin_citas">Presione el botón \'+\' para agregar citas.</string>
+    <string name="presione_mas_sin_vacunas">Presione el botón \'+\' para agregar vacunas.</string>
 </resources>

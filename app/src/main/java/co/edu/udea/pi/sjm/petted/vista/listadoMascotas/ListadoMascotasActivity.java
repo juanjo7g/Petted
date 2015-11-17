@@ -1,8 +1,14 @@
 package co.edu.udea.pi.sjm.petted.vista.listadoMascotas;
 
 
+import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -24,6 +30,7 @@ import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
 import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
+import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
 import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaFormularioActivity;
 
@@ -36,16 +43,24 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     private ImageButton ibtnNuevaMacota;
     private MascotaDAO daoM;
 
+    private NfcAdapter myNfcAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listado_mascotas);
 
+        myNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
         lvMascotas = (ListView) this.findViewById(R.id.lvListaMascotas);
         ibtnNuevaMacota = (ImageButton) this.findViewById(R.id.ibtnNuevaMascota);
 
+        lvMascotas.setEmptyView(findViewById(R.id.llNoMascotas));
+
         onResume();
+
+        onNewIntent(getIntent());
 
         lvMascotas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -60,18 +75,16 @@ public class ListadoMascotasActivity extends AppCompatActivity {
                 iniciarActividadMascotaNueva();
             }
         });
-
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        daoM = new MascotaDAOImpl();
-        listaMascotas = daoM.obtenerMascotas(this);
-        customAdapter = new MascotaCustomAdapter(this, listaMascotas);
-        lvMascotas.setAdapter(customAdapter);
-        lvMascotas.setEmptyView(findViewById(R.id.llNoMascotas));
-    }
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        daoM = new MascotaDAOImpl();
+//        listaMascotas = daoM.obtenerMascotas(this);
+//        customAdapter = new MascotaCustomAdapter(this, listaMascotas);
+//        lvMascotas.setAdapter(customAdapter);
+//    }
 
     public void iniciarActividadMascota(String mascotaId) {
         Intent i = new Intent(this, MascotaActivity.class);
@@ -143,34 +156,6 @@ public class ListadoMascotasActivity extends AppCompatActivity {
                 cerrarSesion();
                 break;
             case R.id.action_settings:
-
-                Mascota mascotaNoMia;
-                daoM = new MascotaDAOImpl();
-                String idTemp = daoM.obtenerMascotaId("0x407a21fe");
-                Toast.makeText(ListadoMascotasActivity.this, "Id: " + idTemp, Toast.LENGTH_SHORT).show();
-                if (!idTemp.equals("")) { // Esta local
-                    if (daoM.obtenerMascota(idTemp, ListadoMascotasActivity.this).getPropietario()
-                            .equals(ParseUser.getCurrentUser().getObjectId())) { // Es del usuario actual
-                        Intent i = new Intent(this, MascotaActivity.class);
-                        i.putExtra("mascotaId", idTemp);
-                        startActivity(i);
-                    } else {
-                        Toast.makeText(ListadoMascotasActivity.this, "Esta mascota es de otro " +
-                                "usuario que uso este dispositivo", Toast.LENGTH_SHORT).show();
-                    }
-                } else { // Esta remota
-                    Toast.makeText(ListadoMascotasActivity.this, "Esta mascota no esta acá por lo " +
-                            "tanto no le pertenece  a ud, se va a buscar en la base de datos remota " +
-                            "para ver si existe", Toast.LENGTH_LONG).show();
-                    mascotaNoMia = daoM.obtenerMascotaConIdTag("0x407a21fe");
-                    if (mascotaNoMia == null) {
-                        Toast.makeText(ListadoMascotasActivity.this, "El tag no esta asociado a " +
-                                "ninguna mascota", Toast.LENGTH_SHORT).show();
-                    } else { //Mostrar mascota que no es mia
-                        Toast.makeText(ListadoMascotasActivity.this, "Nombre: " + mascotaNoMia.getNombre(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
                 break;
         }
 
@@ -198,5 +183,80 @@ public class ListadoMascotasActivity extends AppCompatActivity {
             }
         });
         finish();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (myNfcAdapter != null) {
+            if (intent.hasExtra(NfcAdapter.EXTRA_TAG)) {
+                Tag myTagId = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
+                String idTag = Utility.bytesToHexString(myTagId.getId());
+                Toast.makeText(ListadoMascotasActivity.this, "Taggggggg " + idTag, Toast.LENGTH_SHORT).show();
+                mostrarMascota(idTag);
+            } else {
+            }
+        }
+    }
+
+    private void mostrarMascota(String idTag) {
+        Mascota mascotaNoMia;
+        if (ParseUser.getCurrentUser() != null) {
+            daoM = new MascotaDAOImpl();
+            String idTemp = daoM.obtenerMascotaId(idTag);
+            Toast.makeText(ListadoMascotasActivity.this, "Id: " + idTemp, Toast.LENGTH_SHORT).show();
+            if (!idTemp.equals("")) { // Esta local
+                if (daoM.obtenerMascota(idTemp, ListadoMascotasActivity.this).getPropietario()
+                        .equals(ParseUser.getCurrentUser().getObjectId())) { // Es del usuario actual
+                    Intent i = new Intent(this, MascotaActivity.class);
+                    i.putExtra("mascotaId", idTemp);
+                    startActivity(i);
+                } else {
+                    Toast.makeText(ListadoMascotasActivity.this, "Esta mascota es de otro " +
+                            "usuario que uso este dispositivo", Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(this)
+                            .setTitle("Mascota")
+                            .setMessage("Esta mascota es de otro usuario que uso este dispositivo, id: " + idTemp)
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+            } else { // Esta remota -> TODO: Necesita internet!!!
+                Toast.makeText(ListadoMascotasActivity.this, "Esta mascota no esta acá por lo " +
+                        "tanto no le pertenece  a ud, se va a buscar en la base de datos remota " +
+                        "para ver si existe", Toast.LENGTH_LONG).show();
+                mascotaNoMia = daoM.obtenerMascotaConIdTag(idTag);
+                if (mascotaNoMia == null) {
+                    Toast.makeText(ListadoMascotasActivity.this, "El tag no esta asociado a " +
+                            "ninguna mascota", Toast.LENGTH_SHORT).show();
+                } else { //Mostrar mascota que no es mia
+                    Toast.makeText(ListadoMascotasActivity.this, "Nombre: " + mascotaNoMia.getNombre(),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+        } else {
+            new AlertDialog.Builder(this)
+                    .setTitle("Alerta")
+                    .setMessage("No ha iniciado sesión")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        daoM = new MascotaDAOImpl();
+        listaMascotas = daoM.obtenerMascotas(this);
+        customAdapter = new MascotaCustomAdapter(this, listaMascotas);
+        lvMascotas.setAdapter(customAdapter);
     }
 }

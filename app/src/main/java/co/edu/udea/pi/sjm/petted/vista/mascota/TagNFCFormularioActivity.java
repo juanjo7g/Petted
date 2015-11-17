@@ -77,10 +77,8 @@ public class TagNFCFormularioActivity extends AppCompatActivity {
         if (true) {
             daoM = new MascotaDAOImpl();
             mascota = daoM.obtenerMascota(mascotaId, this);
-
             mascota.setIdTag(idTag);
             daoM.actualizarMascota(mascota, this);
-
             finish();
         }
 
@@ -89,13 +87,11 @@ public class TagNFCFormularioActivity extends AppCompatActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
         if (intent.hasExtra(NfcAdapter.EXTRA_TAG)) {
             Tag myTagId = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             idTag = Utility.bytesToHexString(myTagId.getId());
             tvIdTag.setText(idTag);
         } else {
-
         }
     }
 
@@ -113,12 +109,10 @@ public class TagNFCFormularioActivity extends AppCompatActivity {
     }
 
     private void enableForegroundDispatchSystem() {
-
         Intent intent = new Intent(this, TagNFCFormularioActivity.class).addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         IntentFilter[] intentFilter = new IntentFilter[]{};
         myNfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFilter, null);
-
     }
 
 

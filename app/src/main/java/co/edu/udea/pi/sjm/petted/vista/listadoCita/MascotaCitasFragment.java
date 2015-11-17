@@ -47,20 +47,17 @@ public class MascotaCitasFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_mascota_citas, container, false);
+        ma = (MascotaActivity) getActivity();
 
         lvCitas = (ListView) rootView.findViewById(R.id.lvListaCitas);
         ibtnNuevaCita = (ImageButton) rootView.findViewById(R.id.ibtnNuevaCita);
 
         listaCitas = new ArrayList<>();
 
-        ma = (MascotaActivity) getActivity();
-        Toast.makeText(ma, ma.getMascota().getId(), Toast.LENGTH_SHORT).show();
-
         daoC = new CitaDAOImpl();
-        listaCitas = daoC.obtenerCitas(ma.getMascota().getId(), ma);
 
-        customAdapter = new CitaCustomAdapter(ma, listaCitas);
-        lvCitas.setAdapter(customAdapter);
+        lvCitas.setEmptyView(rootView.findViewById(R.id.llNoCitas));
+        onResume();
 
         lvCitas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -123,10 +120,10 @@ public class MascotaCitasFragment extends Fragment {
 
     @Override
     public void onResume() {
+        super.onResume();
         Toast.makeText(ma, "REINICIAR CITAS", Toast.LENGTH_SHORT).show();
         listaCitas = daoC.obtenerCitas(ma.getMascota().getId(), ma);
         customAdapter = new CitaCustomAdapter(ma, listaCitas);
         lvCitas.setAdapter(customAdapter);
-        super.onResume();
     }
 }

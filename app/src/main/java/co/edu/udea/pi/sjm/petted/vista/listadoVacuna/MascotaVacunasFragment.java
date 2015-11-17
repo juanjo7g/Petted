@@ -47,6 +47,7 @@ public class MascotaVacunasFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_mascota_vacunas, container, false);
+        ma = (MascotaActivity) getActivity();
 
         lvVacunas = (ListView) rootView.findViewById(R.id.lvListaVacunas);
         ibtnNuevaVacuna = (ImageButton) rootView.findViewById(R.id.ibtnNuevaVacuna);
@@ -54,12 +55,9 @@ public class MascotaVacunasFragment extends Fragment {
         listaVacunas = new ArrayList<>();
 
         daoV = new VacunaDAOImpl();
-        ma = (MascotaActivity) getActivity();
 
-        listaVacunas = daoV.obtenerVacunas(ma.getMascota().getId(), ma);
-
-        customAdapter = new VacunaCustomAdapter(ma, listaVacunas);
-        lvVacunas.setAdapter(customAdapter);
+        lvVacunas.setEmptyView(rootView.findViewById(R.id.llNoVacunas));
+        onResume();
 
         lvVacunas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -97,10 +95,10 @@ public class MascotaVacunasFragment extends Fragment {
 
     @Override
     public void onResume() {
+        super.onResume();
         Toast.makeText(ma, "REINICIAR VACUNAS", Toast.LENGTH_SHORT).show();
         listaVacunas = daoV.obtenerVacunas(ma.getMascota().getId(), ma);
         customAdapter = new VacunaCustomAdapter(ma, listaVacunas);
         lvVacunas.setAdapter(customAdapter);
-        super.onResume();
     }
 }

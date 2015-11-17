@@ -115,9 +115,7 @@ public class MascotaDAOImpl implements MascotaDAO {
         List<ParseObject> list;
         try {
             query = ParseQuery.getQuery("Mascota");
-
             query.whereEqualTo("idTag", idTag);
-
             list = query.find();
 
             if (list.size() == 0) {

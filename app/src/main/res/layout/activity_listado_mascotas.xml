@@ -36,17 +36,16 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/ivNoPets"
+            android:id="@+id/ivNoMascotas"
             android:layout_width="107dp"
             android:layout_height="107dp"
-            android:src="@mipmap/ic_no_pets" />
+            android:src="@mipmap/ic_no_pets_gray_e8" />
 
         <TextView
-            android:id="@+id/emptyMascota"
+            android:id="@+id/etMascotas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:text="@string/presione_mas_sin_mascotas" />
-
     </LinearLayout>
 </RelativeLayout>
