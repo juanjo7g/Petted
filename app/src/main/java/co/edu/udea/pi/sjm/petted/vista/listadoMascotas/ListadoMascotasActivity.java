@@ -228,14 +228,14 @@ public class ListadoMascotasActivity extends AppCompatActivity {
                 Toast.makeText(ListadoMascotasActivity.this, "Esta mascota no esta acá por lo " +
                         "tanto no le pertenece  a ud, se va a buscar en la base de datos remota " +
                         "para ver si existe", Toast.LENGTH_LONG).show();
-                mascotaNoMia = daoM.obtenerMascotaConIdTag(idTag);
-                if (mascotaNoMia == null) {
-                    Toast.makeText(ListadoMascotasActivity.this, "El tag no esta asociado a " +
-                            "ninguna mascota", Toast.LENGTH_SHORT).show();
-                } else { //Mostrar mascota que no es mia
-                    Toast.makeText(ListadoMascotasActivity.this, "Nombre: " + mascotaNoMia.getNombre(),
-                            Toast.LENGTH_SHORT).show();
-                }
+//                mascotaNoMia = daoM.obtenerMascotaConIdTag(idTag);
+//                if (mascotaNoMia == null) {
+//                    Toast.makeText(ListadoMascotasActivity.this, "El tag no esta asociado a " +
+//                            "ninguna mascota", Toast.LENGTH_SHORT).show();
+//                } else { //Mostrar mascota que no es mia
+//                    Toast.makeText(ListadoMascotasActivity.this, "Nombre: " + mascotaNoMia.getNombre(),
+//                            Toast.LENGTH_SHORT).show();
+//                }
             }
         } else {
             new AlertDialog.Builder(this)
