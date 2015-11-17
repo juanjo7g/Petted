@@ -9,9 +9,12 @@ import co.edu.udea.pi.sjm.petted.dto.Vacuna;
  * Created by Juan on 04/10/2015.
  */
 public class Validacion {
-    public static int validarUsuario(Usuario u) {
+    public static int validarUsuario(Usuario u, String contraseñaRep) {
         if(u.getNombre().equals("")||u.getContraseña().equals("")){
             return 1;
+        }
+        if (!u.getContraseña().equals(contraseñaRep)){
+            return 2;
         }
         return 0;
     }

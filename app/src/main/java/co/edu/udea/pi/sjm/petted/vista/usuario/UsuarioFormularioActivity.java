@@ -47,7 +47,7 @@ public class UsuarioFormularioActivity extends AppCompatActivity {
         u.setContraseña(etContraseña.getText().toString());
 
 
-        switch (Validacion.validarUsuario(u)) {
+        switch (Validacion.validarUsuario(u, etContraseñaRep.getText().toString())) {
             case 0:
                 daoU.insertarUsuario(u, UsuarioFormularioActivity.this);
                 break;
@@ -55,6 +55,7 @@ public class UsuarioFormularioActivity extends AppCompatActivity {
                 Toast.makeText(UsuarioFormularioActivity.this, "Error, datos vacios", Toast.LENGTH_SHORT).show();
                 break;
             case 2:
+                Toast.makeText(UsuarioFormularioActivity.this, "Contraseñas no coinciden", Toast.LENGTH_SHORT).show();
                 break;
         }
 

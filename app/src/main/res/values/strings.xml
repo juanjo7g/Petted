@@ -90,8 +90,8 @@
         <item>Otra</item>
     </string-array>
 
-    <string name="title_activity_asociar_tag_nfc">AsociarTagNFCActivity</string>
-    <string name="title_activity_creacion_usuario">CreacionUsuarioActivity</string>
+    <string name="title_activity_asociar_tag_nfc">Asociar Tag NFC</string>
+    <string name="title_activity_creacion_usuario">Crear Usuario</string>
     <string name="hintNombreUsuario">Nombre de usuario</string>
     <string name="hintCorreoElectronico">Correo electronico</string>
     <string name="hintContraseña">Contraseña</string>
@@ -107,7 +107,7 @@
     <string name="notas_label">Notas</string>
     <string name="notas_hint">Notas hint</string>
     <string name="action_guardar">Guardar</string>
-    <string name="title_activity_vacuna_formulario">VacunaFormularioActivity</string>
+    <string name="title_activity_vacuna_formulario">Formulario Vacuna</string>
     <string name="no_ha_nacido">No ha nacido</string>
     <string name="un_mes">1 mes</string>
     <string name="_meses">" meses"</string>
@@ -115,4 +115,5 @@
     <string name="_años">" años"</string>
     <string name="no_nfc">No tiene NFC</string>
     <string name="no_funcionalidad_nfc">Esta funcionalidad está disponible solo para dispositivos con NFC.</string>
+    <string name="presione_mas_sin_mascotas">Presione el botón \'+\' para agregar mascotas.</string>
 </resources>

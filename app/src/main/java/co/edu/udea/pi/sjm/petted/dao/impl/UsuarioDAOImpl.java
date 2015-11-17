@@ -36,11 +36,10 @@ public class UsuarioDAOImpl implements UsuarioDAO {
                 Toast.makeText(context, "Usuario creado con exito",
                         Toast.LENGTH_SHORT).show();
                 ((Activity) context).finish();
-                ParseUser.logOut();
             }
         } catch (ParseException e) {
             e.printStackTrace();
-            Toast.makeText(context, "Error creando usuario",
+            Toast.makeText(context, "Error creando usuario: "+ e.getMessage(),
                     Toast.LENGTH_SHORT).show();
         }
 

@@ -39,18 +39,21 @@ public class MainActivity extends AppCompatActivity {
         tvCrearUsuario = (TextView) findViewById(R.id.tvCrearUsuario);
         etEmail = (EditText) findViewById(R.id.etUsuario);
         etContraseña = (EditText) findViewById(R.id.etContraseña);
+        onResume();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         Intent i;
-
         ParseUser currentUser = ParseUser.getCurrentUser();
-
         if (currentUser != null) {
             i = new Intent(this, ListadoMascotasActivity.class);
             startActivity(i);
             finish();
-            Toast.makeText(MainActivity.this, "Ya esta logueado: " + currentUser.getEmail(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "Bienvenido: " + currentUser.getEmail(), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     public void onClickIniciar(View view) {
