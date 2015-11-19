@@ -1,9 +1,14 @@
 package co.edu.udea.pi.sjm.petted.vista;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,6 +17,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
@@ -19,6 +27,11 @@ import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -40,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         etEmail = (EditText) findViewById(R.id.etUsuario);
         etContraseña = (EditText) findViewById(R.id.etContraseña);
         onResume();
-
     }
 
     @Override
@@ -54,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
             finish();
             Toast.makeText(MainActivity.this, "Bienvenido: " + currentUser.getEmail(), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ParseFacebookUtils.onActivityResult(requestCode, resultCode, data);
     }
 
     public void onClickIniciar(View view) {
@@ -126,22 +144,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickIniciarConFacebook(View view) {
-        List<String> permissions = Arrays.asList("public_profile");
+
+        final List<String> permissions = Arrays.asList("public_profile", "email");
+
         ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
             @Override
             public void done(ParseUser user, ParseException err) {
                 if (user == null) {
                     Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
-                    Toast.makeText(MainActivity.this, "Uh oh. The user cancelled the Facebook login.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, err.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                 } else if (user.isNew()) {
                     Log.d("MyApp", "User signed up and logged in through Facebook!");
                     Toast.makeText(MainActivity.this, "User signed up and logged in through Facebook!" + user.toString(), Toast.LENGTH_SHORT).show();
+                    getFacebookUserDetails(user);
                 } else {
                     Log.d("MyApp", "User logged in through Facebook!");
                     Toast.makeText(MainActivity.this, "User logged in through Facebook!" + user.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+
+
     }
 
     public void iniciarCreacionUsuario(View view) {
@@ -164,5 +188,53 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void getFacebookUserDetails(final ParseUser user) {
+
+        GraphRequest request = GraphRequest.newMeRequest(
+                AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(
+                            JSONObject object,
+                            GraphResponse response) {
+                        // Application code
+                        try {
+                            String userName = object.getString("name");
+                            String userId = object.getString("id");
+                            String userGender = object.getString("gender");
+                            String userProfileURL = object.getString("link");
+                            String userEmail = object.getString("email");
+                            String firstName = object.getString("first_name");
+                            String lastName = object.getString("last_name");
+
+                            user.put("username", userEmail);
+                            user.put("email", userEmail);
+
+                            user.put("nameFacebook",userName);
+                            user.put("idFacebook",userId);
+                            user.put("genderFacebok",userGender);
+                            user.put("urlFacebook", userProfileURL);
+                            user.put("firstName", firstName);
+                            user.put("lastName", lastName);
+                            user.put("fullName", firstName + " " + lastName);
+                            user.saveEventually();
+
+                            onResume();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                });
+
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "age_range,gender,name,id,link,email,picture.type(large),first_name,last_name");
+        request.setParameters(parameters);
+        request.executeAsync();
+
     }
 }
