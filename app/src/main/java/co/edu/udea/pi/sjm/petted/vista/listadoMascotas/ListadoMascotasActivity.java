@@ -228,6 +228,17 @@ public class ListadoMascotasActivity extends AppCompatActivity {
                 Toast.makeText(ListadoMascotasActivity.this, "Esta mascota no esta acá por lo " +
                         "tanto no le pertenece  a ud, se va a buscar en la base de datos remota " +
                         "para ver si existe", Toast.LENGTH_LONG).show();
+                new AlertDialog.Builder(this)
+                        .setTitle("Mascota")
+                        .setMessage("Esta mascota no esta acá por lo " +
+                                "tanto no le pertenece  a ud, se va a buscar en la base de datos remota " +
+                                "para ver si existe" + idTemp)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
 //                mascotaNoMia = daoM.obtenerMascotaConIdTag(idTag);
 //                if (mascotaNoMia == null) {
 //                    Toast.makeText(ListadoMascotasActivity.this, "El tag no esta asociado a " +
