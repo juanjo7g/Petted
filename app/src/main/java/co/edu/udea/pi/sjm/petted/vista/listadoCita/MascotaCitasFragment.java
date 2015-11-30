@@ -121,7 +121,6 @@ public class MascotaCitasFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Toast.makeText(ma, "REINICIAR CITAS", Toast.LENGTH_SHORT).show();
         listaCitas = daoC.obtenerCitas(ma.getMascota().getId(), ma);
         customAdapter = new CitaCustomAdapter(ma, listaCitas);
         lvCitas.setAdapter(customAdapter);

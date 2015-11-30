@@ -2,6 +2,7 @@ package co.edu.udea.pi.sjm.petted.util;
 
 import co.edu.udea.pi.sjm.petted.dto.Cita;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
+import co.edu.udea.pi.sjm.petted.dto.Medicamento;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
 import co.edu.udea.pi.sjm.petted.dto.Vacuna;
 
@@ -28,6 +29,10 @@ public class Validacion {
     }
 
     public static int validarVacuna(Vacuna v) {
+        return 0;
+    }
+
+    public static int validarMedicamento(Medicamento m) {
         return 0;
     }
 }

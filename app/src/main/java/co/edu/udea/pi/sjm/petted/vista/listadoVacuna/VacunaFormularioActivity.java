@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -32,17 +31,12 @@ import java.util.Locale;
 import java.util.UUID;
 
 import co.edu.udea.pi.sjm.petted.R;
-import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
 import co.edu.udea.pi.sjm.petted.dao.VacunaDAO;
-import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dao.impl.VacunaDAOImpl;
-import co.edu.udea.pi.sjm.petted.dto.Cita;
-import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Vacuna;
 import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.util.Validacion;
 import co.edu.udea.pi.sjm.petted.vista.listadoCita.CitaFormularioActivity;
-import co.edu.udea.pi.sjm.petted.vista.mascota.MascotaActivity;
 
 public class VacunaFormularioActivity extends AppCompatActivity {
 

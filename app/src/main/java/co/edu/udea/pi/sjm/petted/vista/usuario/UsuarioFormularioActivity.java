@@ -1,7 +1,6 @@
 package co.edu.udea.pi.sjm.petted.vista.usuario;
 
-import android.app.ProgressDialog;
-import android.support.v4.widget.ContentLoadingProgressBar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,10 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
@@ -35,6 +30,17 @@ public class UsuarioFormularioActivity extends AppCompatActivity {
         etCorreoElectronico = (EditText) findViewById(R.id.etCorreoElectronico);
         etContraseña = (EditText) findViewById(R.id.etContraseña);
         etContraseñaRep = (EditText) findViewById(R.id.etContraseñaRep);
+
+        etNombreUsuario.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (etNombreUsuario.getText().toString().equals("")) {
+                        etNombreUsuario.setError("Campo requerido.");
+                    }
+                }
+            }
+        });
 
     }
 
@@ -84,4 +90,5 @@ public class UsuarioFormularioActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

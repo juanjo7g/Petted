@@ -88,8 +88,8 @@ public class MascotaVacunasFragment extends Fragment {
     }
 
     private void iniciarActividadVacunaNueva() {
-        Intent i = new Intent(getActivity(), VacunaFormularioActivity.class);
-        i.putExtra("mascotaId", ((MascotaActivity) getActivity()).getMascota().getId());
+        Intent i = new Intent(ma, VacunaFormularioActivity.class);
+        i.putExtra("mascotaId", ma.getMascota().getId());
         startActivity(i);
     }
 

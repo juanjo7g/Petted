@@ -57,38 +57,11 @@ public class CitaDAOImpl implements CitaDAO {
 
     @Override
     public Cita obtenerCita(String id, Context context) {
-        PettedDataBaseHelper helper;
-        Cursor c;
-        Cita cita = new Cita();
-        MascotaDAO dao = new MascotaDAOImpl();
-        try {
-            helper = PettedDataBaseHelper.getInstance(context);
-            c = helper.obtenerCita(id);
-            if (!c.moveToFirst()) {
-                return null;
-            }
-            cita.setId(c.getString(0));
-//            cita.setMascota(dao.obtenerMascota(c.getString(1), context));
-            cita.setNombre(c.getString(2));
-            cita.setDescripcion(c.getString(3));
-            cita.setTipo(c.getString(4));
-
-            if (c.getString(5) != null) {
-                cita.setFechaHora(formatoFechaHora.parse(c.getString(5)));
-            }
-            cita.setEstado(c.getString(6));
-
-        } catch (Exception e) {
-            // Error
-        }
-        return cita;
+        return null;
     }
 
     @Override
     public void actualizarCita(Cita cita, Context context) {
-        PettedDataBaseHelper helper;
-        helper = PettedDataBaseHelper.getInstance(context);
-        helper.actualizarCita(cita);
     }
 
     @Override

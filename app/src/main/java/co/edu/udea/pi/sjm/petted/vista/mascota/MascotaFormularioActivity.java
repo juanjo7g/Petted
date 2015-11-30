@@ -254,6 +254,12 @@ public class MascotaFormularioActivity extends AppCompatActivity {
                 electorDeFechaDialogo.show();
             }
         });
+        etFechaNacimiento.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                electorDeFechaDialogo.show();
+            }
+        });
         Calendar calendario = Calendar.getInstance();
         electorDeFechaDialogo = new DatePickerDialog(this, new OnDateSetListener() {
             public void onDateSet(DatePicker view, int año, int mes, int dia) {

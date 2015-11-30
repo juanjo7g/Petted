@@ -8,22 +8,10 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="co.edu.udea.pi.sjm.petted.vista.mascota.TagNFCFormularioActivity">
 
-    <EditText
-        android:id="@+id/etNombreMascota"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="48dp"
-        android:hint="Nombre de la mascota"
-        android:inputType="textCapWords" />
-
     <TextView
         android:id="@+id/tvIdTagNFC"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/etNombreMascota"
         android:layout_marginTop="24dp"
         android:text="ID Tag NFC: " />
 

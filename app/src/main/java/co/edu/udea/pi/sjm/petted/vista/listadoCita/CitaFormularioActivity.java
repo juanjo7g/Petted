@@ -47,6 +47,7 @@ public class CitaFormularioActivity extends AppCompatActivity {
     private TimePickerDialog electorDeHoraDialogo;
 
     private String mascotaId;
+
     private EditText etNombre;
     private EditText etDescripcion;
     private Spinner spinnerTipo;
@@ -171,14 +172,18 @@ public class CitaFormularioActivity extends AppCompatActivity {
     }
 
     private void mostrarFecha() {
-
         ibtnFecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 electorDeFechaDialogo.show();
             }
         });
-
+        etFecha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                electorDeFechaDialogo.show();
+            }
+        });
         Calendar calendario = Calendar.getInstance();
         electorDeFechaDialogo = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int año, int mes, int dia) {
@@ -194,6 +199,12 @@ public class CitaFormularioActivity extends AppCompatActivity {
 
     private void mostrarHora() {
         ibtnHora.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                electorDeHoraDialogo.show();
+            }
+        });
+        etHora.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 electorDeHoraDialogo.show();

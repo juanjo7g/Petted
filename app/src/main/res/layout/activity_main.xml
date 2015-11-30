@@ -78,7 +78,7 @@
         android:layout_below="@+id/btnIniciarFB"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:onClick="iniciarCreacionUsuario"
+        android:onClick="onClickCrearUsuario"
         android:text="Crear usuario"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

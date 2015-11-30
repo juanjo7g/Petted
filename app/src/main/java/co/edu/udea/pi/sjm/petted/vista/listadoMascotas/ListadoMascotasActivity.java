@@ -43,6 +43,8 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     private ImageButton ibtnNuevaMacota;
     private MascotaDAO daoM;
 
+    private Mascota mascotaNoMia;
+
     private NfcAdapter myNfcAdapter;
 
     @Override
@@ -200,7 +202,6 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     }
 
     private void mostrarMascota(final String idTag) {
-        final Mascota[] mascotaNoMia = new Mascota[1];
         if (ParseUser.getCurrentUser() != null) {
             daoM = new MascotaDAOImpl();
             String idTemp = daoM.obtenerMascotaId(idTag);
@@ -213,12 +214,28 @@ public class ListadoMascotasActivity extends AppCompatActivity {
                     startActivity(i);
                 } else {
                     Toast.makeText(ListadoMascotasActivity.this, "Esta mascota es de otro " +
-                            "usuario que uso este dispositivo", Toast.LENGTH_SHORT).show();
+                            "usuario que usó este dispositivo", Toast.LENGTH_SHORT).show();
                     new AlertDialog.Builder(this)
                             .setTitle("Mascota")
-                            .setMessage("Esta mascota es de otro usuario que uso este dispositivo, id: " + idTemp)
+                            .setMessage("Esta mascota es de otro usuario que usó este dispositivo, id: " + idTemp)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(ListadoMascotasActivity.this, "Nombre: "
+                                                    + daoM.obtenerMascotaConIdTag(idTag).getNombre(),
+                                            Toast.LENGTH_SHORT).show();
+                                    new AlertDialog.Builder(ListadoMascotasActivity.this)
+                                            .setTitle("Mascota")
+                                            .setMessage("Nombre:  " + daoM.obtenerMascotaConIdTag(idTag).getNombre())
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                }
+                                            })
+                                            .setNeutralButton("Encontré esta mascota", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_info)
+                                            .show();
                                 }
                             })
                             .setIcon(android.R.drawable.ic_dialog_alert)
@@ -235,8 +252,8 @@ public class ListadoMascotasActivity extends AppCompatActivity {
                                 "para ver si existe" + idTemp)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                mascotaNoMia[0] = daoM.obtenerMascotaConIdTag(idTag);
-                                if (mascotaNoMia[0] == null) {
+                                mascotaNoMia = daoM.obtenerMascotaConIdTag(idTag);
+                                if (mascotaNoMia == null) {
                                     Toast.makeText(ListadoMascotasActivity.this, "El tag no esta asociado a " +
                                             "ninguna mascota", Toast.LENGTH_SHORT).show();
                                     new AlertDialog.Builder(ListadoMascotasActivity.this)
@@ -252,12 +269,16 @@ public class ListadoMascotasActivity extends AppCompatActivity {
                                 } else { //Mostrar mascota que no es mia
                                     new AlertDialog.Builder(ListadoMascotasActivity.this)
                                             .setTitle("Mascota encontrada")
-                                            .setMessage("Nombre: " + mascotaNoMia[0].getNombre())
+                                            .setMessage("Nombre: " + mascotaNoMia.getNombre())
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                 }
                                             })
-                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .setNeutralButton("Encontré esta mascota", new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_info)
                                             .show();
                                 }
 

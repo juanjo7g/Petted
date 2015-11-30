@@ -1,7 +1,9 @@
 package co.edu.udea.pi.sjm.petted.vista;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -36,6 +38,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.R;
+import co.edu.udea.pi.sjm.petted.dto.Mascota;
+import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.vista.listadoMascotas.ListadoMascotasActivity;
 import co.edu.udea.pi.sjm.petted.vista.usuario.UsuarioFormularioActivity;
 
@@ -64,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
             i = new Intent(this, ListadoMascotasActivity.class);
             startActivity(i);
             finish();
-            Toast.makeText(MainActivity.this, "Bienvenido: " + currentUser.getEmail(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -75,72 +78,110 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickIniciar(View view) {
-        final ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Iniciando sesión...");
-        progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progress.setIndeterminate(true);
-        progress.show();
+        if (Utility.isOnline()) {
+            final ProgressDialog progress = new ProgressDialog(this);
+            progress.setMessage("Iniciando sesión...");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(true);
+            progress.show();
 
-        ParseUser.logInInBackground(etEmail.getText().toString(), etContraseña.getText().toString(),
-                new LogInCallback() {
-                    @Override
-                    public void done(ParseUser parseUser, ParseException e) {
-                        if (parseUser != null) {
-                            Intent i = new Intent(MainActivity.this, ListadoMascotasActivity.class);
-                            if (!parseUser.getBoolean("emailVerified")) {
-                                Toast.makeText(MainActivity.this, "Por favor verificar el e-mail " +
-                                                "proximamente sera requerido para acceder a la aplicación.",
+            ParseUser.logInInBackground(etEmail.getText().toString(), etContraseña.getText().toString(),
+                    new LogInCallback() {
+                        @Override
+                        public void done(ParseUser parseUser, ParseException e) {
+                            if (parseUser != null) {
+                                final Intent i = new Intent(MainActivity.this, ListadoMascotasActivity.class);
+                                cargarInformacion();
+                                progress.dismiss();
+                                if (!parseUser.getBoolean("emailVerified")) {
+                                    new AlertDialog.Builder(MainActivity.this)
+                                            .setTitle("Bienvenido " + parseUser.getUsername())
+                                            .setMessage("Por favor verificar el e-mail próximamente" +
+                                                    " será requerido para acceder a la aplicación.")
+                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    finish();
+                                                    startActivity(i);
+                                                }
+                                            })
+                                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                                @Override
+                                                public void onCancel(DialogInterface dialog) {
+                                                    finish();
+                                                    startActivity(i);
+                                                }
+                                            })
+                                            .setIcon(android.R.drawable.ic_dialog_alert)
+                                            .show();
+                                }
+                            } else {
+                                Toast.makeText(MainActivity.this, "Ha ocurrido un error iniciando sesión",
                                         Toast.LENGTH_SHORT).show();
                             }
-                            try {
-                                ParseQuery<ParseObject> query;
-                                List<ParseObject> list;
-                                query = ParseQuery.getQuery("Mascota");
-
-                                ParseQuery<ParseObject> queryC;
-                                List<ParseObject> listC;
-                                queryC = ParseQuery.getQuery("Cita");
-
-                                ParseQuery<ParseObject> queryV;
-                                List<ParseObject> listV;
-                                queryV = ParseQuery.getQuery("Vacuna");
-
-                                query.whereEqualTo("propietario", ParseUser.getCurrentUser());
-                                list = query.find();
-//                                if (list.size() > 0) {
-//                                    progress.setMessage("Cargando mascotas...");
-//                                }
-                                for (int j = 0; j < list.size(); j++) {
-                                    list.get(j).pin();
-
-                                    queryC.whereEqualTo("mascota", list.get(j));
-                                    listC = queryC.find();
-
-                                    for (int k = 0; k < listC.size(); k++) {
-                                        listC.get(k).pin();
-                                    }
-
-                                    queryV.whereEqualTo("mascota", list.get(j));
-                                    listV = queryV.find();
-
-                                    for (int k = 0; k < listV.size(); k++) {
-                                        listV.get(k).pin();
-                                    }
-
-                                }
-                            } catch (ParseException e1) {
-                                e1.printStackTrace();
-                            }
-                            startActivity(i);
-                            finish();
-                            Toast.makeText(MainActivity.this, "Bienvenido: " + parseUser.getEmail(),
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(MainActivity.this, "Error en el logueo", Toast.LENGTH_SHORT).show();
                         }
-                        progress.dismiss();
-                    }
-                });
+                    });
+        } else {
+            new AlertDialog.Builder(this)
+                    .setTitle("Sin conexión")
+                    .setMessage("Conexión a internet necesaria para iniciar sesión.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
+    }
+
+    private void cargarInformacion() {
+        try {
+            ParseQuery<ParseObject> query;
+            List<ParseObject> list;
+            query = ParseQuery.getQuery("Mascota");
+
+            ParseQuery<ParseObject> queryC;
+            List<ParseObject> listC;
+            queryC = ParseQuery.getQuery("Cita");
+
+            ParseQuery<ParseObject> queryMe;
+            List<ParseObject> listMe;
+            queryMe = ParseQuery.getQuery("Medicamento");
+
+            ParseQuery<ParseObject> queryV;
+            List<ParseObject> listV;
+            queryV = ParseQuery.getQuery("Vacuna");
+
+            query.whereEqualTo("propietario", ParseUser.getCurrentUser());
+            list = query.find();
+
+            for (int j = 0; j < list.size(); j++) {
+                list.get(j).pin();
+
+                queryC.whereEqualTo("mascota", list.get(j));
+                listC = queryC.find();
+
+                for (int k = 0; k < listC.size(); k++) {
+                    listC.get(k).pin();
+                }
+
+                queryMe.whereEqualTo("mascota", list.get(j));
+                listMe = queryMe.find();
+
+                for (int k = 0; k < listMe.size(); k++) {
+                    listMe.get(k).pin();
+                }
+
+                queryV.whereEqualTo("mascota", list.get(j));
+                listV = queryV.find();
+
+                for (int k = 0; k < listV.size(); k++) {
+                    listV.get(k).pin();
+                }
+
+            }
+        } catch (ParseException e1) {
+            e1.printStackTrace();
+        }
     }
 
     public void onClickIniciarConFacebook(View view) {
@@ -165,12 +206,23 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
 
-    public void iniciarCreacionUsuario(View view) {
-        Intent i = new Intent(this, UsuarioFormularioActivity.class);
-        startActivity(i);
+    public void onClickCrearUsuario(View view) {
+        if (Utility.isOnline()) {
+            Intent i = new Intent(this, UsuarioFormularioActivity.class);
+            startActivity(i);
+        } else {
+            new AlertDialog.Builder(this)
+                    .setTitle("Sin conexión")
+                    .setMessage("Conexión a internet necesaria para crear usuario.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
     }
 
     @Override
@@ -213,9 +265,9 @@ public class MainActivity extends AppCompatActivity {
                             user.put("username", userEmail);
                             user.put("email", userEmail);
 
-                            user.put("nameFacebook",userName);
-                            user.put("idFacebook",userId);
-                            user.put("genderFacebok",userGender);
+                            user.put("nameFacebook", userName);
+                            user.put("idFacebook", userId);
+                            user.put("genderFacebok", userGender);
                             user.put("urlFacebook", userProfileURL);
                             user.put("firstName", firstName);
                             user.put("lastName", lastName);

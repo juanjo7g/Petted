@@ -24,8 +24,8 @@
     <style name="etSeleccionarFechaNacimiento">Seleccionar la fecha de nacimiento</style>
 
     <string-array name="TiposDeMascotas">
-        <item>Gato</item>
         <item>Perro</item>
+        <item>Gato</item>
         <item>Ave</item>
         <item>Reptil</item>
         <item>Otro</item>
@@ -90,6 +90,14 @@
         <item>Otra</item>
     </string-array>
 
+    <string-array name="TiposDeViaDeSuministroMedicamento">
+        <item>Oral</item>
+        <item>Cutánea</item>
+        <item>Inhalatoria</item>
+        <item>Intravenosa</item>
+        <item>Otra</item>
+    </string-array>
+
     <string name="title_activity_asociar_tag_nfc">Asociar Tag NFC</string>
     <string name="title_activity_creacion_usuario">Crear Usuario</string>
     <string name="hintNombreUsuario">Nombre de usuario</string>
@@ -118,4 +126,5 @@
     <string name="presione_mas_sin_mascotas">Presione el botón \'+\' para agregar mascotas.</string>
     <string name="presione_mas_sin_citas">Presione el botón \'+\' para agregar citas.</string>
     <string name="presione_mas_sin_vacunas">Presione el botón \'+\' para agregar vacunas.</string>
+    <string name="presione_mas_sin_medicamentos">Presione el botón \'+\' para agregar medicamentos.</string>
 </resources>

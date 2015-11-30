@@ -47,6 +47,7 @@ public class TagNFCFormularioActivity extends AppCompatActivity {
         });
         tvIdTag = (TextView) findViewById(R.id.tvIdTagNFC);
 
+
         mascotaId = this.getIntent().getExtras().getString("mascotaId");
 
         myNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -77,9 +78,14 @@ public class TagNFCFormularioActivity extends AppCompatActivity {
         if (true) {
             daoM = new MascotaDAOImpl();
             mascota = daoM.obtenerMascota(mascotaId, this);
-            mascota.setIdTag(idTag);
-            daoM.actualizarMascota(mascota, this);
-            finish();
+            if (mascota == null) {
+                Toast.makeText(TagNFCFormularioActivity.this, "Ha ocurrido un error, no obtuvo la mascota por id",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                mascota.setIdTag(idTag);
+                daoM.actualizarMascota(mascota, this);
+                finish();
+            }
         }
 
     }

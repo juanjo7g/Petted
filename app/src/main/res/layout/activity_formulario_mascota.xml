@@ -79,7 +79,7 @@
             android:layout_marginTop="10dp" />
 
         <TextView
-            android:id="@+id/tvGenero"
+            android:id="@+id/tvGeneroMascota"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -94,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_below="@+id/tvGenero"
+            android:layout_below="@+id/tvGeneroMascota"
             android:layout_marginTop="10dp" />
 
         <Button

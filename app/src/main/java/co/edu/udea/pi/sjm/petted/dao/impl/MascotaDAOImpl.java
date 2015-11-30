@@ -87,6 +87,10 @@ public class MascotaDAOImpl implements MascotaDAO {
 
             list = query.find();
 
+            if (list.size() == 0) {
+                return null;
+            }
+
             m.setId(list.get(0).getString("id"));
             m.setPropietario(list.get(0).getParseUser("propietario").getObjectId());
             m.setNombre(list.get(0).getString("nombre"));

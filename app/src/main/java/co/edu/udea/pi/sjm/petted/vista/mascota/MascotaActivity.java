@@ -26,6 +26,7 @@ import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.vista.listadoCita.MascotaCitasFragment;
 import co.edu.udea.pi.sjm.petted.vista.listadoVacuna.MascotaVacunasFragment;
+import co.edu.udea.pi.sjm.petted.vista.medicamento.MascotaMedicamentosFragment;
 
 public class MascotaActivity extends AppCompatActivity implements ActionBar.TabListener {
 

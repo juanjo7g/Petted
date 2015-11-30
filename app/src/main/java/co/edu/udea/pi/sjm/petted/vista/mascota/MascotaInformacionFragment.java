@@ -55,7 +55,7 @@ public class MascotaInformacionFragment extends Fragment {
         btnAsociarTagNFC = (Button) rootView.findViewById(R.id.btnAsociarTagNFC);
         ivFoto = (ImageView) rootView.findViewById(R.id.ivFoto);
         tvEdad = (TextView) rootView.findViewById(R.id.tvEdad);
-        tvGenero = (TextView) rootView.findViewById(R.id.tvGenero);
+        tvGenero = (TextView) rootView.findViewById(R.id.tvGeneroMascota);
 
         ma = (MascotaActivity) getActivity();
 
