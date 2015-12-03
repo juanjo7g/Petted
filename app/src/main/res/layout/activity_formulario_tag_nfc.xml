@@ -34,7 +34,7 @@
         android:layout_width="260dp"
         android:layout_height="260dp"
         android:id="@+id/imageView"
-        android:background="@drawable/primacy_emergingtech_NFC_icon_260x260"
+        android:background="@drawable/primacy_emergingtech"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
