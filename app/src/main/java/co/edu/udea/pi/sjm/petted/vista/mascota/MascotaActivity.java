@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.MascotaDAO;
@@ -127,7 +126,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
 
 
         daoM = new MascotaDAOImpl();
-        mascota = daoM.obtenerMascota(mascotaId, this);
+        mascota = daoM.obtenerMascota(mascotaId);
 
     }
 
@@ -152,13 +151,12 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        String s = "";
         switch (id) {
             case android.R.id.home:
                 finish();
                 break;
             case R.id.action_notificaciones:
-                s = "notificaciones";
+
                 if (mascota.getNotificaciones()) {
                     mascota.setNotificaciones(false);
                     item.setIcon(getResources().getDrawable(R.mipmap.ic_notifications_off_white));
@@ -170,7 +168,7 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
                 }
 
                 daoM = new MascotaDAOImpl();
-                daoM.actualizarMascota(mascota, this);
+                daoM.actualizarMascota(mascota);
 
                 break;
             case R.id.action_editar:
@@ -179,7 +177,6 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
                 i.putExtra("mascotaId", mascotaId);
                 startActivityForResult(i, 0);
 
-                s = "Editar";
                 break;
             case R.id.action_eliminar:
                 new AlertDialog.Builder(this)
@@ -188,7 +185,8 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 daoM = new MascotaDAOImpl();
-                                daoM.eliminarMascota(mascota, MascotaActivity.this);
+                                daoM.eliminarMascota(mascota);
+                                finish();
                             }
                         })
                         .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -199,7 +197,6 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
                         .show();
                 break;
         }
-        Toast.makeText(MascotaActivity.this, s, Toast.LENGTH_SHORT).show();
 
         return super.onOptionsItemSelected(item);
     }
@@ -289,7 +286,6 @@ public class MascotaActivity extends AppCompatActivity implements ActionBar.TabL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0) {
-            Toast.makeText(MascotaActivity.this, "REINICIAR", Toast.LENGTH_SHORT).show();
             finish();
             startActivity(getIntent());
         }

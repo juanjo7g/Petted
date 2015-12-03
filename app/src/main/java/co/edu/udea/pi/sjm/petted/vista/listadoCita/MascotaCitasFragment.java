@@ -14,8 +14,10 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.CitaDAO;
@@ -34,6 +36,9 @@ public class MascotaCitasFragment extends Fragment {
     private List<Cita> listaCitas;
     private CitaCustomAdapter customAdapter;
     private MascotaActivity ma;
+
+    private SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+    private SimpleDateFormat formatoHora = new SimpleDateFormat("hh:mm a", Locale.US);
 
     public MascotaCitasFragment() {
     }
@@ -63,20 +68,37 @@ public class MascotaCitasFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final Cita c = customAdapter.getItem(position);
-                Toast.makeText(view.getContext(), "Id cita: " + c.getId(), Toast.LENGTH_SHORT).show();
+
+                final String descripcionS;
+                if (!c.getDescripcion().equals("")) {
+                    descripcionS = c.getDescripcion();
+                } else {
+                    descripcionS = "Sin descripción";
+                }
+
+                final String fechaHoraS;
+                if (c.getFechaHora() != null) {
+                    fechaHoraS = "Fecha: " + formatoFecha.format(c.getFechaHora()) +
+                            "\nHora: " + formatoHora.format(c.getFechaHora());
+                } else {
+                    fechaHoraS = "";
+                }
+
+
                 new AlertDialog.Builder(ma)
                         .setTitle("Cita " + c.getNombre())
-                        .setMessage("Descrpción: " + c.getDescripcion() +
-                                "\nTipo: " + c.getTipo() +
-                                "\nFechaHora: ")
+                        .setMessage(descripcionS +
+                                "\n\nTipo: " + c.getTipo() +
+                                "\n\n" + fechaHoraS)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(ma, "Cerrar cita", Toast.LENGTH_SHORT).show();
                             }
                         })
                         .setNeutralButton("Editar", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(ma, "Editar cita", Toast.LENGTH_SHORT).show();
+                                Intent i = new Intent(ma, CitaFormularioActivity.class);
+                                i.putExtra("citaId", c.getId());
+                                startActivity(i);
                             }
                         })
                         .setNegativeButton("Eliminar", new DialogInterface.OnClickListener() {
@@ -86,7 +108,7 @@ public class MascotaCitasFragment extends Fragment {
                                         .setMessage("¿Desea eliminar a " + c.getNombre() + "?")
                                         .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
-                                                daoC.eliminarCita(c, ma);
+                                                daoC.eliminarCita(c);
                                                 onResume();
                                             }
                                         })
@@ -121,7 +143,7 @@ public class MascotaCitasFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        listaCitas = daoC.obtenerCitas(ma.getMascota().getId(), ma);
+        listaCitas = daoC.obtenerCitas(ma.getMascota().getId());
         customAdapter = new CitaCustomAdapter(ma, listaCitas);
         lvCitas.setAdapter(customAdapter);
     }

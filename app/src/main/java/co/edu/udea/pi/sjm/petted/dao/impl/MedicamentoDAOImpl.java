@@ -1,7 +1,6 @@
 package co.edu.udea.pi.sjm.petted.dao.impl;
 
 import android.content.Context;
-import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -18,7 +17,7 @@ import co.edu.udea.pi.sjm.petted.dto.Medicamento;
  */
 public class MedicamentoDAOImpl implements MedicamentoDAO {
     @Override
-    public void insertarMedicamento(Medicamento medicamento, Context context) {
+    public void insertarMedicamento(Medicamento medicamento) {
         ParseObject m;
         ParseQuery<ParseObject> query;
         try {
@@ -35,8 +34,11 @@ public class MedicamentoDAOImpl implements MedicamentoDAO {
             m.put("cantidadDosis", medicamento.getCantidadDosis());
             m.put("pesoDosis", medicamento.getPesoDosis());
             m.put("intervaloDosis", medicamento.getIntervaloDosis());
-            if (medicamento.getFechaInicio() != null) {
-                m.put("fechaInicio", medicamento.getFechaInicio());
+            if (medicamento.getFechaHoraInicio() != null) {
+                m.put("fechaHoraInicio", medicamento.getFechaHoraInicio());
+            }
+            if (medicamento.getFechaHoraFin() != null) {
+                m.put("fechaHoraFin", medicamento.getFechaHoraFin());
             }
             m.pin();
             m.saveEventually();
@@ -47,17 +49,76 @@ public class MedicamentoDAOImpl implements MedicamentoDAO {
     }
 
     @Override
-    public Medicamento obtenerMedicamento(String id, Context context) {
-        return null;
+    public Medicamento obtenerMedicamento(String id) {
+        Medicamento m = new Medicamento();
+        ParseQuery<ParseObject> query;
+        List<ParseObject> list;
+        try {
+            query = ParseQuery.getQuery("Medicamento");
+
+            query.fromLocalDatastore();
+            query.whereEqualTo("id", id);
+
+            list = query.find();
+
+            if (list.size() == 0) {
+                return null;
+            }
+
+            m.setId(list.get(0).getString("id"));
+            m.setMascota(list.get(0).getParseObject("mascota").getObjectId());
+            m.setNombre(list.get(0).getString("nombre"));
+            m.setViaSuministro(list.get(0).getString("viaSuministro"));
+            m.setCantidadDosis(list.get(0).getInt("cantidadDosis"));
+            m.setPesoDosis(list.get(0).getDouble("pesoDosis"));
+            m.setIntervaloDosis(list.get(0).getInt("intervaloDosis"));
+
+            if (list.get(0).getDate("fechaHoraInicio") != null) {
+                m.setFechaHoraInicio(list.get(0).getDate("fechaHoraInicio"));
+            }
+            if (list.get(0).getDate("fechaHoraFin") != null) {
+                m.setFechaHoraFin(list.get(0).getDate("fechaHoraFin"));
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return m;
+
     }
 
     @Override
-    public void actualizarMedicamento(Medicamento medicamento, Context context) {
+    public void actualizarMedicamento(Medicamento medicamento) {
+        ParseObject m;
+        ParseQuery<ParseObject> query;
+        try {
+            query = ParseQuery.getQuery("Medicamento");
 
+            query.fromLocalDatastore();
+            query.whereEqualTo("id", medicamento.getId());
+
+            m = query.find().get(0);
+
+            m.put("nombre", medicamento.getNombre());
+            m.put("viaSuministro", medicamento.getViaSuministro());
+            m.put("cantidadDosis", medicamento.getCantidadDosis());
+            m.put("pesoDosis", medicamento.getPesoDosis());
+            m.put("intervaloDosis", medicamento.getIntervaloDosis());
+            if (medicamento.getFechaHoraInicio() != null) {
+                m.put("fechaHoraInicio", medicamento.getFechaHoraInicio());
+            }
+            if (medicamento.getFechaHoraFin() != null) {
+                m.put("fechaHoraFin", medicamento.getFechaHoraFin());
+            }
+            m.pin();
+            m.saveEventually();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void eliminarMedicamento(Medicamento medicamento, Context context) {
+    public void eliminarMedicamento(Medicamento medicamento) {
         ParseObject m;
         ParseQuery<ParseObject> query;
         try {
@@ -76,7 +137,7 @@ public class MedicamentoDAOImpl implements MedicamentoDAO {
     }
 
     @Override
-    public List<Medicamento> obtenerMedicamentos(String mascotaId, Context context) {
+    public List<Medicamento> obtenerMedicamentos(String mascotaId) {
         List<Medicamento> listaMedicamentos = new ArrayList<>();
         Medicamento m;
         ParseQuery<ParseObject> queryMed;
@@ -107,7 +168,8 @@ public class MedicamentoDAOImpl implements MedicamentoDAO {
                 m.setCantidadDosis(list.get(i).getInt("cantidadDosis"));
                 m.setPesoDosis(list.get(i).getDouble("pesoDosis"));
                 m.setIntervaloDosis(list.get(i).getInt("intervaloDosis"));
-                m.setFechaInicio(list.get(i).getDate("fechaInicio"));
+                m.setFechaHoraInicio(list.get(i).getDate("fechaHoraInicio"));
+                m.setFechaHoraFin(list.get(i).getDate("fechaHoraFin"));
 
                 listaMedicamentos.add(m);
             }
@@ -119,7 +181,7 @@ public class MedicamentoDAOImpl implements MedicamentoDAO {
     }
 
     @Override
-    public List<Medicamento> obtenerMedicamentos(Context context) {
+    public List<Medicamento> obtenerMedicamentos() {
         return null;
     }
 }

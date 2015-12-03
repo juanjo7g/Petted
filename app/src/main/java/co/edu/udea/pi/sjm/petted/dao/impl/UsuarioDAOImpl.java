@@ -1,21 +1,18 @@
 package co.edu.udea.pi.sjm.petted.dao.impl;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.widget.Toast;
 
 import com.parse.ParseException;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 
 import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.SQLite.PettedDataBaseHelper;
 import co.edu.udea.pi.sjm.petted.dao.UsuarioDAO;
-import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Usuario;
-import co.edu.udea.pi.sjm.petted.vista.MainActivity;
 
 /**
  * Created by Juan on 02/10/2015.
@@ -24,23 +21,17 @@ public class UsuarioDAOImpl implements UsuarioDAO {
 
 
     @Override
-    public void insertarUsuario(Usuario u, final Context context) {
+    public void insertarUsuario(Usuario u ) {
         ParseUser usuario = new ParseUser();
-
         try {
             usuario.setUsername(u.getNombre());
             usuario.setPassword(u.getContraseña());
             usuario.setEmail(u.getCorreo());
             usuario.signUp();
-            if (ParseUser.getCurrentUser() != null) {
-                Toast.makeText(context, "Usuario creado con exito",
-                        Toast.LENGTH_SHORT).show();
-                ((Activity) context).finish();
-            }
+
         } catch (ParseException e) {
             e.printStackTrace();
-            Toast.makeText(context, "Error creando usuario: "+ e.getMessage(),
-                    Toast.LENGTH_SHORT).show();
+
         }
 
 
@@ -84,32 +75,14 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     @Deprecated
     @Override
     public Usuario obtenerUsuarioLogueado(Context context) {
-        PettedDataBaseHelper helper;
-        Cursor c;
         Usuario u = null;
-        try {
-            helper = PettedDataBaseHelper.getInstance(context);
-            c = helper.obtenerUsuarioLogueado();
-            u = new Usuario();
-            if (!c.moveToFirst()) {
-                return null;
-            }
-            u.setCorreo(c.getString(0));
-            u.setNombre(c.getString(1));
-            u.setContraseña(c.getString(2));
-            u.setLogueado(c.getString(3));
-        } catch (Exception e) {
-            // Error
-        }
         return u;
     }
 
     @Deprecated
     @Override
     public void actualizarUsuario(Usuario usuario, Context context) {
-        PettedDataBaseHelper helper;
-        helper = PettedDataBaseHelper.getInstance(context);
-        helper.actualizarUsuario(usuario);
+
     }
 
     @Override
@@ -121,4 +94,44 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     public List<Usuario> obtener(Context context) {
         return null;
     }
+
+    @Override
+    public Usuario obtenerUsuario(String username) {
+        Usuario u = new Usuario();
+        ParseQuery<ParseObject> query;
+        List<ParseObject> list;
+        try {
+            query = ParseQuery.getQuery("_User");
+            query.whereEqualTo("username", username);
+
+            list = query.find();
+            if (list.size() == 0) {
+                return null;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return u;
+    }
+
+    @Override
+    public Usuario obtenerUsuarioPorCorreo(String correo) {
+        Usuario u = new Usuario();
+        ParseQuery<ParseObject> query;
+        List<ParseObject> list;
+        try {
+            query = ParseQuery.getQuery("_User");
+            query.whereEqualTo("email", correo);
+
+            list = query.find();
+            if (list.size() == 0) {
+                return null;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return u;
+    }
+
+
 }

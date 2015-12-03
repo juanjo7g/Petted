@@ -75,18 +75,54 @@ public class TagNFCFormularioActivity extends AppCompatActivity {
     }
 
     private void onClickAsociarTag() {
-        if (true) {
-            daoM = new MascotaDAOImpl();
-            mascota = daoM.obtenerMascota(mascotaId, this);
-            if (mascota == null) {
-                Toast.makeText(TagNFCFormularioActivity.this, "Ha ocurrido un error, no obtuvo la mascota por id",
-                        Toast.LENGTH_SHORT).show();
-            } else {
+
+        daoM = new MascotaDAOImpl();
+        mascota = daoM.obtenerMascota(mascotaId);
+        if (mascota == null) {
+            Toast.makeText(TagNFCFormularioActivity.this, "Ha ocurrido un error, no obtuvo la mascota por id.",
+                    Toast.LENGTH_SHORT).show();
+        } else {
+            Mascota m = daoM.obtenerMascotaConIdTag(idTag);
+            if (m == null) {
                 mascota.setIdTag(idTag);
-                daoM.actualizarMascota(mascota, this);
-                finish();
+                daoM.actualizarMascota(mascota);
+                new AlertDialog.Builder(this)
+                        .setTitle("Tag Asociado")
+                        .setMessage("El tag se asoció a la mascota con éxito.")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                finish();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .show();
+
+            } else {
+                new AlertDialog.Builder(this)
+                        .setTitle("Error asociando Tag")
+                        .setMessage("Error, el Tag esta asociado a otra mascota.")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialog) {
+                                finish();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         }
+
 
     }
 
@@ -137,9 +173,9 @@ public class TagNFCFormularioActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

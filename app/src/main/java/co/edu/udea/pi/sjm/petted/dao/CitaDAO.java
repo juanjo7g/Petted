@@ -11,15 +11,15 @@ import co.edu.udea.pi.sjm.petted.dto.Mascota;
  * Created by Juan on 25/10/2015.
  */
 public interface CitaDAO {
-    void insertarCita(Cita cita, Context context);
+    void insertarCita(Cita cita);
 
-    Cita obtenerCita(String id, Context context);
+    Cita obtenerCita(String id);
 
-    void actualizarCita(Cita cita, Context context);
+    void actualizarCita(Cita cita);
 
-    void eliminarCita(Cita cita, Context context);
+    void eliminarCita(Cita cita);
 
-    List<Cita> obtenerCitas(String mascotaId, Context context);
+    List<Cita> obtenerCitas(String mascotaId);
 
-    List<Cita> obtenerCitas(Context context);
+    List<Cita> obtenerCitas();
 }

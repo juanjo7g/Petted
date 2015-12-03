@@ -79,8 +79,8 @@
         <item>Otro</item>
     </string-array>
     <string-array name="Generos">
-        <item>Hembra</item>
         <item>Macho</item>
+        <item>Hembra</item>
     </string-array>
 
     <string-array name="TiposDeCitas">

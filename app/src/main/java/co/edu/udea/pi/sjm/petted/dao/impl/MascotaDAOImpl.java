@@ -2,13 +2,11 @@ package co.edu.udea.pi.sjm.petted.dao.impl;
 
 import android.app.Activity;
 import android.content.Context;
-import android.widget.Toast;
 
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +21,7 @@ import co.edu.udea.pi.sjm.petted.util.Utility;
 public class MascotaDAOImpl implements MascotaDAO {
 
     @Override
-    public void insertarMascota(Mascota mascota, final Context context) {
+    public void insertarMascota(Mascota mascota) {
         final ParseObject m;
         ParseObject propietario;
         try {
@@ -43,39 +41,15 @@ public class MascotaDAOImpl implements MascotaDAO {
                 m.put("foto", Utility.compreesByteArray(mascota.getFoto()));
             }
             m.put("notificaciones", mascota.getNotificaciones());
-            m.pinInBackground(new SaveCallback() {
-                @Override
-                public void done(com.parse.ParseException e) {
-                    if (e == null) {
-                        Toast.makeText(context, "Mascota guardada " +
-                                        "localmente, intentando almacenar remoto...",
-                                Toast.LENGTH_SHORT).show();
-                        m.saveEventually(new SaveCallback() {
-                            @Override
-                            public void done(com.parse.ParseException e) {
-                                if (e == null) {
-                                    Toast.makeText(context, "Mascota " +
-                                            "guardada remotamente", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(context, e.getMessage(),
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                        ((Activity) context).finish();
-                    } else {
-                        Toast.makeText(context, "Error guardado mascotaParseO",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+            m.pin();
+            m.saveEventually();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public Mascota obtenerMascota(String id, Context context) {
+    public Mascota obtenerMascota(String id) {
         Mascota m = new Mascota();
         ParseQuery<ParseObject> query;
         List<ParseObject> list;
@@ -168,7 +142,7 @@ public class MascotaDAOImpl implements MascotaDAO {
     }
 
     @Override
-    public void actualizarMascota(Mascota mascota, Context context) {
+    public void actualizarMascota(Mascota mascota) {
         ParseObject m;
         ParseQuery<ParseObject> query;
         try {
@@ -201,7 +175,7 @@ public class MascotaDAOImpl implements MascotaDAO {
     }
 
     @Override
-    public void eliminarMascota(Mascota mascota, Context context) {
+    public void eliminarMascota(Mascota mascota) {
         ParseObject m;
         ParseQuery<ParseObject> query;
         try {
@@ -213,15 +187,14 @@ public class MascotaDAOImpl implements MascotaDAO {
 
             m.unpin();
             m.deleteEventually();
-            Toast.makeText(context, "Mascota eliminada", Toast.LENGTH_SHORT).show();
-            ((Activity) context).finish();
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public List<Mascota> obtenerMascotas(Context context) {
+    public List<Mascota> obtenerMascotas() {
         List<Mascota> listaMascotas = new ArrayList<>();
         Mascota m;
         ParseQuery<ParseObject> query;
@@ -232,10 +205,6 @@ public class MascotaDAOImpl implements MascotaDAO {
             query.whereEqualTo("propietario", ParseUser.getCurrentUser());
 
             list = query.find();
-
-            if (list.size() == 0) {
-                Toast.makeText(context, "No hay mascotas todavia", Toast.LENGTH_SHORT).show();
-            }
 
             for (int i = 0; i < list.size(); i++) {
 

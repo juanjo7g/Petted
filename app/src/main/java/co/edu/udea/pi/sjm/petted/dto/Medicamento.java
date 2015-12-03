@@ -14,8 +14,8 @@ public class Medicamento implements Serializable{
     private int cantidadDosis;
     private double pesoDosis; // Peso en gramos de cada dosis
     private int intervaloDosis; // Cada cuanto se suministra la dosis en horas.
-    private Date fechaInicio;
-    private Date fechaFin;
+    private Date fechaHoraInicio;
+    private Date fechaHoraFin;
 
     public Medicamento() {
     }
@@ -76,19 +76,19 @@ public class Medicamento implements Serializable{
         this.intervaloDosis = intervaloDosis;
     }
 
-    public Date getFechaInicio() {
-        return fechaInicio;
+    public Date getFechaHoraInicio() {
+        return fechaHoraInicio;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
+    public void setFechaHoraInicio(Date fechaHoraInicio) {
+        this.fechaHoraInicio = fechaHoraInicio;
     }
 
-    public Date getFechaFin() {
-        return fechaFin;
+    public Date getFechaHoraFin() {
+        return fechaHoraFin;
     }
 
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
+    public void setFechaHoraFin(Date fechaHoraFin) {
+        this.fechaHoraFin = fechaHoraFin;
     }
 }

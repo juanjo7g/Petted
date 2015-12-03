@@ -1,20 +1,17 @@
 package co.edu.udea.pi.sjm.petted.vista;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,13 +29,10 @@ import com.parse.ParseUser;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.R;
-import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.vista.listadoMascotas.ListadoMascotasActivity;
 import co.edu.udea.pi.sjm.petted.vista.usuario.UsuarioFormularioActivity;
@@ -46,7 +40,7 @@ import co.edu.udea.pi.sjm.petted.vista.usuario.UsuarioFormularioActivity;
 public class MainActivity extends AppCompatActivity {
 
     private TextView tvCrearUsuario;
-    private EditText etEmail;
+    private EditText etUsuario;
     private EditText etContraseña;
 
     @Override
@@ -54,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvCrearUsuario = (TextView) findViewById(R.id.tvCrearUsuario);
-        etEmail = (EditText) findViewById(R.id.etUsuario);
+        etUsuario = (EditText) findViewById(R.id.etUsuario);
         etContraseña = (EditText) findViewById(R.id.etContraseña);
         onResume();
     }
@@ -62,12 +56,34 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Intent i;
+        final Intent i;
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             i = new Intent(this, ListadoMascotasActivity.class);
-            startActivity(i);
-            finish();
+            if (!currentUser.getBoolean("emailVerified")) {
+//                new AlertDialog.Builder(MainActivity.this)
+//                        .setTitle("Bienvenido " + currentUser.getUsername())
+//                        .setMessage("Por favor verificar el e-mail próximamente" +
+//                                " será requerido para acceder a la aplicación.")
+//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                finish();
+//                                startActivity(i);
+//                            }
+//                        })
+//                        .setOnCancelListener(new DialogInterface.OnCancelListener() {
+//                            @Override
+//                            public void onCancel(DialogInterface dialog) {
+//                                finish();
+//                                startActivity(i);
+//                            }
+//                        })
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+//                        .show();
+            }else{
+                finish();
+                startActivity(i);
+            }
         }
     }
 
@@ -79,47 +95,62 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickIniciar(View view) {
         if (Utility.isOnline()) {
-            final ProgressDialog progress = new ProgressDialog(this);
-            progress.setMessage("Iniciando sesión...");
-            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progress.setIndeterminate(true);
-            progress.show();
+            if (etUsuario.getText().toString().equals("")) {
+                etUsuario.setError("Campo requerido.");
+            }
+            if (etContraseña.getText().toString().equals("")) {
+                etContraseña.setError("Campo requerido.");
+            }
+            if ((etUsuario.getError() == null) && (etContraseña.getError() == null)) {
+                final ProgressDialog progress = new ProgressDialog(this);
+                progress.setMessage("Iniciando sesión...");
+                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progress.setIndeterminate(true);
+                progress.show();
 
-            ParseUser.logInInBackground(etEmail.getText().toString(), etContraseña.getText().toString(),
-                    new LogInCallback() {
-                        @Override
-                        public void done(ParseUser parseUser, ParseException e) {
-                            if (parseUser != null) {
-                                final Intent i = new Intent(MainActivity.this, ListadoMascotasActivity.class);
-                                cargarInformacion();
-                                progress.dismiss();
-                                if (!parseUser.getBoolean("emailVerified")) {
+                ParseUser.logInInBackground(etUsuario.getText().toString(), etContraseña.getText().toString(),
+                        new LogInCallback() {
+                            @Override
+                            public void done(ParseUser parseUser, ParseException e) {
+                                if (parseUser != null) {
+                                    final Intent i = new Intent(MainActivity.this, ListadoMascotasActivity.class);
+                                    cargarDatosDelUsuario();
+                                    if (!parseUser.getBoolean("emailVerified")) {
+                                        new AlertDialog.Builder(MainActivity.this)
+                                                .setTitle("Bienvenido " + parseUser.getUsername())
+                                                .setMessage("Por favor verificar el e-mail próximamente" +
+                                                        " será requerido para acceder a la aplicación.")
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        finish();
+                                                        startActivity(i);
+                                                    }
+                                                })
+                                                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                                    @Override
+                                                    public void onCancel(DialogInterface dialog) {
+                                                        finish();
+                                                        startActivity(i);
+                                                    }
+                                                })
+                                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                                .show();
+                                    }
+                                } else {
                                     new AlertDialog.Builder(MainActivity.this)
-                                            .setTitle("Bienvenido " + parseUser.getUsername())
-                                            .setMessage("Por favor verificar el e-mail próximamente" +
-                                                    " será requerido para acceder a la aplicación.")
+                                            .setTitle("Error iniciando sesión")
+                                            .setMessage("Usuario y/o contraseña incorrectos.")
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    finish();
-                                                    startActivity(i);
-                                                }
-                                            })
-                                            .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                                @Override
-                                                public void onCancel(DialogInterface dialog) {
-                                                    finish();
-                                                    startActivity(i);
                                                 }
                                             })
                                             .setIcon(android.R.drawable.ic_dialog_alert)
                                             .show();
                                 }
-                            } else {
-                                Toast.makeText(MainActivity.this, "Ha ocurrido un error iniciando sesión",
-                                        Toast.LENGTH_SHORT).show();
+                                progress.dismiss();
                             }
-                        }
-                    });
+                        });
+            }
         } else {
             new AlertDialog.Builder(this)
                     .setTitle("Sin conexión")
@@ -133,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void cargarInformacion() {
+    private void cargarDatosDelUsuario() {
         try {
             ParseQuery<ParseObject> query;
             List<ParseObject> list;
@@ -185,26 +216,38 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickIniciarConFacebook(View view) {
+        if (Utility.isOnline()) {
 
-        final List<String> permissions = Arrays.asList("public_profile", "email");
 
-        ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException err) {
-                if (user == null) {
-                    Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
-                    Toast.makeText(MainActivity.this, err.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                } else if (user.isNew()) {
-                    Log.d("MyApp", "User signed up and logged in through Facebook!");
-                    Toast.makeText(MainActivity.this, "User signed up and logged in through Facebook!" + user.toString(), Toast.LENGTH_SHORT).show();
-                    getFacebookUserDetails(user);
-                } else {
-                    Log.d("MyApp", "User logged in through Facebook!");
-                    Toast.makeText(MainActivity.this, "User logged in through Facebook!" + user.toString(), Toast.LENGTH_SHORT).show();
+            final List<String> permissions = Arrays.asList("public_profile", "email");
+
+            ParseFacebookUtils.logInWithReadPermissionsInBackground(this, permissions, new LogInCallback() {
+                @Override
+                public void done(ParseUser user, ParseException err) {
+                    if (user == null) {
+                        Log.d("MyApp", "Uh oh. The user cancelled the Facebook login.");
+                        Toast.makeText(MainActivity.this, "Error iniciando sesión con Facebook.", Toast.LENGTH_LONG).show();
+                    } else if (user.isNew()) {
+                        Log.d("MyApp", "User signed up and logged in through Facebook!");
+                        getFacebookUserDetails(user);
+                        onResume();
+                    } else {
+                        Log.d("MyApp", "User logged in through Facebook!");
+                        onResume();
+                    }
                 }
-            }
-        });
-
+            });
+        } else {
+            new AlertDialog.Builder(this)
+                    .setTitle("Sin conexión")
+                    .setMessage("Conexión a internet necesaria para iniciar sesión con Facebook.")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+        }
 
     }
 
@@ -252,7 +295,6 @@ public class MainActivity extends AppCompatActivity {
                     public void onCompleted(
                             JSONObject object,
                             GraphResponse response) {
-                        // Application code
                         try {
                             String userName = object.getString("name");
                             String userId = object.getString("id");
@@ -272,13 +314,14 @@ public class MainActivity extends AppCompatActivity {
                             user.put("firstName", firstName);
                             user.put("lastName", lastName);
                             user.put("fullName", firstName + " " + lastName);
-                            user.saveEventually();
 
-                            onResume();
+                            user.save();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
                         }
-
 
                     }
                 });

@@ -11,17 +11,17 @@ import co.edu.udea.pi.sjm.petted.dto.Usuario;
  * Created by Juan on 02/10/2015.
  */
 public interface MascotaDAO {
-    void insertarMascota(Mascota mascota, Context context);
+    void insertarMascota(Mascota mascota);
 
-    Mascota obtenerMascota(String id, Context context);
+    Mascota obtenerMascota(String id);
 
     String obtenerMascotaId(String idTag);
 
-    void actualizarMascota(Mascota mascota, Context context);
+    void actualizarMascota(Mascota mascota);
 
-    void eliminarMascota(Mascota mascota, Context context);
+    void eliminarMascota(Mascota mascota);
 
-    List<Mascota> obtenerMascotas(Context context);
+    List<Mascota> obtenerMascotas();
 
     Mascota obtenerMascotaConIdTag(String idTag);
 }

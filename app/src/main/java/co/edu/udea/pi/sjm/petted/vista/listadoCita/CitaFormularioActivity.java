@@ -35,6 +35,7 @@ import co.edu.udea.pi.sjm.petted.dao.impl.MascotaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dto.Cita;
 import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Vacuna;
+import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.util.Validacion;
 
 public class CitaFormularioActivity extends AppCompatActivity {
@@ -56,6 +57,7 @@ public class CitaFormularioActivity extends AppCompatActivity {
     private EditText etHora;
     private ImageButton ibtnHora;
 
+    private Cita cita;
     private CitaDAO daoC;
 
     @Override
@@ -84,12 +86,17 @@ public class CitaFormularioActivity extends AppCompatActivity {
         mostrarFecha();
         mostrarHora();
 
+        if (this.getIntent().getExtras().getString("citaId") != null) {
+            daoC = new CitaDAOImpl();
+            cita = daoC.obtenerCita(this.getIntent().getExtras().getString("citaId"));
+        }
+
         inicializarSpinner();
 
         if (this.getIntent().getExtras().getString("citaId") == null) {
             super.setTitle("Nueva Cita");
         } else {
-            inicializarFormulario((Cita) this.getIntent().getExtras().getSerializable("cita"));
+            inicializarFormulario();
             super.setTitle("Editar Cita");
         }
         if (this.getIntent().getExtras().getSerializable("vacuna") != null) {
@@ -111,6 +118,17 @@ public class CitaFormularioActivity extends AppCompatActivity {
         }
     }
 
+    private void inicializarFormulario() {
+        etNombre.setText(cita.getNombre());
+        etDescripcion.setText(cita.getDescripcion());
+        spinnerTipo.setSelection(Utility.getIndex(spinnerTipo, cita.getTipo()));
+        if (cita.getFechaHora() != null) {
+            etFecha.setText(formatoFecha.format(cita.getFechaHora()));
+            etHora.setText(formatoHora.format(cita.getFechaHora()));
+        }
+    }
+
+
     private void inicializarFormulario(Vacuna vacuna) {
         etNombre.setText(vacuna.getNombre());
         etDescripcion.setText("Aplicación de la vacuna " + vacuna.getNombre());
@@ -122,6 +140,9 @@ public class CitaFormularioActivity extends AppCompatActivity {
     }
 
     public void onClickGuardarCita() {
+
+        verificarCamposRequeridos();
+
         Cita c;
         UUID uuid = UUID.randomUUID();
         c = new Cita();
@@ -142,22 +163,28 @@ public class CitaFormularioActivity extends AppCompatActivity {
 
         switch (Validacion.validarCita(c)) {
             case 0:
-                if (this.getIntent().getExtras().getString("citaId") == null) {
-                    daoC = new CitaDAOImpl();
-                    daoC.insertarCita(c, this);
-                    Toast.makeText(CitaFormularioActivity.this, "Cita insertada", Toast.LENGTH_SHORT).show();
-
-                } else {
-//                    c.setId(((Cita) this.getIntent().getExtras().getSerializable("cita")).getId());
-//                    c.setEstado(((Cita) this.getIntent().getExtras().getSerializable("cita")).getEstado());
-                    daoC.actualizarCita(c, this);
-                    setResult(0);
-                    Toast.makeText(CitaFormularioActivity.this, "Cita editada", Toast.LENGTH_SHORT).show();
+                if (etNombre.getError() != null) {
+                    if (this.getIntent().getExtras().getString("citaId") == null) {
+                        daoC = new CitaDAOImpl();
+                        daoC.insertarCita(c);
+                    } else {
+                        daoC = new CitaDAOImpl();
+                        c.setId(this.getIntent().getExtras().getString("citaId"));
+                        daoC.actualizarCita(c);
+                        setResult(0);
+                    }
+                    finish();
                 }
-                finish();
                 break;
         }
     }
+
+    private void verificarCamposRequeridos() {
+        if (etNombre.getText().toString().equals("")) {
+            etNombre.setError("Campo requerido.");
+        }
+    }
+
 
     private void inicializarSpinner() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.TiposDeCitas,
@@ -165,10 +192,6 @@ public class CitaFormularioActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerTipo.setAdapter(adapter);
-    }
-
-    // TODO: INICIALIZAR FORMULARIO
-    private void inicializarFormulario(Cita cita) {
     }
 
     private void mostrarFecha() {

@@ -12,20 +12,40 @@
         android:id="@+id/tvIdTagNFC"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="ID Tag NFC: " />
+        android:text="ID Tag NFC: "
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <Button
         android:id="@+id/btnAsociar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="102dp"
+        android:layout_marginBottom="57dp"
         android:background="@color/ColorPrimary"
         android:padding="12dp"
         android:text="Asociar"
         android:textColor="@color/blanco"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:id="@+id/imageView"
+        android:background="@drawable/primacy_emergingtech_NFC_icon_260x260"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Acerca el celular al tag NFC"
+        android:id="@+id/textView"
+        android:textStyle="bold"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

@@ -55,6 +55,7 @@ public class VacunaFormularioActivity extends AppCompatActivity {
 
     private String mascotaId;
 
+    private Vacuna vacuna;
     private VacunaDAO daoV;
 
     private String APP_DIRECTORY = "myPictureApp/";
@@ -91,16 +92,38 @@ public class VacunaFormularioActivity extends AppCompatActivity {
 
         mostrarFecha();
 
+        if (this.getIntent().getExtras().getString("vacunaId") != null) {
+            daoV = new VacunaDAOImpl();
+            vacuna = daoV.obtenerVacuna(this.getIntent().getExtras().getString("vacunaId"));
+        }
+
+
         if (this.getIntent().getExtras().getString("vacunaId") == null) {
             super.setTitle("Nueva Vacuna");
         } else {
-//            inicializarFormulario((Vacuna) this.getIntent().getExtras().getSerializable("vacuna"));
+            inicializarFormulario();
             super.setTitle("Editar Vacuna");
         }
 
     }
 
+    private void inicializarFormulario() {
+        etNombre.setText(vacuna.getNombre());
+        if (vacuna.getFecha() != null) {
+            etFecha.setText(formatoFecha.format(vacuna.getFecha()));
+        }
+        if (vacuna.getFechaProxima() != null) {
+            etFechaProxima.setText(formatoFecha.format(vacuna.getFechaProxima()));
+        }
+        if (vacuna.getValidacion() != null) {
+            ivFotoPrevia.setImageBitmap(Utility.getFoto(vacuna.getValidacion()));
+        }
+    }
+
     private void onClickGuardarVacuna() {
+
+        verificarCamposRequeridos();
+
         Vacuna v;
         UUID uuid = UUID.randomUUID();
         v = new Vacuna();
@@ -122,27 +145,41 @@ public class VacunaFormularioActivity extends AppCompatActivity {
 
         switch (Validacion.validarVacuna(v)) {
             case 0:
-                if (this.getIntent().getExtras().getSerializable("vacuna") == null) {
-                    daoV = new VacunaDAOImpl();
-                    daoV.insertarVacuna(v, this);
-                    Intent i = new Intent(this, CitaFormularioActivity.class);
-                    i.putExtra("mascotaId", mascotaId);
-                    i.putExtra("vacuna", v);
-                    startActivity(i);
-                } else {
-                    // TODO: EDITAR VACUNA
-//                    v.setId(((Vacuna) this.getIntent().getExtras().getSerializable("vacuna")).getId());
-//                    v.setEstado(((Vacuna) this.getIntent().getExtras().getSerializable("vacuna")).getEstado());
-
-                    daoV = new VacunaDAOImpl();
-                    daoV.actualizarVacuna(v, this);
-
-                    Toast.makeText(VacunaFormularioActivity.this, "Vacuna Editada", Toast.LENGTH_SHORT).show();
+                if ((etNombre.getError() == null) && (etFecha.getError() == null) &&
+                        (etFechaProxima.getError() == null)) {
+                    if (this.getIntent().getExtras().getString("vacunaId") == null) {
+                        daoV = new VacunaDAOImpl();
+                        daoV.insertarVacuna(v);
+                        Intent i = new Intent(this, CitaFormularioActivity.class);
+                        i.putExtra("mascotaId", mascotaId);
+                        i.putExtra("vacuna", v);
+                        startActivity(i);
+                    } else {
+                        v.setId(this.getIntent().getExtras().getString("vacunaId"));
+                        daoV = new VacunaDAOImpl();
+                        daoV.actualizarVacuna(v);
+                    }
+                    finish();
                 }
-                finish();
                 break;
         }
 
+    }
+
+    private void verificarCamposRequeridos() {
+        if (etNombre.getText().toString().equals("")) {
+            etNombre.setError("Campo requerido.");
+        }
+        if (etFecha.getText().toString().equals("")) {
+            etFecha.setError("Campo requerido.");
+        } else {
+            etFecha.setError(null);
+        }
+        if (etFechaProxima.getText().toString().equals("")) {
+            etFechaProxima.setError("Campo requerido.");
+        } else {
+            etFechaProxima.setError(null);
+        }
     }
 
     public void onClickFotoValidacionVacuna(View view) {
@@ -166,10 +203,6 @@ public class VacunaFormularioActivity extends AppCompatActivity {
             }
         });
         builder.show();
-    }
-
-    // TODO: INICIALIZAR FORMULARIO VACUNA PARA EDITAR
-    private void inicializarFormulario(Vacuna vacuna) {
     }
 
     public void tomarFoto() {
@@ -233,7 +266,7 @@ public class VacunaFormularioActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     String dir = Environment.getExternalStorageDirectory() + File.separator + MEDIA_DIRECTORY
                             + File.separator + TEMPORAL_PICTURE_NAME;
-                    foto = BitmapFactory.decodeFile(dir);
+                    foto = Utility.cutImage(BitmapFactory.decodeFile(dir));
                     ivFotoPrevia.setImageBitmap(foto);
                 }
                 break;
@@ -241,7 +274,8 @@ public class VacunaFormularioActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK) {
                     Uri dir = data.getData();
                     try {
-                        foto = MediaStore.Images.Media.getBitmap(this.getContentResolver(), dir);
+                        foto = Utility.cutImage(MediaStore.Images.Media.getBitmap(this.getContentResolver(), dir));
+                        ;
                         ivFotoPrevia.setImageBitmap(foto);
                     } catch (IOException e) {
                         e.printStackTrace();

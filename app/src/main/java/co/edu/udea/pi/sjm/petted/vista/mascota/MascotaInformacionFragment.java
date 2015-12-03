@@ -92,7 +92,7 @@ public class MascotaInformacionFragment extends Fragment {
         btnAsociarTagNFC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onclickAsociarTagNFC();
+                onClickAsociarTagNFC();
 
             }
         });
@@ -100,7 +100,7 @@ public class MascotaInformacionFragment extends Fragment {
         return rootView;
     }
 
-    private void onclickAsociarTagNFC() {
+    private void onClickAsociarTagNFC() {
         if (NfcAdapter.getDefaultAdapter(ma) == null) {
             new AlertDialog.Builder(ma)
                     .setTitle(R.string.no_nfc)
@@ -112,9 +112,21 @@ public class MascotaInformacionFragment extends Fragment {
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         } else {
-            Intent i = new Intent(getActivity(), TagNFCFormularioActivity.class);
-            i.putExtra("mascotaId", ma.getMascota().getId());
-            startActivity(i);
+            if (Utility.isOnline()) {
+                Intent i = new Intent(getActivity(), TagNFCFormularioActivity.class);
+                i.putExtra("mascotaId", ma.getMascota().getId());
+                startActivity(i);
+            } else {
+                new AlertDialog.Builder(ma)
+                        .setTitle("Sin conexión")
+                        .setMessage("Conexión a internet necesaria para asociar NFC a la mascota.")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
         }
     }
 

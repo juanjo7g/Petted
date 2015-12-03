@@ -29,7 +29,7 @@ public class CitaDAOImpl implements CitaDAO {
     private SimpleDateFormat formatoFechaHora = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
 
     @Override
-    public void insertarCita(Cita cita, Context context) {
+    public void insertarCita(Cita cita) {
         ParseObject c;
         ParseQuery<ParseObject> query;
         try {
@@ -56,16 +56,65 @@ public class CitaDAOImpl implements CitaDAO {
     }
 
     @Override
-    public Cita obtenerCita(String id, Context context) {
-        return null;
+    public Cita obtenerCita(String id) {
+        Cita c = new Cita();
+        ParseQuery<ParseObject> query;
+        List<ParseObject> list;
+        try {
+            query = ParseQuery.getQuery("Cita");
+
+            query.fromLocalDatastore();
+            query.whereEqualTo("id", id);
+
+            list = query.find();
+
+            if (list.size() == 0) {
+                return null;
+            }
+
+            c.setId(list.get(0).getString("id"));
+            c.setMascota(list.get(0).getParseObject("mascota").getObjectId());
+            c.setNombre(list.get(0).getString("nombre"));
+            c.setDescripcion(list.get(0).getString("descripcion"));
+            c.setTipo(list.get(0).getString("tipo"));
+
+            if (list.get(0).getDate("fechaHora") != null) {
+                c.setFechaHora(list.get(0).getDate("fechaHora"));
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return c;
     }
 
     @Override
-    public void actualizarCita(Cita cita, Context context) {
+    public void actualizarCita(Cita cita) {
+        ParseObject c;
+        ParseQuery<ParseObject> query;
+        try {
+            query = ParseQuery.getQuery("Cita");
+
+            query.fromLocalDatastore();
+            query.whereEqualTo("id", cita.getId());
+
+            c = query.find().get(0);
+
+            c.put("nombre", cita.getNombre());
+            c.put("descripcion", cita.getDescripcion());
+            c.put("tipo", cita.getTipo());
+            if (cita.getFechaHora() != null) {
+                c.put("fechaHora", cita.getFechaHora());
+            }
+            c.pin();
+            c.saveEventually();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public void eliminarCita(Cita cita, Context context) {
+    public void eliminarCita(Cita cita) {
         ParseObject c;
         ParseQuery<ParseObject> query;
         try {
@@ -78,14 +127,13 @@ public class CitaDAOImpl implements CitaDAO {
             c.unpin();
             c.deleteEventually();
 
-            Toast.makeText(context, "Cita eliminada", Toast.LENGTH_SHORT).show();
         } catch (ParseException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public List<Cita> obtenerCitas(String mascotaId, Context context) {
+    public List<Cita> obtenerCitas(String mascotaId) {
         List<Cita> listaCitas = new ArrayList<>();
         Cita c;
         ParseQuery<ParseObject> queryC;
@@ -105,9 +153,6 @@ public class CitaDAOImpl implements CitaDAO {
 
             list = queryC.find();
 
-            if (list.size() == 0) {
-                Toast.makeText(context, "No hay citas todavia", Toast.LENGTH_SHORT).show();
-            }
             for (int i = 0; i < list.size(); i++) {
 
                 c = new Cita();
@@ -129,7 +174,7 @@ public class CitaDAOImpl implements CitaDAO {
     }
 
     @Override
-    public List<Cita> obtenerCitas(Context context) {
+    public List<Cita> obtenerCitas() {
         return null;
     }
 }

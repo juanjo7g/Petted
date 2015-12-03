@@ -11,15 +11,15 @@ import co.edu.udea.pi.sjm.petted.dto.Vacuna;
  * Created by Juan on 27/10/2015.
  */
 public interface VacunaDAO {
-    void insertarVacuna(Vacuna vacuna, Context context);
+    void insertarVacuna(Vacuna vacuna);
 
-    Vacuna obtenerVacuna(String id, Context context);
+    Vacuna obtenerVacuna(String id);
 
-    void actualizarVacuna(Vacuna vacuna, Context context);
+    void actualizarVacuna(Vacuna vacuna);
 
-    void eliminarVacuna(Vacuna vacuna, Context context);
+    void eliminarVacuna(Vacuna vacuna);
 
-    List<Vacuna> obtenerVacunas(String mascotaId, Context context);
+    List<Vacuna> obtenerVacunas(String mascotaId);
 
-    List<Vacuna> obtenerVacunas(Context context);
+    List<Vacuna> obtenerVacunas();
 }

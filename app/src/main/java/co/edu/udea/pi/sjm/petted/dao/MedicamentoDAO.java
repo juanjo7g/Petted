@@ -10,15 +10,15 @@ import co.edu.udea.pi.sjm.petted.dto.Medicamento;
  * Created by Juan on 29/11/2015.
  */
 public interface MedicamentoDAO {
-    void insertarMedicamento(Medicamento medicamento, Context context);
+    void insertarMedicamento(Medicamento medicamento);
 
-    Medicamento obtenerMedicamento(String id, Context context);
+    Medicamento obtenerMedicamento(String id);
 
-    void actualizarMedicamento(Medicamento medicamento, Context context);
+    void actualizarMedicamento(Medicamento medicamento);
 
-    void eliminarMedicamento(Medicamento medicamento, Context context);
+    void eliminarMedicamento(Medicamento medicamento);
 
-    List<Medicamento> obtenerMedicamentos(String mascotaId, Context context);
+    List<Medicamento> obtenerMedicamentos(String mascotaId);
 
-    List<Medicamento> obtenerMedicamentos(Context context);
+    List<Medicamento> obtenerMedicamentos();
 }

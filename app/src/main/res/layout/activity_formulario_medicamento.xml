@@ -101,5 +101,32 @@
             android:background="@drawable/oval"
             android:elevation="5dp"
             android:src="@mipmap/ic_calendar_white" />
+
+        <EditText
+            android:id="@+id/etHoraInicioMedicamento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/etFechaInicioMedicamento"
+            android:layout_marginTop="21dp"
+            android:layout_toLeftOf="@+id/ibtnHoraInicioMedicamento"
+            android:layout_toStartOf="@+id/ibtnHoraInicioMedicamento"
+            android:editable="false"
+            android:focusable="false"
+            android:hint="Hora de inicio" />
+
+        <ImageButton
+            android:id="@+id/ibtnHoraInicioMedicamento"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignBottom="@+id/etHoraInicioMedicamento"
+            android:layout_alignEnd="@+id/etNombreMedicamento"
+            android:layout_alignRight="@+id/etNombreMedicamento"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/oval"
+            android:elevation="5dp"
+            android:src="@mipmap/ic_acces_time_white" />
     </RelativeLayout>
 </ScrollView>

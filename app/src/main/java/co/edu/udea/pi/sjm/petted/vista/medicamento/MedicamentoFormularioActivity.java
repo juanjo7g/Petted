@@ -1,8 +1,7 @@
 package co.edu.udea.pi.sjm.petted.vista.medicamento;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.DialogInterface;
+import android.app.TimePickerDialog;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -27,15 +27,18 @@ import co.edu.udea.pi.sjm.petted.R;
 import co.edu.udea.pi.sjm.petted.dao.MedicamentoDAO;
 import co.edu.udea.pi.sjm.petted.dao.impl.CitaDAOImpl;
 import co.edu.udea.pi.sjm.petted.dao.impl.MedicamentoDAOImpl;
-import co.edu.udea.pi.sjm.petted.dto.Mascota;
 import co.edu.udea.pi.sjm.petted.dto.Medicamento;
+import co.edu.udea.pi.sjm.petted.util.Utility;
 import co.edu.udea.pi.sjm.petted.util.Validacion;
 
 public class MedicamentoFormularioActivity extends AppCompatActivity {
 
     private SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy", Locale.US);
+    private SimpleDateFormat formatoHora = new SimpleDateFormat("hh:mm a", Locale.US);
+    private SimpleDateFormat formatoFechaHora = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.US);
 
     private DatePickerDialog electorDeFechaDialogo;
+    private TimePickerDialog electorDeHoraDialogo;
 
     private String mascotaId;
 
@@ -46,8 +49,11 @@ public class MedicamentoFormularioActivity extends AppCompatActivity {
     private EditText etIntervaloDosis;
     private EditText etFechaInicio;
     private ImageButton ibtnFechaInicio;
+    private EditText etHoraInicio;
+    private ImageButton ibtnHoraInicio;
 
     private MedicamentoDAO daoMe;
+    private Medicamento medicamento;
 
 
     @Override
@@ -72,24 +78,44 @@ public class MedicamentoFormularioActivity extends AppCompatActivity {
         etIntervaloDosis = (EditText) findViewById(R.id.etIntervaloDosisMedicamento);
         etFechaInicio = (EditText) findViewById(R.id.etFechaInicioMedicamento);
         ibtnFechaInicio = (ImageButton) findViewById(R.id.ibtnFechaInicioMedicamento);
+        etHoraInicio = (EditText) findViewById(R.id.etHoraInicioMedicamento);
+        ibtnHoraInicio = (ImageButton) findViewById(R.id.ibtnHoraInicioMedicamento);
 
         mostrarFecha();
+        mostrarHora();
+
+        if (this.getIntent().getExtras().getString("medicamentoId") != null) {
+            daoMe = new MedicamentoDAOImpl();
+            medicamento = daoMe.obtenerMedicamento(this.getIntent().getExtras().getString("medicamentoId"));
+        }
 
         inicializarSpinner();
 
         if (this.getIntent().getExtras().getString("medicamentoId") == null) {
             super.setTitle("Nuevo Medicamento");
         } else {
-            inicializarFormulario((Medicamento) this.getIntent().getExtras().getSerializable("medicamento"));
+            inicializarFormulario();
             super.setTitle("Editar Medicamento");
         }
     }
 
-    private void inicializarFormulario(Medicamento medicamento) {
+    private void inicializarFormulario() {
+        etNombre.setText(medicamento.getNombre());
+        spinnerViaSuministracion.setSelection(Utility.getIndex(spinnerViaSuministracion, medicamento.getViaSuministro()));
+        etCantidadDosis.setText(medicamento.getCantidadDosis() + "");
+        etPesoDosis.setText(medicamento.getPesoDosis() + "");
+        etHoraInicio.setText(medicamento.getIntervaloDosis() + "");
+        if (medicamento.getFechaHoraInicio() != null) {
+            etFechaInicio.setText(formatoFecha.format(medicamento.getFechaHoraInicio()));
+            etHoraInicio.setText(formatoHora.format(medicamento.getFechaHoraInicio()));
+        }
 
     }
 
     public void onClickGuardarMedicamento() {
+
+        verificarCamposRequeridos();
+
         Medicamento m;
         UUID uuid = UUID.randomUUID();
         m = new Medicamento();
@@ -109,7 +135,8 @@ public class MedicamentoFormularioActivity extends AppCompatActivity {
         }
         if (!etFechaInicio.getText().toString().equals("")) {
             try {
-                m.setFechaInicio(formatoFecha.parse(etFechaInicio.getText().toString()));
+                m.setFechaHoraInicio(formatoFechaHora.parse(etFechaInicio.getText().toString() + " "
+                        + etHoraInicio.getText().toString()));
             } catch (ParseException e) {
                 e.printStackTrace();
                 Log.e("Error en fecha", e.getMessage());
@@ -118,16 +145,35 @@ public class MedicamentoFormularioActivity extends AppCompatActivity {
 
         switch (Validacion.validarMedicamento(m)) {
             case 0:
-                if (this.getIntent().getExtras().getString("medicamentoId") == null) {
-                    daoMe = new MedicamentoDAOImpl();
-                    daoMe.insertarMedicamento(m, this);
-                    Toast.makeText(MedicamentoFormularioActivity.this, "Medicamento insertado", Toast.LENGTH_SHORT).show();
-
-                } else {
-
+                if ((etNombre.getError() == null) && (etCantidadDosis.getError() == null) &&
+                        (etPesoDosis.getError() == null) && (etIntervaloDosis.getError() == null)) {
+                    if (this.getIntent().getExtras().getString("medicamentoId") == null) {
+                        daoMe = new MedicamentoDAOImpl();
+                        daoMe.insertarMedicamento(m);
+                    } else {
+                        daoMe = new MedicamentoDAOImpl();
+                        m.setId(this.getIntent().getExtras().getString("medicamentoId"));
+                        daoMe.actualizarMedicamento(m);
+                        setResult(0);
+                    }
+                    finish();
                 }
-                finish();
                 break;
+        }
+    }
+
+    private void verificarCamposRequeridos() {
+        if (etNombre.getText().toString().equals("")) {
+            etNombre.setError("Campo requerido.");
+        }
+        if (etCantidadDosis.getText().toString().equals("")) {
+            etCantidadDosis.setError("Campo requerido.");
+        }
+        if (etPesoDosis.getText().toString().equals("")) {
+            etPesoDosis.setError("Campo requerido.");
+        }
+        if (etIntervaloDosis.getText().toString().equals("")) {
+            etIntervaloDosis.setError("Campo requerido.");
         }
     }
 
@@ -150,8 +196,40 @@ public class MedicamentoFormularioActivity extends AppCompatActivity {
                 Calendar nuevaFecha = Calendar.getInstance();
                 nuevaFecha.set(año, mes, dia);
                 etFechaInicio.setText(formatoFecha.format(nuevaFecha.getTime()));
+                if (etHoraInicio.getText().toString().equals("")) {
+                    etHoraInicio.setText(formatoHora.format(nuevaFecha.getTime()));
+                }
             }
         }, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH));
+    }
+
+    private void mostrarHora() {
+        ibtnHoraInicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                electorDeHoraDialogo.show();
+            }
+        });
+        etHoraInicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                electorDeHoraDialogo.show();
+            }
+        });
+        Calendar calendario = Calendar.getInstance();
+        electorDeHoraDialogo = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                Calendar nuevaHora = Calendar.getInstance();
+                nuevaHora.set(Calendar.HOUR, selectedHour);
+                nuevaHora.set(Calendar.MINUTE, selectedMinute);
+                if (Calendar.AM_PM == 0) {
+                    nuevaHora.set(Calendar.AM_PM, 1);
+                }
+                nuevaHora.set(Calendar.AM_PM, 0);
+                etHoraInicio.setText(formatoHora.format(nuevaHora.getTime()));
+            }
+        }, calendario.get(Calendar.HOUR), calendario.get(Calendar.MINUTE), false);
     }
 
 

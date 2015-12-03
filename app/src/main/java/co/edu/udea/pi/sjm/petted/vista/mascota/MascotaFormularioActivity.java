@@ -24,9 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import java.io.File;
@@ -90,14 +88,11 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         ibtnFechaNacimiento = (ImageButton) findViewById(R.id.ibtnFechaNacimientoMascota);
         ivFotoPrevia = (ImageView) findViewById(R.id.ivFotoPreviaMascota);
 
-        if (this.getIntent().getExtras().getString("mascotaId") == null) {
-            Toast.makeText(MascotaFormularioActivity.this, "Hola", Toast.LENGTH_SHORT).show();
-        }
         mostrarFecha();
 
         if (this.getIntent().getExtras().getString("mascotaId") != null) {
             daoM = new MascotaDAOImpl();
-            mascota = daoM.obtenerMascota(this.getIntent().getExtras().getString("mascotaId"), this);
+            mascota = daoM.obtenerMascota(this.getIntent().getExtras().getString("mascotaId"));
         }
 
         inicializarSpinners();
@@ -111,6 +106,9 @@ public class MascotaFormularioActivity extends AppCompatActivity {
     }
 
     public void onClickGuardarMascota() {
+
+        verificarCamposRequeridos();
+
         Mascota m;
         ParseUser propietario = ParseUser.getCurrentUser();
 
@@ -140,22 +138,34 @@ public class MascotaFormularioActivity extends AppCompatActivity {
 
         switch (Validacion.validarMascota(m)) {
             case 0:
-                if (this.getIntent().getExtras().getString("mascotaId") == null) {
-                    daoM = new MascotaDAOImpl();
-                    daoM.insertarMascota(m, this);
-                } else {
-                    daoM = new MascotaDAOImpl();
-                    m.setId(mascota.getId());
-                    m.setNotificaciones(mascota.getNotificaciones());
-                    m.setIdTag(mascota.getIdTag());
-                    daoM.actualizarMascota(m, this);
-                    setResult(0);
+                if ((etNombre.getError() == null) && (etFechaNacimiento.getError() == null)) {
+                    if (this.getIntent().getExtras().getString("mascotaId") == null) {
+                        daoM = new MascotaDAOImpl();
+                        daoM.insertarMascota(m);
+                    } else {
+                        daoM = new MascotaDAOImpl();
+                        m.setId(mascota.getId());
+                        m.setNotificaciones(mascota.getNotificaciones());
+                        m.setIdTag(mascota.getIdTag());
+                        daoM.actualizarMascota(m);
+                        setResult(0);
+                    }
                     finish();
                 }
-
                 break;
             case 1:
                 break;
+        }
+    }
+
+    private void verificarCamposRequeridos() {
+        if (etNombre.getText().toString().equals("")) {
+            etNombre.setError("Campo requerido.");
+        }
+        if (etFechaNacimiento.getText().toString().equals("")) {
+            etFechaNacimiento.setError("Campo requerido.");
+        } else {
+            etFechaNacimiento.setError(null);
         }
     }
 
@@ -266,6 +276,7 @@ public class MascotaFormularioActivity extends AppCompatActivity {
                 Calendar nuevaFecha = Calendar.getInstance();
                 nuevaFecha.set(año, mes, dia);
                 etFechaNacimiento.setText(formatoFecha.format(nuevaFecha.getTime()));
+                etFechaNacimiento.setError(null);
             }
         }, calendario.get(Calendar.YEAR), calendario.get(Calendar.MONTH), calendario.get(Calendar.DAY_OF_MONTH));
     }
@@ -317,11 +328,11 @@ public class MascotaFormularioActivity extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = null;
         switch (posicion) {
             case 0:
-                adapter = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeGatos,
+                adapter = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDePerros,
                         android.R.layout.simple_dropdown_item_1line);
                 break;
             case 1:
-                adapter = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDePerros,
+                adapter = ArrayAdapter.createFromResource(view.getContext(), R.array.RazasDeGatos,
                         android.R.layout.simple_dropdown_item_1line);
                 break;
             case 2:
