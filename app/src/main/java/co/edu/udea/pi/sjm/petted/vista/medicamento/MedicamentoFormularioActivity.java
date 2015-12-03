@@ -104,7 +104,7 @@ public class MedicamentoFormularioActivity extends AppCompatActivity {
         spinnerViaSuministracion.setSelection(Utility.getIndex(spinnerViaSuministracion, medicamento.getViaSuministro()));
         etCantidadDosis.setText(medicamento.getCantidadDosis() + "");
         etPesoDosis.setText(medicamento.getPesoDosis() + "");
-        etHoraInicio.setText(medicamento.getIntervaloDosis() + "");
+        etIntervaloDosis.setText(medicamento.getIntervaloDosis() + "");
         if (medicamento.getFechaHoraInicio() != null) {
             etFechaInicio.setText(formatoFecha.format(medicamento.getFechaHoraInicio()));
             etHoraInicio.setText(formatoHora.format(medicamento.getFechaHoraInicio()));
