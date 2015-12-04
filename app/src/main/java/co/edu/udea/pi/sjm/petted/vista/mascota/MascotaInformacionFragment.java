@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.parse.ParseObject;
+
 import java.util.List;
 
 import co.edu.udea.pi.sjm.petted.R;
@@ -101,6 +103,12 @@ public class MascotaInformacionFragment extends Fragment {
     }
 
     private void onClickAsociarTagNFC() {
+
+//        ParseObject po = new ParseObject("Mascota");
+//        po.put("idTag", ma.getMascota().getId());
+//        po.put("perdida", true);
+//        po.saveEventually();
+
         if (NfcAdapter.getDefaultAdapter(ma) == null) {
             new AlertDialog.Builder(ma)
                     .setTitle(R.string.no_nfc)

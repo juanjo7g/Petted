@@ -184,7 +184,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
     private void mostrarMascota(final String idTag) {
         if (ParseUser.getCurrentUser() != null) {
             daoM = new MascotaDAOImpl();
-            String idTemp = daoM.obtenerMascotaId(idTag);
+            final String idTemp = daoM.obtenerMascotaId(idTag);
 
             if (!idTemp.equals("")) { // Esta local
                 if (daoM.obtenerMascota(idTemp).getPropietario()
@@ -198,15 +198,18 @@ public class ListadoMascotasActivity extends AppCompatActivity {
                             .setMessage("Esta esta en el dispositivo pero no te pertenece, id: " + idTemp)
                             .setPositiveButton("Ver", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
+
+                                    final Mascota mascotaEncontrada = daoM.obtenerMascota(idTemp);
                                     new AlertDialog.Builder(ListadoMascotasActivity.this)
                                             .setTitle("Mascota")
-                                            .setMessage("Nombre:  " + daoM.obtenerMascotaConIdTag(idTag).getNombre())
+                                            .setMessage("Nombre:  " + mascotaEncontrada.getNombre())
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
                                                 }
                                             })
                                             .setNeutralButton("Encontré esta mascota", new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
+                                                    daoM.actualizarMascotaPerdida(mascotaEncontrada.getId());
                                                 }
                                             })
                                             .setIcon(android.R.drawable.ic_dialog_info)
@@ -216,7 +219,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
                 }
-            } else { // Esta remota -> TODO: Necesita internet!!!
+            } else { // Esta remota
 
                 new AlertDialog.Builder(this)
                         .setTitle("Mascota")
@@ -256,6 +259,7 @@ public class ListadoMascotasActivity extends AppCompatActivity {
                                                 })
                                                 .setNeutralButton("Encontré esta mascota", new DialogInterface.OnClickListener() {
                                                     public void onClick(DialogInterface dialog, int which) {
+                                                        daoM.actualizarMascotaPerdida(mascotaNoMia.getId());
                                                     }
                                                 })
                                                 .setIcon(android.R.drawable.ic_dialog_info)

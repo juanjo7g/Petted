@@ -175,6 +175,24 @@ public class MascotaDAOImpl implements MascotaDAO {
     }
 
     @Override
+    public void actualizarMascotaPerdida(String id) {
+        ParseObject m;
+        ParseQuery<ParseObject> query;
+        try {
+            query = ParseQuery.getQuery("Mascota");
+            query.whereEqualTo("id", id);
+
+            m = query.find().get(0);
+            m.put("perdida", true);
+
+            m.saveEventually();
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void eliminarMascota(Mascota mascota) {
         ParseObject m;
         ParseQuery<ParseObject> query;
