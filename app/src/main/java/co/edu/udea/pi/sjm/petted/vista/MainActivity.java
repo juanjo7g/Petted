@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
         ParseUser currentUser = ParseUser.getCurrentUser();
         if (currentUser != null) {
             i = new Intent(this, ListadoMascotasActivity.class);
+            finish();
+            startActivity(i);
             if (!currentUser.getBoolean("emailVerified")) {
 //                new AlertDialog.Builder(MainActivity.this)
 //                        .setTitle("Bienvenido " + currentUser.getUsername())
@@ -81,8 +83,6 @@ public class MainActivity extends AppCompatActivity {
 //                        .setIcon(android.R.drawable.ic_dialog_alert)
 //                        .show();
             }else{
-                finish();
-                startActivity(i);
             }
         }
     }
