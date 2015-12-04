@@ -163,7 +163,7 @@ public class CitaFormularioActivity extends AppCompatActivity {
 
         switch (Validacion.validarCita(c)) {
             case 0:
-                if (etNombre.getError() != null) {
+                if (etNombre.getError() == null) {
                     if (this.getIntent().getExtras().getString("citaId") == null) {
                         daoC = new CitaDAOImpl();
                         daoC.insertarCita(c);
