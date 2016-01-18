@@ -133,7 +133,6 @@ public class TagNFCFormularioActivity extends AppCompatActivity {
             Tag myTagId = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
             idTag = Utility.bytesToHexString(myTagId.getId());
             tvIdTag.setText(idTag);
-        } else {
         }
     }
 

@@ -74,10 +74,10 @@ public class MascotaMedicamentosFragment extends Fragment {
                 }
                 new AlertDialog.Builder(ma)
                         .setTitle("Medicamento " + m.getNombre())
-                        .setMessage("Suministro vía " + m.getViaSuministro()+
-                                "\n\nDosis: " + "\n" + m.getPesoDosis() +"grs, "+m.getCantidadDosis() +
-                                " cada "+m.getIntervaloDosis()+ " horas."+
-                                "\n\n"+ fechaHoraInicioS)
+                        .setMessage("Suministro vía " + m.getViaSuministro() +
+                                "\n\nDosis: " + "\n" + m.getPesoDosis() + "grs. " + " Cada "
+                                + m.getIntervaloDosis() + " horas, " + m.getCantidadDosis() + " veces." +
+                                "\n\n" + fechaHoraInicioS)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                             }
